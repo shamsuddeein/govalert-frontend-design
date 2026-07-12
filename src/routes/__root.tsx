@@ -11,6 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Toaster } from "../components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -77,11 +78,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "GovAlert monitors official Nigerian government portals in real time and delivers verified recruitment intelligence — no rumors, no phishing." },
+      { title: "GovAlert — Verified Nigerian Government Recruitment Intelligence" },
+      {
+        name: "description",
+        content:
+          "GovAlert monitors official Nigerian government portals in real time and delivers verified recruitment intelligence — no rumors, no phishing.",
+      },
       { name: "author", content: "GovAlert" },
-      { property: "og:title", content: "GovAlert — Verified Nigerian Government Recruitment Intelligence" },
-      { property: "og:description", content: "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk." },
+      {
+        property: "og:title",
+        content: "GovAlert — Verified Nigerian Government Recruitment Intelligence",
+      },
+      {
+        property: "og:description",
+        content:
+          "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@GovAlertNG" },
@@ -127,6 +139,7 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
+      <Toaster />
     </QueryClientProvider>
   );
 }

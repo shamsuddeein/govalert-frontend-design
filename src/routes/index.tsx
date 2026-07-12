@@ -1,12 +1,14 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { Nav, Footer } from "../components/layout";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-type Status = "verified" | "warning" | "urgent" | "closed";
+export type Status = "verified" | "warning" | "urgent" | "closed";
 
-const latestJobs: Array<{
+export interface Job {
   id: string;
   agency: string;
   agencyShort: string;
@@ -14,7 +16,20 @@ const latestJobs: Array<{
   deadline: string;
   status: Status;
   detected: string;
-}> = [
+  category: string;
+  state: string;
+  createdAt: string;
+}
+
+function getDeterministicOpenings(category: string): number {
+  let hash = 0;
+  for (let i = 0; i < category.length; i++) {
+    hash = category.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  return Math.abs(hash % 35) + 5; // Deterministic value between 5 and 39
+}
+
+export const latestJobs: Job[] = [
   {
     id: "8829-GA",
     agency: "NNPC Limited",
@@ -23,6 +38,9 @@ const latestJobs: Array<{
     deadline: "Oct 24, 2024",
     status: "urgent",
     detected: "2h ago",
+    category: "Engineering & Energy",
+    state: "Rivers",
+    createdAt: "2024-10-12T16:00:00Z",
   },
   {
     id: "4120-GA",
@@ -32,6 +50,9 @@ const latestJobs: Array<{
     deadline: "Nov 12, 2024",
     status: "verified",
     detected: "6h ago",
+    category: "Revenue & Finance",
+    state: "Cross River",
+    createdAt: "2024-10-12T12:00:00Z",
   },
   {
     id: "9001-GA",
@@ -41,6 +62,9 @@ const latestJobs: Array<{
     deadline: "Nov 02, 2024",
     status: "verified",
     detected: "1d ago",
+    category: "Law Enforcement",
+    state: "Abuja",
+    createdAt: "2024-10-11T18:00:00Z",
   },
   {
     id: "7712-GA",
@@ -50,6 +74,9 @@ const latestJobs: Array<{
     deadline: "Pending",
     status: "warning",
     detected: "3h ago",
+    category: "Revenue & Finance",
+    state: "Lagos",
+    createdAt: "2024-10-12T15:00:00Z",
   },
   {
     id: "6650-GA",
@@ -59,6 +86,9 @@ const latestJobs: Array<{
     deadline: "Closed",
     status: "closed",
     detected: "2d ago",
+    category: "Military & Paramilitary",
+    state: "Kaduna",
+    createdAt: "2024-10-10T09:00:00Z",
   },
   {
     id: "5581-GA",
@@ -68,10 +98,97 @@ const latestJobs: Array<{
     deadline: "Nov 20, 2024",
     status: "verified",
     detected: "5h ago",
+    category: "Military & Paramilitary",
+    state: "Abuja",
+    createdAt: "2024-10-12T13:00:00Z",
+  },
+  {
+    id: "1023-GA",
+    agency: "National Identity Management Commission",
+    agencyShort: "NIMC",
+    title: "Lead Cloud Infrastructure Engineer",
+    deadline: "Dec 05, 2024",
+    status: "verified",
+    detected: "12h ago",
+    category: "Engineering & Energy",
+    state: "Abuja",
+    createdAt: "2024-10-12T06:00:00Z",
+  },
+  {
+    id: "1024-GA",
+    agency: "Federal Inland Revenue Service",
+    agencyShort: "FIRS",
+    title: "Tax Auditor II (Large Taxpayers)",
+    deadline: "Nov 30, 2024",
+    status: "verified",
+    detected: "3d ago",
+    category: "Revenue & Finance",
+    state: "Lagos",
+    createdAt: "2024-10-09T10:00:00Z",
+  },
+  {
+    id: "1025-GA",
+    agency: "Nigeria Police Force",
+    agencyShort: "NPF",
+    title: "Cadet Inspector of Police Intake",
+    deadline: "Dec 15, 2024",
+    status: "urgent",
+    detected: "4d ago",
+    category: "Law Enforcement",
+    state: "Kano",
+    createdAt: "2024-10-08T11:00:00Z",
+  },
+  {
+    id: "1026-GA",
+    agency: "Nigerian Ports Authority",
+    agencyShort: "NPA",
+    title: "Marine Engineering Trainees",
+    deadline: "Pending",
+    status: "warning",
+    detected: "5d ago",
+    category: "Engineering & Energy",
+    state: "Rivers",
+    createdAt: "2024-10-07T08:00:00Z",
+  },
+  {
+    id: "1027-GA",
+    agency: "Federal Ministry of Health",
+    agencyShort: "FMOH",
+    title: "Medical Officers & Resident Physicians",
+    deadline: "Nov 15, 2024",
+    status: "verified",
+    detected: "1w ago",
+    category: "Health & Medical",
+    state: "Oyo",
+    createdAt: "2024-10-05T14:00:00Z",
+  },
+  {
+    id: "1028-GA",
+    agency: "Federal Ministry of Education",
+    agencyShort: "FMOE",
+    title: "Secondary School Education Instructors",
+    deadline: "Closed",
+    status: "closed",
+    detected: "2w ago",
+    category: "Education",
+    state: "Enugu",
+    createdAt: "2024-09-28T09:00:00Z",
+  },
+  {
+    id: "1029-GA",
+    agency: "Supreme Court of Nigeria",
+    agencyShort: "SCN",
+    title: "Senior Legal Research Officers",
+    deadline: "Dec 01, 2024",
+    status: "verified",
+    detected: "1d ago",
+    category: "Judiciary",
+    state: "Abuja",
+    createdAt: "2024-10-11T17:00:00Z",
   },
 ];
 
-const featuredAgencies: Array<{
+export const featuredAgencies: Array<{
   short: string;
   name: string;
   portal: "online" | "review" | "closed";
@@ -87,7 +204,7 @@ const featuredAgencies: Array<{
   { short: "NPA", name: "Ports Authority", portal: "review", active: 1 },
 ];
 
-const categories = [
+export const categories = [
   "Federal Civil Service",
   "Military & Paramilitary",
   "Law Enforcement",
@@ -98,7 +215,7 @@ const categories = [
   "Judiciary",
 ];
 
-function StatusBadge({ status }: { status: Status }) {
+export function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; cls: string }> = {
     verified: { label: "Verified", cls: "bg-verified/10 text-verified ring-verified/20" },
     warning: { label: "Updating", cls: "bg-warning/15 text-warning ring-warning/25" },
@@ -116,45 +233,29 @@ function StatusBadge({ status }: { status: Status }) {
   );
 }
 
-function Logo() {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="grid size-8 place-items-center rounded bg-primary">
-        <div className="size-3.5 rounded-full border-2 border-accent" />
-      </div>
-      <span className="text-lg font-semibold tracking-tight text-primary">GovAlert</span>
-    </div>
-  );
-}
 
-function Nav() {
-  return (
-    <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-md">
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
-        <div className="flex items-center gap-8">
-          <Logo />
-          <div className="hidden gap-6 md:flex">
-            <a href="#recruitments" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Recruitments</a>
-            <a href="#agencies" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Agencies</a>
-            <a href="#verification" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">Verification</a>
-            <a href="#" className="text-sm font-medium text-muted-foreground transition-colors hover:text-primary">About</a>
-          </div>
-        </div>
-        <div className="flex items-center gap-3">
-          <button className="hidden text-sm font-medium text-muted-foreground hover:text-primary md:inline-flex">Sign in</button>
-          <button className="inline-flex items-center gap-2 rounded-full bg-primary py-2 pl-3 pr-4 text-sm font-medium text-primary-foreground ring-1 ring-primary transition-transform hover:-translate-y-px">
-            <svg className="size-4" fill="none" viewBox="0 0 24 24" strokeWidth={1.75} stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.27 3.13A59.77 59.77 0 0 1 21.49 12 59.77 59.77 0 0 1 3.27 20.88L6 12zm0 0h7.5" />
-            </svg>
-            Join Telegram
-          </button>
-        </div>
-      </div>
-    </nav>
-  );
-}
 
-function Hero() {
+function Hero({
+  searchQuery,
+  setSearchQuery,
+  onTagClick,
+}: {
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  onTagClick: (tag: string) => void;
+}) {
+  const [inputValue, setInputValue] = useState(searchQuery);
+
+  useEffect(() => {
+    setInputValue(searchQuery);
+  }, [searchQuery]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSearchQuery(inputValue);
+    document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <section className="overflow-hidden py-16 md:py-24">
       <div className="mx-auto max-w-7xl px-6">
@@ -178,14 +279,19 @@ function Hero() {
             </p>
             <form
               className="mt-10 flex max-w-md items-center rounded-2xl bg-card p-1.5 shadow-sm ring-1 ring-border"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleSubmit}
             >
               <input
                 type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
                 placeholder="Search NNPC, Customs, or NPF…"
                 className="w-full border-none bg-transparent px-4 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-0"
               />
-              <button className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:brightness-110">
+              <button
+                type="submit"
+                className="rounded-xl bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-all hover:brightness-110 cursor-pointer"
+              >
                 Search
               </button>
             </form>
@@ -193,7 +299,12 @@ function Hero() {
               {["NNPC", "Customs", "EFCC", "NAF", "CBN", "FIRS"].map((tag) => (
                 <button
                   key={tag}
-                  className="rounded-full border border-border bg-card px-2.5 py-1 text-[11px] font-medium text-muted-foreground transition-colors hover:border-primary/30 hover:text-primary"
+                  onClick={() => onTagClick(tag)}
+                  className={`rounded-full border px-2.5 py-1 text-[11px] font-medium transition-colors cursor-pointer ${
+                    searchQuery.toLowerCase() === tag.toLowerCase()
+                      ? "border-primary bg-primary/10 text-primary"
+                      : "border-border bg-card text-muted-foreground hover:border-primary/30 hover:text-primary"
+                  }`}
                 >
                   #{tag}
                 </button>
@@ -213,16 +324,35 @@ function Hero() {
                 </span>
               </div>
               <div className="space-y-4">
-                <StreamRow color="verified" agency="NNPC Graduate Trainee Portal" note="Identity verification confirmed. High traffic detected." />
-                <StreamRow color="warning" agency="Nigeria Customs Service" note="Portal maintenance scheduled for 18:00 WAT." />
-                <StreamRow color="urgent" agency="EFCC recruitment alert" note="Phishing site detected: efcc-recruit.gov.ng is fake." />
-                <StreamRow color="verified" agency="Federal Fire Service" note="Batch B application window now open." />
+                <StreamRow
+                  color="verified"
+                  agency="NNPC Graduate Trainee Portal"
+                  note="Identity verification confirmed. High traffic detected."
+                />
+                <StreamRow
+                  color="warning"
+                  agency="Nigeria Customs Service"
+                  note="Portal maintenance scheduled for 18:00 WAT."
+                />
+                <StreamRow
+                  color="urgent"
+                  agency="EFCC recruitment alert"
+                  note="Phishing site detected: efcc-recruit.gov.ng is fake."
+                />
+                <StreamRow
+                  color="verified"
+                  agency="Federal Fire Service"
+                  note="Batch B application window now open."
+                />
               </div>
               <div className="mt-6 flex items-center justify-between border-t border-primary-foreground/10 pt-4">
                 <span className="font-mono-ui text-[10px] uppercase tracking-widest text-primary-foreground/40">
                   Signed by GovAlert desk
                 </span>
-                <a href="#verification" className="text-xs font-medium text-secondary hover:underline">
+                <a
+                  href="#verification"
+                  className="text-xs font-medium text-secondary hover:underline"
+                >
                   How we verify →
                 </a>
               </div>
@@ -275,7 +405,9 @@ function Stats() {
             <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
               {s.label}
             </p>
-            <p className={`mt-1 text-2xl font-semibold ${s.accent ? "text-verified" : "text-primary"}`}>
+            <p
+              className={`mt-1 text-2xl font-semibold ${s.accent ? "text-verified" : "text-primary"}`}
+            >
               {s.value}
             </p>
           </div>
@@ -285,62 +417,152 @@ function Stats() {
   );
 }
 
-function LatestJobs() {
+function LatestJobs({
+  jobs,
+  searchQuery,
+  setSearchQuery,
+  selectedCategory,
+  setSelectedCategory,
+}: {
+  jobs: typeof latestJobs;
+  searchQuery: string;
+  setSearchQuery: (q: string) => void;
+  selectedCategory: string | null;
+  setSelectedCategory: (c: string | null) => void;
+}) {
+  const hasFilters = searchQuery !== "" || selectedCategory !== null;
+
+  const handleClearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory(null);
+  };
+
   return (
     <section id="recruitments" className="py-24">
       <div className="mx-auto max-w-7xl px-6">
-        <div className="mb-10 flex items-end justify-between gap-4">
+        <div className="mb-10 flex flex-col justify-between gap-4 md:flex-row md:items-end">
           <div>
             <h2 className="text-3xl font-medium text-primary md:text-4xl">Verified openings</h2>
             <p className="mt-2 text-muted-foreground">
-              Latest authenticated recruitments from federal MDAs.
+              {hasFilters ? (
+                <span>
+                  Showing {jobs.length} results for{" "}
+                  {selectedCategory && (
+                    <span className="font-semibold text-primary">{selectedCategory}</span>
+                  )}
+                  {selectedCategory && searchQuery && " and "}
+                  {searchQuery && (
+                    <span className="font-semibold text-primary">"{searchQuery}"</span>
+                  )}
+                </span>
+              ) : (
+                "Latest authenticated recruitments from federal MDAs."
+              )}
             </p>
           </div>
-          <a href="#" className="hidden text-sm font-medium text-primary underline decoration-2 underline-offset-4 md:inline">
-            View all listings →
-          </a>
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
-          {latestJobs.map((job) => (
-            <article
-              key={job.id}
-              className="group relative flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 hover:ring-primary/20"
+          <div className="flex items-center gap-3">
+            {hasFilters && (
+              <button
+                onClick={handleClearFilters}
+                className="text-sm font-medium text-muted-foreground underline decoration-1 underline-offset-4 hover:text-primary cursor-pointer"
+              >
+                Clear filters
+              </button>
+            )}
+            <Link
+              to="/jobs"
+              className="hidden text-sm font-medium text-primary underline decoration-2 underline-offset-4 md:inline cursor-pointer"
             >
-              <div className="mb-5 flex items-start justify-between">
-                <div className="grid size-12 place-items-center rounded-xl bg-muted ring-1 ring-inset ring-border">
-                  <span className="font-mono-ui text-[10px] font-semibold text-muted-foreground">
-                    {job.agencyShort}
-                  </span>
-                </div>
-                <StatusBadge status={job.status} />
-              </div>
-              <h3 className="text-lg font-semibold leading-snug text-primary">{job.title}</h3>
-              <p className="mt-1 text-sm text-muted-foreground">{job.agency}</p>
-
-              <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
-                <div>
-                  <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Deadline
-                  </p>
-                  <p className="text-sm font-medium text-foreground">{job.deadline}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
-                    Detected
-                  </p>
-                  <p className="font-mono-ui text-xs text-foreground">{job.detected}</p>
-                </div>
-              </div>
-            </article>
-          ))}
+              View all listings →
+            </Link>
+          </div>
         </div>
+
+        {jobs.length > 0 ? (
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {jobs.map((job) => (
+              <Link
+                key={job.id}
+                to="/jobs/$jobId"
+                params={{ jobId: job.id }}
+                className="group relative flex flex-col rounded-3xl bg-card p-7 ring-1 ring-border transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-primary/5 hover:ring-primary/20 cursor-pointer"
+              >
+                <div className="mb-5 flex items-start justify-between">
+                  <div className="grid size-12 place-items-center rounded-xl bg-muted ring-1 ring-inset ring-border">
+                    <span className="font-mono-ui text-[10px] font-semibold text-muted-foreground">
+                      {job.agencyShort}
+                    </span>
+                  </div>
+                  <StatusBadge status={job.status} />
+                </div>
+                <h3 className="text-lg font-semibold leading-snug text-primary transition-colors group-hover:text-primary/80">{job.title}</h3>
+                <p className="mt-1 text-sm text-muted-foreground">{job.agency}</p>
+
+                <div className="mt-6 flex items-center justify-between border-t border-border pt-5">
+                  <div>
+                    <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Deadline
+                    </p>
+                    <p className="text-sm font-medium text-foreground">{job.deadline}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
+                      Detected
+                    </p>
+                    <p className="font-mono-ui text-xs text-foreground">{job.detected}</p>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : (
+          <div className="rounded-3xl border border-dashed border-border bg-card py-16 text-center">
+            <svg
+              className="mx-auto size-12 text-muted-foreground"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z"
+              />
+            </svg>
+            <h3 className="mt-4 text-lg font-semibold text-primary">No openings found</h3>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Try adjusting your search terms or category filter.
+            </p>
+            <button
+              onClick={handleClearFilters}
+              className="mt-4 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:brightness-110 cursor-pointer"
+            >
+              Reset filters
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
-function Categories() {
+function Categories({
+  selectedCategory,
+  setSelectedCategory,
+}: {
+  selectedCategory: string | null;
+  setSelectedCategory: (c: string | null) => void;
+}) {
+  const handleCategoryClick = (category: string) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null);
+    } else {
+      setSelectedCategory(category);
+      document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <section className="border-t border-border bg-muted/40 py-16">
       <div className="mx-auto max-w-7xl px-6">
@@ -354,16 +576,24 @@ function Categories() {
         </div>
         <div className="mt-8 grid gap-3 sm:grid-cols-2 md:grid-cols-4">
           {categories.map((c) => (
-            <a
+            <button
               key={c}
-              href="#"
-              className="group rounded-2xl bg-card p-5 ring-1 ring-border transition-colors hover:ring-primary/30"
+              onClick={() => handleCategoryClick(c)}
+              className={`group text-left rounded-2xl p-5 ring-1 transition-all cursor-pointer ${
+                selectedCategory === c
+                  ? "bg-primary/5 ring-primary ring-2"
+                  : "bg-card ring-border hover:ring-primary/30"
+              }`}
             >
-              <p className="text-sm font-medium text-primary group-hover:text-primary">{c}</p>
-              <p className="mt-1 font-mono-ui text-[11px] text-muted-foreground">
-                {Math.floor(Math.random() * 40) + 6} live openings
+              <p
+                className={`text-sm font-medium ${selectedCategory === c ? "text-primary font-semibold" : "text-primary"}`}
+              >
+                {c}
               </p>
-            </a>
+              <p className="mt-1 font-mono-ui text-[11px] text-muted-foreground">
+                {getDeterministicOpenings(c)} live openings
+              </p>
+            </button>
           ))}
         </div>
       </div>
@@ -371,7 +601,7 @@ function Categories() {
   );
 }
 
-function Agencies() {
+function Agencies({ onAgencyClick }: { onAgencyClick: (short: string) => void }) {
   const dot = (p: "online" | "review" | "closed") =>
     p === "online" ? "bg-verified" : p === "review" ? "bg-accent" : "bg-closed";
   const label = (p: "online" | "review" | "closed") =>
@@ -389,27 +619,36 @@ function Agencies() {
 
         <div className="mt-14 grid grid-cols-2 gap-px overflow-hidden rounded-3xl bg-border ring-1 ring-border md:grid-cols-4">
           {featuredAgencies.map((a) => (
-            <a
+            <div
               key={a.short}
-              href="#"
-              className="group flex flex-col justify-between bg-card p-6 transition-colors hover:bg-muted/60"
+              className="group flex flex-col justify-between bg-card p-6 transition-colors hover:bg-muted/30"
             >
-              <div>
-                <p className="font-mono-ui text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
+              <button
+                onClick={() => {
+                  onAgencyClick(a.short);
+                  document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
+                }}
+                className="flex-1 text-left w-full cursor-pointer focus:outline-none"
+              >
+                <p className="font-mono-ui text-[10px] font-semibold uppercase tracking-widest text-muted-foreground group-hover:text-primary">
                   {a.short}
                 </p>
-                <p className="mt-2 text-sm font-medium text-primary">{a.name}</p>
-              </div>
-              <div className="mt-6 flex items-center justify-between">
+                <p className="mt-2 text-sm font-medium text-primary group-hover:text-primary-hover">{a.name}</p>
+              </button>
+              <div className="mt-6 flex items-center justify-between w-full border-t border-border/40 pt-4">
                 <span className="flex items-center gap-1.5 text-[11px] font-medium text-muted-foreground">
                   <span className={`size-1.5 rounded-full ${dot(a.portal)}`} />
                   {label(a.portal)}
                 </span>
-                <span className="font-mono-ui text-[10px] text-muted-foreground">
-                  {a.active} live
-                </span>
+                <Link
+                  to="/agencies/$agencyShort"
+                  params={{ agencyShort: a.short }}
+                  className="font-mono-ui text-[10px] font-semibold text-primary hover:underline"
+                >
+                  Profile →
+                </Link>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>
@@ -477,8 +716,18 @@ function TelegramCTA() {
               href="#"
               className="inline-flex items-center gap-2 rounded-full bg-secondary py-3 pl-4 pr-6 text-sm font-medium text-primary transition-transform hover:scale-[1.02]"
             >
-              <svg className="size-5" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.27 3.13A59.77 59.77 0 0 1 21.49 12 59.77 59.77 0 0 1 3.27 20.88L6 12zm0 0h7.5" />
+              <svg
+                className="size-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={2}
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M6 12L3.27 3.13A59.77 59.77 0 0 1 21.49 12 59.77 59.77 0 0 1 3.27 20.88L6 12zm0 0h7.5"
+                />
               </svg>
               Join the channel
             </a>
@@ -497,65 +746,60 @@ function TelegramCTA() {
   );
 }
 
-function Footer() {
-  const cols: Array<{ heading: string; links: string[] }> = [
-    { heading: "Product", links: ["Search feed", "Agency profiles", "Verification guide", "API access"] },
-    { heading: "Company", links: ["About", "Contact", "Careers", "Press"] },
-    { heading: "Legal", links: ["Privacy policy", "Terms of service", "Data protection", "Cookies"] },
-  ];
-  return (
-    <footer className="border-t border-border bg-background py-16">
-      <div className="mx-auto max-w-7xl px-6">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_2fr]">
-          <div>
-            <Logo />
-            <p className="mt-4 max-w-sm text-sm text-muted-foreground">
-              Empowering Nigerian job seekers with verified recruitment intelligence. Data you can
-              trust, straight from the source.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
-            {cols.map((c) => (
-              <div key={c.heading}>
-                <h5 className="font-mono-ui text-[10px] font-semibold uppercase tracking-widest text-muted-foreground">
-                  {c.heading}
-                </h5>
-                <ul className="mt-4 space-y-2 text-sm text-foreground">
-                  {c.links.map((l) => (
-                    <li key={l}>
-                      <a href="#" className="transition-colors hover:text-primary">
-                        {l}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-        <div className="mt-12 flex flex-col items-start justify-between gap-3 border-t border-border pt-6 md:flex-row md:items-center">
-          <p className="font-mono-ui text-[10px] uppercase tracking-widest text-muted-foreground">
-            © 2024 GovAlert Intelligence · Independent monitoring service · Not affiliated with the FGN
-          </p>
-          <p className="font-mono-ui text-[10px] uppercase tracking-widest text-verified">
-            Systems operational
-          </p>
-        </div>
-      </div>
-    </footer>
-  );
-}
+
 
 function Index() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  const filteredJobs = latestJobs.filter((job) => {
+    const matchesSearch =
+      searchQuery === "" ||
+      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.agency.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      job.agencyShort.toLowerCase().includes(searchQuery.toLowerCase());
+
+    let jobCategory = "";
+    if (job.agencyShort === "NNPC") jobCategory = "Engineering & Energy";
+    else if (job.agencyShort === "NCS") jobCategory = "Revenue & Finance";
+    else if (job.agencyShort === "EFCC") jobCategory = "Law Enforcement";
+    else if (job.agencyShort === "CBN") jobCategory = "Revenue & Finance";
+    else if (job.agencyShort === "NAF") jobCategory = "Military & Paramilitary";
+    else if (job.agencyShort === "FFS") jobCategory = "Military & Paramilitary";
+
+    const matchesCategory = selectedCategory === null || jobCategory === selectedCategory;
+
+    return matchesSearch && matchesCategory;
+  });
+
+  const handleTagClick = (tag: string) => {
+    setSearchQuery(tag);
+    document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleAgencyClick = (agencyShort: string) => {
+    setSearchQuery(agencyShort);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25">
       <Nav />
       <main>
-        <Hero />
+        <Hero
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          onTagClick={handleTagClick}
+        />
         <Stats />
-        <LatestJobs />
-        <Categories />
-        <Agencies />
+        <LatestJobs
+          jobs={filteredJobs}
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+        />
+        <Categories selectedCategory={selectedCategory} setSelectedCategory={setSelectedCategory} />
+        <Agencies onAgencyClick={handleAgencyClick} />
         <HowItWorks />
         <TelegramCTA />
       </main>
