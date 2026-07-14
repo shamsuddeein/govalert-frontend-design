@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VerificationRouteImport } from './routes/verification'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SearchRouteImport } from './routes/search'
@@ -30,11 +29,6 @@ import { Route as VerificationJobIdRouteImport } from './routes/verification.$jo
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
 
-const VerificationRoute = VerificationRouteImport.update({
-  id: '/verification',
-  path: '/verification',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -146,7 +140,6 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -166,7 +159,6 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -189,7 +181,6 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -213,7 +204,6 @@ export interface FileRouteTypes {
     | '/search'
     | '/status'
     | '/terms'
-    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -233,7 +223,6 @@ export interface FileRouteTypes {
     | '/search'
     | '/status'
     | '/terms'
-    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -255,7 +244,6 @@ export interface FileRouteTypes {
     | '/search'
     | '/status'
     | '/terms'
-    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -278,18 +266,10 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   StatusRoute: typeof StatusRoute
   TermsRoute: typeof TermsRoute
-  VerificationRoute: typeof VerificationRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/verification': {
-      id: '/verification'
-      path: '/verification'
-      fullPath: '/verification'
-      preLoaderRoute: typeof VerificationRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -452,18 +432,6 @@ const JobsRouteChildren: JobsRouteChildren = {
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
-interface VerificationRouteChildren {
-  VerificationJobIdRoute: typeof VerificationJobIdRoute
-}
-
-const VerificationRouteChildren: VerificationRouteChildren = {
-  VerificationJobIdRoute: VerificationJobIdRoute,
-}
-
-const VerificationRouteWithChildren = VerificationRoute._addFileChildren(
-  VerificationRouteChildren,
-)
-
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -479,7 +447,6 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   StatusRoute: StatusRoute,
   TermsRoute: TermsRoute,
-  VerificationRoute: VerificationRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

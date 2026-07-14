@@ -7,6 +7,14 @@ import { ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
   component: AgencyProfilePage,
+  head: ({ params }) => {
+    const agency = agenciesData.find((x) => x.short.toUpperCase() === params.agencyShort.toUpperCase());
+    return {
+      meta: [
+        { title: agency ? `${agency.short} Portal Status | GovAlert` : `Agency Profile | GovAlert` }
+      ],
+    };
+  }
 });
 
 function Divider() {

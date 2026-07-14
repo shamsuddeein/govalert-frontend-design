@@ -103,7 +103,7 @@ export function Nav() {
       {/* Brand Top Border Indicator (Nigerian Flag Green) */}
       <div className="h-[3px] w-full bg-[#006b3c]" />
 
-      <nav className="sticky top-0 z-50 border-b border-border bg-background/90 backdrop-blur-md h-[60px]">
+      <nav className="sticky top-0 z-50 border-b border-border bg-background h-[60px]">
         <div className="mx-auto flex h-full max-w-[1184px] items-center justify-between px-6">
           <div className="flex items-center gap-8">
             <Logo />
@@ -130,7 +130,7 @@ export function Nav() {
                 Agencies
               </Link>
               <Link
-                to="/verification"
+                to="/faq"
                 className="nav-link-underline text-[14px] font-medium text-muted-foreground transition-colors hover:text-primary py-1"
                 activeProps={{ className: "text-primary font-semibold" }}
               >
@@ -217,7 +217,7 @@ export function Nav() {
               Agencies
             </Link>
             <Link
-              to="/verification"
+              to="/faq"
               onClick={() => setMobileMenuOpen(false)}
               className="text-[15px] font-medium text-foreground hover:text-primary"
             >
@@ -268,7 +268,7 @@ export function Footer() {
     {
       heading: "Resources",
       links: [
-        { label: "Verification Methodology", to: "/verification" },
+        { label: "Verification FAQ", to: "/faq" },
         { label: "Monitored Agencies", to: "/agencies" },
         { label: "System Status", to: "/status" },
       ],
@@ -277,7 +277,7 @@ export function Footer() {
       heading: "Platform",
       links: [
         { label: "Official Telegram", to: "https://t.me/GovAlert", external: true },
-        { label: "API Docs", to: "/contact" },
+        { label: "Contact Us", to: "/contact" },
       ],
     },
     {

@@ -964,22 +964,38 @@ function AgencyDirectory({
           </div>
         </div>
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
-          {topAgencies.map((a) => (
-            <button
-              key={a.short}
-              onClick={() => onAgencyFilter(a.short)}
-              className="group flex flex-col items-center justify-center text-center rounded-[8px] border border-border bg-card p-3 transition-colors cursor-pointer hover:border-[#0a5c38] dark:hover:border-[#3fb68e] focus:outline-none"
-            >
-              <AgencyLogo 
-                short={a.short} 
-                size={36} 
-                className="group-hover:border-[#0a5c38]/40 transition-colors" 
-              />
-              <p className="mt-1.5 text-[9px] font-bold text-primary truncate w-full">
-                {a.short}
-              </p>
-            </button>
-          ))}
+          {topAgencies.map((a) => {
+            const agencyObj = agenciesData.find((ad) => ad.short === a.short);
+            const website = agencyObj?.officialWebsite || agencyObj?.recruitmentPortal;
+
+            return (
+              <button
+                key={a.short}
+                onClick={() => onAgencyFilter(a.short)}
+                className="group flex flex-col items-center justify-center text-center rounded-[8px] border border-border bg-card p-3 transition-colors cursor-pointer hover:border-[#0a5c38] dark:hover:border-[#3fb68e] focus:outline-none relative"
+              >
+                <AgencyLogo 
+                  short={a.short} 
+                  size={36} 
+                  className="group-hover:border-[#0a5c38]/40 transition-colors" 
+                />
+                <p className="mt-1.5 text-[10px] font-bold text-primary truncate w-full">
+                  {a.short}
+                </p>
+                {website && (
+                  <a
+                    href={website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(e) => e.stopPropagation()}
+                    className="mt-1 text-[9px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
+                  >
+                    Visit Site &rarr;
+                  </a>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </section>

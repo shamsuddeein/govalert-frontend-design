@@ -6,6 +6,14 @@ import { ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/jobs/$jobId")({
   component: JobDetailsPage,
+  head: ({ params }) => {
+    const job = latestJobs.find((j) => j.id === params.jobId);
+    return {
+      meta: [
+        { title: job ? `${job.agencyShort} Recruitment Details | GovAlert` : `Recruitment Details | GovAlert` }
+      ],
+    };
+  }
 });
 
 interface AuditLog {

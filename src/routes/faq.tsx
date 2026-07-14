@@ -5,6 +5,11 @@ import { ChevronDown, ChevronUp } from "lucide-react";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
+  head: () => ({
+    meta: [
+      { title: "Verification FAQ | GovAlert" }
+    ]
+  }),
 });
 
 interface FaqItem {

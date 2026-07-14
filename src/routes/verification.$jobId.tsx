@@ -7,6 +7,13 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/verification/$jobId")({
   component: VerificationReportPage,
+  head: ({ params }) => {
+    return {
+      meta: [
+        { title: `Verification Report: ${params.jobId} | GovAlert` }
+      ],
+    };
+  }
 });
 
 function Divider() {
