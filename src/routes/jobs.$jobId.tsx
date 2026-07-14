@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
+import { AgencyLogo } from "../components/AgencyLogo";
 import { latestJobs, StatusBadge, type Job } from "./index";
 import { toast } from "sonner";
 import {
