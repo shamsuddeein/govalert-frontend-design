@@ -313,9 +313,9 @@ function Hero({
               <span>FEDERAL RECRUITMENT MONITOR &middot; LIVE</span>
             </div>
 
-            <h1 className="text-4xl font-display font-normal tracking-tight text-foreground md:text-[52px] leading-[1.15] max-w-[560px]">
+            <h1 className="text-[36px] md:text-[44px] font-semibold tracking-tight text-foreground leading-[1.15] max-w-[560px]">
               Nigeria's verified<br />
-              recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e] italic">intelligence.</span>
+              recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e]">intelligence.</span>
             </h1>
 
             <p className="text-[15px] leading-relaxed text-muted-foreground max-w-[400px]">
@@ -349,7 +349,9 @@ function Hero({
                 onSubmit={handleSubmit}
               >
                 <div className="flex items-center flex-1 px-3">
-                  <span className="text-muted-foreground mr-2 text-sm">🔍</span>
+                  <svg className="mr-2 size-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
+                  </svg>
                   <input
                     type="text"
                     value={inputValue}

@@ -64,7 +64,7 @@ function SearchPage() {
       if (category && job.category !== category) {
         return false;
       }
-      if (state && !job.location.includes(state.split(" ")[0])) {
+      if (state && !job.state.includes(state.split(" ")[0])) {
         return false;
       }
       if (status && job.status !== status) {
@@ -263,7 +263,7 @@ function SearchPage() {
                   <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-4 text-[10px] text-muted-foreground">
                     <span className="flex items-center gap-1">
                       <MapPin className="size-3.5" />
-                      {job.location}
+                      {job.state}
                     </span>
                     <span className="flex items-center gap-1">
                       <Calendar className="size-3.5" />
