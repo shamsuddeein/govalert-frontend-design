@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
+import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData, type Agency } from "../lib/agenciesData";
 
 export const Route = createFileRoute("/agencies/")({
@@ -204,9 +205,12 @@ function AgenciesIndexPage() {
                   <div className="space-y-4">
                     {/* Top Row: Acronym + Status Badge */}
                     <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                      <span className="inline-flex h-[32px] items-center justify-center rounded-[6px] bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] px-3 font-sans text-xs font-bold uppercase tracking-wider">
-                        {agency.short}
-                      </span>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <AgencyLogo short={agency.short} size={36} />
+                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                          {agency.short}
+                        </span>
+                      </div>
                       
                       <div className="flex items-center gap-1.5 text-[12px] font-medium">
                         <span className={`size-2 rounded-full ${

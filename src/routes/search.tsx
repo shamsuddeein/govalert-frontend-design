@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
 import { latestJobs, StatusBadge } from "./index";
+import { AgencyLogo } from "../components/AgencyLogo";
 import {
   Search as SearchIcon,
   Building,
@@ -249,9 +250,7 @@ function SearchPage() {
               >
                 <div>
                   <div className="flex items-start justify-between gap-4">
-                    <span className="grid size-10 place-items-center rounded bg-muted border border-border font-mono text-xs font-bold tracking-wider text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
-                      {job.agencyShort}
-                    </span>
+                    <AgencyLogo short={job.agencyShort} size={40} />
                     <StatusBadge status={job.status} />
                   </div>
 
