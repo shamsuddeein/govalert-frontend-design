@@ -64,7 +64,7 @@ function SearchPage() {
       if (category && job.category !== category) {
         return false;
       }
-      if (state && !job.location.includes(state.split(" ")[0])) {
+      if (state && !job.state.includes(state.split(" ")[0])) {
         return false;
       }
       if (status && job.status !== status) {
