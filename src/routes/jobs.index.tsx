@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
+import { AgencyLogo } from "../components/AgencyLogo";
 import { latestJobs, StatusBadge, type Job, type Status } from "./index";
 import { agenciesData } from "../lib/agenciesData";
 
@@ -255,7 +256,10 @@ function JobsPage() {
                 >
                   <div className="space-y-4">
                     <div className="flex items-center justify-between gap-2">
-                      <span className="font-mono text-[11px] text-muted-foreground">REF: {job.id}</span>
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <AgencyLogo short={job.agencyShort} size={32} />
+                        <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
+                      </div>
                       <StatusBadge status={job.status} />
                     </div>
 

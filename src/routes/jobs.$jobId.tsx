@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
+import { AgencyLogo } from "../components/AgencyLogo";
 import { latestJobs, StatusBadge, type Job } from "./index";
 import { toast } from "sonner";
 import {
@@ -283,9 +284,7 @@ function JobDetailsPage() {
           <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="grid size-10 place-items-center rounded bg-muted border border-border font-mono text-xs font-bold tracking-wider text-muted-foreground">
-                  {job.agencyShort}
-                </span>
+                <AgencyLogo short={job.agencyShort} size={44} />
                 <div>
                   <h1 className="text-xl font-bold tracking-tight text-primary">
                     {job.title}
@@ -383,9 +382,7 @@ function JobDetailsPage() {
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[9px] font-mono font-bold text-muted-foreground">
-                            {simJob.agencyShort}
-                          </span>
+                          <AgencyLogo short={simJob.agencyShort} size={24} />
                           <StatusBadge status={simJob.status} />
                         </div>
                         <h4 className="mt-2 text-xs font-bold text-primary group-hover:text-primary-hover line-clamp-1">

@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
+import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
 
 export const Route = createFileRoute("/")({
@@ -580,7 +581,10 @@ function LatestJobs({
                   >
                     <div className="space-y-4">
                       <div className="flex items-center justify-between gap-2">
-                        <span className="font-mono text-[11px] text-muted-foreground">REF: {job.id}</span>
+                        <div className="flex items-center gap-2.5 min-w-0">
+                          <AgencyLogo short={job.agencyShort} size={32} />
+                          <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
+                        </div>
                         <StatusBadge status={job.status} />
                       </div>
 
@@ -669,7 +673,12 @@ function LatestJobs({
                             {job.title}
                           </Link>
                         </td>
-                        <td className="p-4 text-muted-foreground font-semibold">{job.agencyShort}</td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <AgencyLogo short={job.agencyShort} size={24} />
+                            <span className="text-muted-foreground font-semibold">{job.agencyShort}</span>
+                          </div>
+                        </td>
                         <td className="p-4 text-foreground/80">{job.detected}</td>
                         <td className="p-4 text-foreground/80">{job.deadline}</td>
                         <td className="p-4">
@@ -851,9 +860,12 @@ function PortalHealth() {
               >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                    <span className="inline-flex h-[32px] items-center justify-center rounded-[6px] bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] px-3 font-sans text-xs font-bold uppercase tracking-wider">
-                      {a.short}
-                    </span>
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <AgencyLogo short={a.short} size={36} />
+                      <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
+                        {a.short}
+                      </span>
+                    </div>
                     <VettedArc score={a.trustScore} />
                   </div>
                   
