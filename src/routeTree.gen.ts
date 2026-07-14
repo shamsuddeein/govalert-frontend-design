@@ -26,6 +26,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as AgenciesIndexRouteImport } from './routes/agencies.index'
+import { Route as VerificationJobIdRouteImport } from './routes/verification.$jobId'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
 
@@ -114,6 +115,11 @@ const AgenciesIndexRoute = AgenciesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AgenciesRoute,
 } as any)
+const VerificationJobIdRoute = VerificationJobIdRouteImport.update({
+  id: '/$jobId',
+  path: '/$jobId',
+  getParentRoute: () => VerificationRoute,
+} as any)
 const JobsJobIdRoute = JobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
@@ -140,9 +146,10 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRoute
+  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/verification/$jobId': typeof VerificationJobIdRoute
   '/agencies/': typeof AgenciesIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -159,9 +166,10 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRoute
+  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/verification/$jobId': typeof VerificationJobIdRoute
   '/agencies': typeof AgenciesIndexRoute
   '/jobs': typeof JobsIndexRoute
 }
@@ -181,9 +189,10 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
-  '/verification': typeof VerificationRoute
+  '/verification': typeof VerificationRouteWithChildren
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
+  '/verification/$jobId': typeof VerificationJobIdRoute
   '/agencies/': typeof AgenciesIndexRoute
   '/jobs/': typeof JobsIndexRoute
 }
@@ -207,6 +216,7 @@ export interface FileRouteTypes {
     | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
+    | '/verification/$jobId'
     | '/agencies/'
     | '/jobs/'
   fileRoutesByTo: FileRoutesByTo
@@ -226,6 +236,7 @@ export interface FileRouteTypes {
     | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
+    | '/verification/$jobId'
     | '/agencies'
     | '/jobs'
   id:
@@ -247,6 +258,7 @@ export interface FileRouteTypes {
     | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
+    | '/verification/$jobId'
     | '/agencies/'
     | '/jobs/'
   fileRoutesById: FileRoutesById
@@ -266,7 +278,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   StatusRoute: typeof StatusRoute
   TermsRoute: typeof TermsRoute
-  VerificationRoute: typeof VerificationRoute
+  VerificationRoute: typeof VerificationRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -390,6 +402,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgenciesIndexRouteImport
       parentRoute: typeof AgenciesRoute
     }
+    '/verification/$jobId': {
+      id: '/verification/$jobId'
+      path: '/$jobId'
+      fullPath: '/verification/$jobId'
+      preLoaderRoute: typeof VerificationJobIdRouteImport
+      parentRoute: typeof VerificationRoute
+    }
     '/jobs/$jobId': {
       id: '/jobs/$jobId'
       path: '/$jobId'
@@ -433,6 +452,18 @@ const JobsRouteChildren: JobsRouteChildren = {
 
 const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 
+interface VerificationRouteChildren {
+  VerificationJobIdRoute: typeof VerificationJobIdRoute
+}
+
+const VerificationRouteChildren: VerificationRouteChildren = {
+  VerificationJobIdRoute: VerificationJobIdRoute,
+}
+
+const VerificationRouteWithChildren = VerificationRoute._addFileChildren(
+  VerificationRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -448,8 +479,18 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   StatusRoute: StatusRoute,
   TermsRoute: TermsRoute,
-  VerificationRoute: VerificationRoute,
+  VerificationRoute: VerificationRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

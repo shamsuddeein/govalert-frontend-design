@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
-import { HelpCircle, ChevronDown, ChevronUp, ShieldCheck } from "lucide-react";
+import { ChevronDown, ChevronUp } from "lucide-react";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
@@ -18,28 +18,28 @@ const faqList: FaqItem[] = [
     a: "GovAlert is an independent verification platform that monitors Nigerian federal recruitment portals. Our crawlers check endpoints every 15 minutes, and our analysts cross-verify listings to protect job seekers from widespread recruitment scams.",
   },
   {
-    q: "How do you verify if a recruitment portal is authentic?",
+    q: "How do you verify a portal is authentic?",
     a: "We use a multi-phase audit process: (1) Domain analysis, checking that the portal operates on a registered, secure .gov.ng or verified corporate domain extension; (2) SSL examination, confirming the presence of genuine corporate EV certificates; (3) Cross-referencing announcement details against the national gazette, federal budget allocations, or verified MDA media releases.",
   },
   {
-    q: "Is GovAlert affiliated with the Federal Government of Nigeria?",
+    q: "Is GovAlert affiliated with the Federal Government?",
     a: "No. GovAlert is completely independent. We are not government employees, and we do not influence, represent, or sell employment slots. We function solely as a public utility to assure safety and security in recruitment.",
   },
   {
-    q: "Do I have to pay to apply for recruitments posted here?",
+    q: "Do I pay to apply for listed jobs?",
     a: "Absolutely not. Official government recruitments are free of charge. If any agency portal, recruiter, or third party demands payment for registration, exams, medical checks, or training kits, it is a scam.",
   },
   {
-    q: "What does the Portal Trust Score represent?",
-    a: "The trust score indicates portal security compliance. A 100% score means the portal operates on a verified official government domain with secure HTTPS connections, has no security anomalies, and matches checked records. Scores drop if warning flags like non-standard domains, external redirections, or scam logs are found.",
+    q: "What does the confidence score mean?",
+    a: "The confidence score indicates verification certainty. A high score means the portal operates on a verified official government domain with secure HTTPS connections, has no security anomalies, and content matches historical patterns. Scores drop if warning flags like non-standard domains, external redirections, or format deviations are found.",
   },
   {
-    q: "How do I receive instant alerts via Telegram?",
-    a: "Go to your Applicant Dashboard, click the Notifications tab, and click 'Connect Alert Bot'. Follow the instructions to search for @GovAlertBot on Telegram and pair your account using the generated code. You'll receive real-time push alerts on your phone whenever new recruitments are verified.",
+    q: "How do I get alerts on Telegram?",
+    a: "Click 'Get Alerts' in the navigation menu to connect to our official Telegram channel. You will receive real-time notifications on your phone whenever new recruitments are verified.",
   },
 ];
 
-function FaqPage() {
+export default function FaqPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleIndex = (idx: number) => {
@@ -47,35 +47,30 @@ function FaqPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
+    <div className="min-h-screen bg-background text-foreground">
       <Nav />
-      <main className="flex-1 mx-auto max-w-3xl w-full px-6 py-12">
+      <main className="mx-auto max-w-[640px] w-full px-6 py-16">
         <div className="text-center mb-12">
-          <div className="mx-auto grid size-10 place-items-center rounded bg-muted border border-border text-primary">
-            <HelpCircle className="size-5" />
-          </div>
-          <h1 className="mt-4 text-2xl font-bold tracking-tight text-primary md:text-3xl">
+          <h1 className="text-[28px] font-bold tracking-tight text-foreground">
             Frequently Asked Questions
           </h1>
-          <p className="mt-2 text-xs text-muted-foreground">
-            Get answers on how we track MDA portals, calculate trust scores, and prevent scams.
+          <p className="mt-2 text-[15px] text-muted-foreground">
+            Get answers on how we track MDA portals, verify sources, and prevent scams.
           </p>
         </div>
 
-        {/* Accordion List */}
-        <div className="space-y-3">
+        <div className="border-t border-border">
           {faqList.map((item, idx) => {
             const isOpen = openIndex === idx;
             return (
-              <div
-                key={idx}
-                className="rounded border border-border bg-card overflow-hidden shadow-sm transition-colors duration-200"
-              >
+              <div key={idx} className="border-b border-border">
                 <button
                   onClick={() => toggleIndex(idx)}
-                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-bold text-xs hover:text-primary transition-colors cursor-pointer"
+                  className="flex w-full items-center justify-between py-5 text-left cursor-pointer group"
                 >
-                  <span>{item.q}</span>
+                  <span className="text-[15px] font-semibold text-foreground group-hover:text-[#0a5c38] dark:group-hover:text-[#3fb68e] transition-colors">
+                    {item.q}
+                  </span>
                   {isOpen ? (
                     <ChevronUp className="size-4 text-muted-foreground shrink-0" />
                   ) : (
@@ -84,7 +79,7 @@ function FaqPage() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-5 pb-5 text-xs text-muted-foreground leading-relaxed border-t border-border pt-3.5 bg-muted/10">
+                  <div className="pb-6 text-[15px] text-muted-foreground leading-relaxed">
                     {item.a}
                   </div>
                 )}

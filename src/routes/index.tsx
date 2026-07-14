@@ -970,9 +970,11 @@ function AgencyDirectory({
               onClick={() => onAgencyFilter(a.short)}
               className="group flex flex-col items-center justify-center text-center rounded-[8px] border border-border bg-card p-3 transition-colors cursor-pointer hover:border-[#0a5c38] dark:hover:border-[#3fb68e] focus:outline-none"
             >
-              <span className="grid size-9 place-items-center rounded-[6px] bg-muted border border-border font-mono text-xs font-bold text-muted-foreground group-hover:text-primary group-hover:border-[#0a5c38]/40">
-                {a.short}
-              </span>
+              <AgencyLogo 
+                short={a.short} 
+                size={36} 
+                className="group-hover:border-[#0a5c38]/40 transition-colors" 
+              />
               <p className="mt-1.5 text-[9px] font-bold text-primary truncate w-full">
                 {a.short}
               </p>

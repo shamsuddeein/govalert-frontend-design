@@ -1,100 +1,45 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
-import { agenciesData, type Agency } from "../lib/agenciesData";
+import { agenciesData } from "../lib/agenciesData";
 import { latestJobs, StatusBadge } from "./index";
-import {
-  ArrowLeft,
-  ShieldCheck,
-  Clock,
-  Briefcase,
-  Archive,
-  ExternalLink,
-  Globe,
-  CheckCircle2,
-  Calendar,
-  AlertTriangle,
-  History,
-  Building,
-} from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
   component: AgencyProfilePage,
 });
 
-function PortalStatusBadge({ status }: { status: Agency["portalStatus"] }) {
-  const styles = {
-    online: "bg-verified/10 text-verified border-verified/20",
-    review: "bg-amber-500/10 text-amber-500 border-amber-500/20",
-    warning: "bg-closed/10 text-closed border-closed/20",
-    closed: "bg-muted text-muted-foreground border-border",
-  };
-
-  const labels = {
-    online: "Online & Functional",
-    review: "Under Technical Review",
-    warning: "Access Issues Warning",
-    closed: "Portal Closed / Offline",
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1.5 rounded border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${styles[status]}`}
-    >
-      <span
-        className={`size-1.5 rounded-full ${
-          status === "online"
-            ? "bg-verified"
-            : status === "review"
-              ? "bg-warning"
-              : status === "warning"
-                ? "bg-closed"
-                : "bg-muted-foreground"
-        }`}
-      />
-      {labels[status]}
-    </span>
-  );
+function Divider() {
+  return <div className="my-8 h-px w-full bg-border" />;
 }
 
-function AgencyProfilePage() {
+export default function AgencyProfilePage() {
   const { agencyShort } = Route.useParams();
 
   const agency = useMemo(() => {
     return agenciesData.find((a) => a.short.toUpperCase() === agencyShort.toUpperCase());
   }, [agencyShort]);
 
-  // Find active jobs for this agency in latestJobs
   const activeJobs = useMemo(() => {
     if (!agency) return [];
     return latestJobs.filter((j) => j.agencyShort.toUpperCase() === agency.short.toUpperCase());
-  }, [agency]);
-
-  const similarAgencies = useMemo(() => {
-    if (!agency) return [];
-    const sameCat = agenciesData.filter(
-      (a) => a.category === agency.category && a.short !== agency.short,
-    );
-    if (sameCat.length > 0) return sameCat.slice(0, 3);
-    return agenciesData.filter((a) => a.short !== agency.short).slice(0, 3);
   }, [agency]);
 
   if (!agency) {
     return (
       <div className="min-h-screen bg-background text-foreground">
         <Nav />
-        <main className="mx-auto max-w-md px-6 py-24 text-center">
-          <AlertTriangle className="mx-auto size-10 text-warning" />
-          <h1 className="mt-4 text-lg font-bold text-primary">Agency Profile Not Found</h1>
-          <p className="mt-2 text-xs text-muted-foreground">
+        <main className="mx-auto max-w-[640px] px-6 py-24 text-center">
+          <h1 className="text-[28px] font-bold text-foreground">Agency not found</h1>
+          <p className="mt-2 text-[15px] text-muted-foreground">
             We couldn't find a record for MDA acronym "{agencyShort}".
           </p>
-          <div className="mt-6">
+          <div className="mt-8">
             <Link
               to="/agencies"
-              className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/90"
+              className="inline-flex h-[36px] items-center justify-center rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] px-4 text-[14px] font-semibold text-white dark:text-[#0c1015] hover:opacity-90"
             >
-              <ArrowLeft className="size-4" /> Back to MDA directory
+              Back to MDA Directory
             </Link>
           </div>
         </main>
@@ -103,260 +48,205 @@ function AgencyProfilePage() {
     );
   }
 
+  const isOnline = agency.portalStatus === "online";
+  const portalUrlDisplay = agency.recruitmentPortal.replace(/^https?:\/\//, "");
+
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25">
+    <div className="min-h-screen bg-background text-foreground">
       <Nav />
-      <main className="mx-auto max-w-7xl px-6 py-12">
-        {/* Breadcrumbs */}
-        <div className="mb-6">
-          <Link
-            to="/agencies"
-            className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-primary cursor-pointer"
+      <main className="mx-auto max-w-[720px] px-6 py-12">
+        {/* Breadcrumb */}
+        <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground">
+          <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/agencies" className="hover:text-primary">Agencies</Link> → {agency.short}
+        </div>
+
+        {/* Agency Header */}
+        <div className="flex items-center gap-4">
+          <span className="inline-flex items-center justify-center rounded bg-muted border border-border px-3 py-1 text-[18px] font-bold text-foreground font-sans">
+            {agency.short}
+          </span>
+          <span className="flex items-center gap-1.5 text-[14px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">
+            <span className={`h-2 w-2 rounded-full ${isOnline ? "bg-current" : "bg-warning"}`} />
+            {isOnline ? "Online" : "Maintenance"}
+          </span>
+        </div>
+
+        <h1 className="mt-4 text-[28px] font-bold leading-tight tracking-tight text-foreground">
+          {agency.name}
+        </h1>
+        <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground max-w-[600px] line-clamp-2">
+          {agency.description}
+        </p>
+
+        {/* Status Row */}
+        <div className="mt-8 grid grid-cols-2 gap-y-4 gap-x-8 text-[14px] md:grid-cols-3">
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Portal:</span>
+            <span className="font-medium text-foreground">{isOnline ? "Online" : "Offline"}</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Monitoring:</span>
+            <span className="font-medium text-foreground">Every 5 minutes</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
+            <span className="font-medium text-foreground">99.8%</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Avg response:</span>
+            <span className="font-medium text-[#0a5c38] dark:text-[#3fb68e]">●●● <span className="text-foreground ml-1">Fast</span></span>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Detected:</span>
+            <span className="font-medium text-foreground">14 recruitments</span>
+          </div>
+          <div className="flex gap-2">
+            <span className="text-muted-foreground w-24 shrink-0">Last update:</span>
+            <span className="font-medium text-foreground">Today, 08:43</span>
+          </div>
+        </div>
+
+        {/* Official Portal Link */}
+        <div className="mt-6">
+          <a
+            href={agency.recruitmentPortal}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
           >
-            <ArrowLeft className="size-4" />
-            Back to MDA Directory
-          </Link>
+            <ExternalLink className="size-4" /> {portalUrlDisplay}
+          </a>
         </div>
 
-        {/* Hero Header */}
-        <div className="relative mb-8 overflow-hidden rounded border border-border bg-card p-6">
-          <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-            <div className="flex flex-wrap items-center gap-4">
-              <span className="grid size-12 place-items-center rounded bg-muted border border-border font-mono text-sm font-bold tracking-wider text-muted-foreground">
-                {agency.short}
-              </span>
-              <div>
-                <h1 className="text-xl font-bold tracking-tight text-primary">{agency.name}</h1>
-                <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                  <Building className="size-4 text-muted-foreground" />
-                  {agency.category}
-                </p>
-              </div>
-            </div>
+        <Divider />
 
-            <div className="flex flex-col gap-2 md:items-end">
-              <PortalStatusBadge status={agency.portalStatus} />
-              <p className="text-[10px] text-muted-foreground mt-1 flex items-center gap-1 font-mono-ui">
-                <Clock className="size-3.5" /> Checked {agency.lastChecked}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Columns Grid */}
-        <div className="grid gap-8 lg:grid-cols-[2.1fr_1fr]">
-          {/* Main Content */}
-          <div className="space-y-6">
-            {/* About Section */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-4 flex items-center gap-2">
-                <Building className="size-4" />
-                About the MDA
-              </h2>
-              <p className="text-muted-foreground leading-relaxed text-xs">{agency.description}</p>
-            </section>
-
-            {/* Active Recruitments */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-4 flex items-center gap-2">
-                <Briefcase className="size-4" />
-                Active Recruitments
-              </h2>
-              {activeJobs.length > 0 ? (
-                <div className="grid gap-4 sm:grid-cols-2">
-                  {activeJobs.map((job) => (
-                    <Link
-                      key={job.id}
-                      to="/jobs/$jobId"
-                      params={{ jobId: job.id }}
-                      className="group flex flex-col justify-between rounded border border-border bg-card p-5 hover:border-primary/45 cursor-pointer transition-colors"
-                    >
-                      <div>
-                        <div className="flex items-center justify-between gap-2">
-                          <span className="text-[9px] font-mono font-bold text-muted-foreground">
-                            {job.id}
-                          </span>
-                          <StatusBadge status={job.status} />
-                        </div>
-                        <h4 className="mt-2 text-xs font-bold text-primary group-hover:text-primary-hover line-clamp-1">
-                          {job.title}
-                        </h4>
-                      </div>
-                      <div className="mt-4 flex items-center justify-between text-[9px] text-muted-foreground border-t border-border pt-3">
-                        <span className="flex items-center gap-1">
-                          <Calendar className="size-3" />
-                          {job.deadline}
-                        </span>
-                        <span>{job.detected}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-8 rounded border border-dashed border-border bg-muted/10">
-                  <Briefcase className="mx-auto size-8 text-muted-foreground" />
-                  <p className="mt-2 text-xs font-bold text-primary">No open recruitments detected</p>
-                  <p className="text-[10px] text-muted-foreground mt-1 max-w-xs mx-auto">
-                    We currently do not track any ongoing recruitment campaigns for this agency.
-                  </p>
-                </div>
-              )}
-            </section>
-
-            {/* Recruitment History (Timeline) */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-6 flex items-center gap-2">
-                <History className="size-4" />
-                Tracked Recruitment History
-              </h2>
-              <div className="relative border-l border-border pl-6 ml-4 space-y-6">
-                {agency.history.map((hist, idx) => (
-                  <div key={idx} className="relative">
-                    {/* Circle marker */}
-                    <span className="absolute -left-[31px] top-1.5 flex size-4 items-center justify-center rounded-full bg-background border border-primary">
-                      <span className="size-1.5 rounded-full bg-primary" />
-                    </span>
-
-                    <div>
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-[9px] font-bold px-2 py-0.5 rounded bg-muted text-muted-foreground font-mono">
-                          {hist.year}
-                        </span>
-                        <h4 className="text-xs font-bold text-primary">{hist.title}</h4>
-                        <span className="text-[9px] font-mono-ui uppercase tracking-wider text-muted-foreground ml-auto bg-muted px-1.5 py-0.5 rounded border border-border">
-                          {hist.status}
-                        </span>
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap gap-2">
-                        {hist.cadres.map((cadre, cidx) => (
-                          <span
-                            key={cidx}
-                            className="inline-flex items-center gap-1 rounded bg-card px-2.5 py-1 text-[10px] text-muted-foreground border border-border"
-                          >
-                            {cadre}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Trust and Score Panel */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm text-center">
-              <ShieldCheck className="mx-auto size-8 text-verified mb-3" />
-              <h3 className="text-xs font-bold text-primary uppercase tracking-wider">Official Safety Rating</h3>
-              <div className="text-2xl font-bold text-primary mt-2">{agency.trustScore}%</div>
-
-              <div className="h-1.5 w-full rounded-full bg-border/20 overflow-hidden mt-3 mb-4">
-                <div
-                  className="h-full rounded-full bg-verified"
-                  style={{ width: `${agency.trustScore}%` }}
-                />
-              </div>
-
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Recruitment portals are checked by GovAlert intelligence officers. Trust score
-                depends on official domain extension, secure connections, and past scam reports.
-              </p>
-            </section>
-
-            {/* MDA Portal Directory Card */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm space-y-3">
-              <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                Official Directory Links
-              </h3>
-
-              <a
-                href={agency.recruitmentPortal}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-between p-3 rounded border border-border bg-card hover:border-primary/45 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-2">
-                  <ExternalLink className="size-4 text-muted-foreground group-hover:text-primary" />
-                  <span className="text-xs font-semibold">Recruitment Portal</span>
-                </div>
-                <span className="text-[9px] font-mono text-muted-foreground group-hover:text-primary uppercase">
-                  {agency.short.toLowerCase()}.gov.ng
-                </span>
-              </a>
-
-              <a
-                href={agency.officialWebsite}
-                target="_blank"
-                rel="noreferrer"
-                className="flex items-center justify-between p-3 rounded border border-border bg-card hover:border-primary/45 transition-colors cursor-pointer group"
-              >
-                <div className="flex items-center gap-2">
-                  <Globe className="size-4 text-muted-foreground group-hover:text-primary" />
-                  <span className="text-xs font-semibold">Corporate Website</span>
-                </div>
-                <span className="text-[9px] font-mono text-muted-foreground group-hover:text-primary">
-                  website &rarr;
-                </span>
-              </a>
-            </section>
-
-            {/* Anti-Scam Alert Card */}
-            <section className="rounded border border-border bg-card p-6 shadow-sm">
-              <div className="flex items-center gap-2 mb-2 text-primary">
-                <AlertTriangle className="size-4 text-warning shrink-0" />
-                <h4 className="text-xs font-bold uppercase tracking-wider">Anti-Scam Alert</h4>
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                All federal recruitment registration exercises are **completely free of charge**.
-                Never pay any agent, consultant, or third party requesting money for employment
-                letters or placement services.
-              </p>
-            </section>
-          </div>
-        </div>
-
-        {/* Similar Agencies */}
-        {similarAgencies.length > 0 && (
-          <section className="mt-12 space-y-4">
-            <h2 className="text-sm font-bold tracking-tight text-primary">Other Monitored Agencies</h2>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {similarAgencies.map((sim) => (
+        {/* ACTIVE RECRUITMENTS */}
+        <section>
+          <h2 className="text-[17px] font-semibold text-foreground">Active Recruitments</h2>
+          {activeJobs.length > 0 ? (
+            <div className="mt-6 space-y-4">
+              {activeJobs.map((job) => (
                 <Link
-                  key={sim.short}
-                  to="/agencies/$agencyShort"
-                  params={{ agencyShort: sim.short }}
-                  className="group flex flex-col justify-between rounded border border-border bg-card p-5 hover:border-primary/45 cursor-pointer transition-colors"
+                  key={job.id}
+                  to="/jobs/$jobId"
+                  params={{ jobId: job.id }}
+                  className="interactive-card flex flex-col justify-between rounded-[8px] border border-border bg-card p-[24px] cursor-pointer md:flex-row md:items-center"
                 >
-                  <div>
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[9px] font-mono font-bold text-muted-foreground">
-                        {sim.short}
-                      </span>
-                      <span className="inline-flex items-center gap-1 rounded bg-muted px-1.5 py-0.5 text-[9px] font-semibold text-muted-foreground border border-border">
-                        {sim.category}
-                      </span>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between mb-4 md:mb-2 md:justify-start md:gap-4">
+                      <div className="font-mono-ui text-[11px] text-muted-foreground uppercase">REF: {job.agencyShort}/REC/{job.id}</div>
+                      <StatusBadge status={job.status} />
                     </div>
-                    <h4 className="mt-2 text-xs font-bold text-primary group-hover:text-primary-hover line-clamp-1">
-                      {sim.name}
-                    </h4>
+                    <h3 className="text-[17px] font-semibold text-foreground leading-snug">
+                      {job.title}
+                    </h3>
                   </div>
-                  <div className="mt-4 flex items-center justify-between text-[9px] text-muted-foreground border-t border-border pt-3">
-                    <span className="flex items-center gap-1">
-                      <Clock className="size-3" />
-                      Checked {sim.lastChecked}
-                    </span>
-                    <span className="text-primary font-medium group-hover:underline">
-                      Profile &rarr;
-                    </span>
+                  <div className="mt-4 shrink-0 border-t border-border pt-4 md:mt-0 md:border-0 md:pt-0 md:pl-6 md:text-right">
+                    <div className="font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground">Deadline</div>
+                    <div className="mt-1 text-[13px] font-medium">{job.deadline}</div>
                   </div>
                 </Link>
               ))}
             </div>
-          </section>
-        )}
+          ) : (
+            <div className="mt-6 flex flex-col items-center justify-center rounded-[8px] border border-border bg-card p-12 text-center">
+              <svg className="size-[48px] text-muted-foreground mb-4" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+              </svg>
+              <h3 className="text-[17px] font-semibold text-foreground">No active recruitment detected</h3>
+              <div className="mt-2 text-[14px] text-muted-foreground">Last checked: <span className="font-mono-ui">14 Jul 2026, 08:43 WAT</span></div>
+              <p className="mt-4 text-[14px] text-muted-foreground">This portal is being monitored. We will alert you when a recruitment appears.</p>
+              <a
+                href="https://t.me/GovAlert"
+                target="_blank"
+                rel="noreferrer"
+                className="mt-6 inline-flex h-[36px] items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[16px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10"
+              >
+                Subscribe to alerts for this agency
+              </a>
+            </div>
+          )}
+        </section>
+
+        <Divider />
+
+        {/* RECRUITMENT HISTORY */}
+        <section>
+          <h2 className="text-[17px] font-semibold text-foreground">Recruitment History</h2>
+          <div className="mt-6 space-y-3">
+            {[
+              { date: "14 Jul 2026", desc: "Graduate Trainee (Engineering) detected" },
+              { date: "12 Jul 2026", desc: "Portal checked, no changes" },
+              { date: "10 Jul 2026", desc: "Application window opened" },
+              { date: "08 Jul 2026", desc: "Vacancy announced" }
+            ].map((hist, idx, arr) => {
+              const isLast = idx === arr.length - 1;
+              return (
+                <div key={idx} className="flex gap-4">
+                  <div className="w-[85px] shrink-0 font-mono-ui text-[11px] text-muted-foreground pt-0.5">
+                    {hist.date}
+                  </div>
+                  <div className="relative pb-4 pl-4 border-l border-border/60">
+                    <div className={`absolute -left-[4.5px] top-1.5 h-2 w-2 rounded-full ${idx === 0 ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted-foreground/50"}`} />
+                    <div className="text-[14px] text-foreground">{hist.desc}</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* PORTAL HEALTH */}
+        <section>
+          <h2 className="text-[17px] font-semibold text-foreground">Portal Health</h2>
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <div className="text-[14px] text-muted-foreground">Response time (30 days)</div>
+              <div className="mt-1 font-mono-ui text-[14px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">~240ms</div>
+            </div>
+            <div>
+              <div className="text-[14px] text-muted-foreground">Uptime</div>
+              <div className="mt-1 font-mono-ui text-[14px] font-medium text-foreground">99.8%</div>
+            </div>
+            <div>
+              <div className="text-[14px] text-muted-foreground">Last 10 checks</div>
+              <div className="mt-1 flex items-center gap-1 font-mono-ui text-[#0a5c38] dark:text-[#3fb68e]">
+                ●●●●●●●●●<span className="text-destructive">○</span>
+              </div>
+            </div>
+            <div>
+              <div className="text-[14px] text-muted-foreground">Last offline</div>
+              <div className="mt-1 font-mono-ui text-[13px] text-foreground">13 Jul 2026, 03:12 WAT <span className="text-muted-foreground">(recovered in 18 mins)</span></div>
+            </div>
+          </div>
+        </section>
+
+        <Divider />
+
+        {/* VERIFICATION TRACK RECORD */}
+        <section>
+          <h2 className="text-[17px] font-semibold text-foreground">Verification Track Record</h2>
+          <div className="mt-6 grid grid-cols-1 gap-y-4 sm:grid-cols-2 text-[14px]">
+            <div className="flex gap-2">
+              <span className="text-muted-foreground w-48 shrink-0">Average confidence score:</span>
+              <span className="font-semibold text-foreground">96%</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-muted-foreground w-48 shrink-0">Total announcements verified:</span>
+              <span className="font-semibold text-foreground">14</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-muted-foreground w-48 shrink-0">False positives detected:</span>
+              <span className="font-semibold text-foreground">0</span>
+            </div>
+            <div className="flex gap-2">
+              <span className="text-muted-foreground w-48 shrink-0">Scam domains blocked:</span>
+              <span className="font-semibold text-foreground">3</span>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
