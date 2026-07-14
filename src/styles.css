@@ -14,9 +14,9 @@
   --radius-md: 6px;
   --radius-lg: 8px;
   --radius-xl: 12px;
-  --font-display: "Instrument Serif", serif;
-  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+  --font-display: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
   --font-size-xs: 12px;
   --font-size-sm: 14px;
   --font-size-base: 16px;
@@ -73,7 +73,7 @@
   --gold: #c8960c;
   
   /* Surfaces & Backgrounds */
-  --background: #f6f4f0; /* Warm off-white page background */
+  --background: #f5f3ef; /* Warm off-white page background */
   --surface: #ffffff;
   --card: #ffffff;
   --popover: #ffffff;
@@ -107,6 +107,10 @@
   --warning-foreground: #ffffff;
   --urgent: #b45309;
   --urgent-foreground: #ffffff;
+  --new: #0e6b8a;
+  --new-foreground: #ffffff;
+  --updating: #3b4bbf;
+  --updating-foreground: #ffffff;
   --closed: #6b7280;
   --closed-foreground: #ffffff;
 }
