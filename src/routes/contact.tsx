@@ -26,9 +26,11 @@ function ContactPage() {
       setEmail("");
       setSubject("");
       setMessage("");
-      
+
       if (inquiryType === "scam") {
-        toast.success("Scam Report Received! Our intelligence officers will audit this URL immediately.");
+        toast.success(
+          "Scam Report Received! Our intelligence officers will audit this URL immediately.",
+        );
       } else {
         toast.success("Inquiry Received! We will respond within 12 hours.");
       }
@@ -40,53 +42,60 @@ function ContactPage() {
       <Nav />
       <main className="flex-1 mx-auto max-w-5xl w-full px-6 py-12">
         <div className="mb-10">
-          <h1 className="text-3xl font-bold tracking-tight text-primary md:text-4xl font-semibold">Contact & Scam Desk</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-primary md:text-4xl font-semibold">
+            Contact & Scam Desk
+          </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Report a fake recruitment portal, notify us of portal uptime issues, or request general information.
+            Report a fake recruitment portal, notify us of portal uptime issues, or request general
+            information.
           </p>
         </div>
 
         <div className="grid gap-8 lg:grid-cols-[1.8fr_1fr]">
           {/* Contact Form */}
-          <div className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-sm">
-            <h2 className="text-lg font-semibold tracking-tight mb-6 flex items-center gap-2">
-              <MessageSquare className="size-5 text-primary" />
-              Inquiry / Reporting Details
+          <div className="rounded border border-border bg-card p-6 md:p-8 shadow-sm">
+            <h2 className="text-sm font-bold tracking-tight mb-6 flex items-center gap-2 text-primary">
+              <MessageSquare className="size-4" />
+              Inquiry & Reporting Details
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">Your Name</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Your Name</label>
                   <input
                     type="text"
                     required
                     placeholder="Shamsuddeein Alao"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                   />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-semibold text-muted-foreground">Email Address</label>
+                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                    Email Address
+                  </label>
                   <input
                     type="email"
                     required
                     placeholder="name@example.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                   />
                 </div>
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Inquiry Department</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Inquiry Department
+                </label>
                 <select
                   value={inquiryType}
                   onChange={(e) => setInquiryType(e.target.value)}
-                  className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                 >
                   <option value="scam">Report a Fake Recruitment Portal (Scam Desk)</option>
                   <option value="uptime">Report Official Portal Outage / Link Issue</option>
@@ -96,26 +105,34 @@ function ContactPage() {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Subject / Portal URL</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Subject / Portal URL
+                </label>
                 <input
                   type="text"
                   required
-                  placeholder={inquiryType === "scam" ? "e.g., Suspicious Portal URL: http://nnpc-recruitment-2024.xyz" : "e.g., Account sync issue"}
+                  placeholder={
+                    inquiryType === "scam"
+                      ? "e.g., Suspicious Portal URL: http://nnpc-recruitment-2024.xyz"
+                      : "e.g., Account sync issue"
+                  }
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
-                  className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                  className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                 />
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Description / Message</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Description / Message
+                </label>
                 <textarea
                   required
                   rows={5}
                   placeholder="Provide detailed information to help our intelligence analysts process this quickly..."
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
-                  className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary resize-none"
+                  className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary resize-none"
                 />
               </div>
 
@@ -123,9 +140,9 @@ function ContactPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/95 disabled:opacity-50 transition-colors cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 disabled:opacity-50 transition-colors cursor-pointer"
                 >
-                  <Send className="size-4" />
+                  <Send className="size-3.5" />
                   {loading ? "Transmitting..." : "Send Report"}
                 </button>
               </div>
@@ -134,24 +151,26 @@ function ContactPage() {
 
           {/* Sidebar Info */}
           <div className="space-y-6">
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-4">
+            <section className="rounded border border-border bg-card p-6 shadow-sm">
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-4">
                 Anti-Scam Operations
               </h3>
               <p className="text-xs text-muted-foreground leading-relaxed">
-                If you encounter a WhatsApp broadcast, Facebook post, or SMS directing you to a non-government website (like .xyz, .site, .org, or .info) for public sector recruitment, please submit the link. 
+                If you encounter a WhatsApp broadcast, Facebook post, or SMS directing you to a
+                non-government website (like .xyz, .site, .org, or .info) for public sector
+                recruitment, please submit the link.
               </p>
-              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-closed">
-                <AlertTriangle className="size-4" />
+              <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-primary">
+                <AlertTriangle className="size-4 text-warning" />
                 <span>Audited within 15 minutes.</span>
               </div>
             </section>
 
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+            <section className="rounded border border-border bg-card p-6 shadow-sm space-y-4">
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
                 Contact Desk
               </h3>
-              <div className="space-y-2 text-xs text-muted-foreground">
+              <div className="space-y-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Mail className="size-4 text-primary" />
                   <span>ops@govalert.ng</span>

@@ -87,10 +87,7 @@ const detailedMockData: Record<string, JobDetails> = {
   "9001-GA": {
     description:
       "The Economic and Financial Crimes Commission (EFCC) Academy invites young, energetic, and patriotic Nigerians to apply for the Detective Assistant Cadet Course. This course prepares candidates for counter-fraud operations, financial intelligence gathering, and assets tracking duties under the EFCC Act.",
-    positions: [
-      "Detective Assistant Cadet (DA)",
-      "Detective Inspector Cadet (DI)",
-    ],
+    positions: ["Detective Assistant Cadet (DA)", "Detective Inspector Cadet (DI)"],
     requirements: [
       "West African School Certificate (WASC/SSCE) with at least 5 credits including English and Mathematics in not more than 2 sittings.",
       "Age must be between 18 and 22 years at the time of training enlistment.",
@@ -109,11 +106,7 @@ const detailedMockData: Record<string, JobDetails> = {
   "7712-GA": {
     description:
       "The Central Bank of Nigeria (CBN) is seeking outstanding candidates for the role of Economic Policy Analyst (Level 7) to join the Research and Monetary Policy Departments. Selected candidates will participate in macroeconomic research, policy formulation, inflation analysis, and fiscal-monetary coordination models.",
-    positions: [
-      "Economic Policy Analyst I",
-      "Macroeconomic Modeller",
-      "Monetary Policy Analyst",
-    ],
+    positions: ["Economic Policy Analyst I", "Macroeconomic Modeller", "Monetary Policy Analyst"],
     requirements: [
       "Master's degree in Economics, Econometrics, Finance, or related quantitative discipline.",
       "Minimum of 3 years of post-qualification experience in a research institute, central bank, or development finance institution.",
@@ -180,11 +173,7 @@ const detailedMockData: Record<string, JobDetails> = {
 function getFallbackDetails(job: Job): JobDetails {
   return {
     description: `Suits for recruitment at the ${job.agency} have been opened for the role of ${job.title}. This position operates within the ${job.category} framework and is located in ${job.state} State. Candidates will be integrated into the federal career path and participate in intensive briefing and service delivery programs.`,
-    positions: [
-      `${job.title} (Level I)`,
-      `${job.title} (Support)`,
-      `Assistant ${job.title}`,
-    ],
+    positions: [`${job.title} (Level I)`, `${job.title} (Support)`, `Assistant ${job.title}`],
     requirements: [
       "Relevant educational qualifications (Degree, HND, or O'level depending on specific cadre).",
       "NYSC discharge certificate or exemption letter where applicable.",
@@ -192,7 +181,12 @@ function getFallbackDetails(job: Job): JobDetails {
       "Applicants must possess strong analytical, teamwork, and organizational skills.",
       "Must have a clean record of public and professional conduct.",
     ],
-    trustScore: job.status === "verified" || job.status === "urgent" ? 95 : job.status === "warning" ? 85 : 90,
+    trustScore:
+      job.status === "verified" || job.status === "urgent"
+        ? 95
+        : job.status === "warning"
+          ? 85
+          : 90,
     portalUrl: `https://recruitment.${job.agencyShort.toLowerCase()}.gov.ng`,
     trustReason: `GovAlert has cross-referenced this portal address. It utilizes the official FGN .gov.ng top level domain and active HTTPS secure certificates.`,
     refCode: `${job.agencyShort}/REC/${job.id}`,
@@ -218,9 +212,7 @@ function JobDetailsPage() {
   // Find similar jobs (same category, excluding current job)
   const similarJobs = useMemo(() => {
     if (!job) return [];
-    return latestJobs
-      .filter((j) => j.category === job.category && j.id !== job.id)
-      .slice(0, 3);
+    return latestJobs.filter((j) => j.category === job.category && j.id !== job.id).slice(0, 3);
   }, [job]);
 
   const handleShare = () => {
@@ -238,7 +230,8 @@ function JobDetailsPage() {
           <AlertTriangle className="mx-auto size-12 text-warning animate-bounce" />
           <h1 className="mt-4 text-xl font-bold">Recruitment Listing Not Found</h1>
           <p className="mt-2 text-muted-foreground">
-            The job ID you are requesting does not exist or has been archived by our intelligence desk.
+            The job ID you are requesting does not exist or has been archived by our intelligence
+            desk.
           </p>
           <div className="mt-6">
             <Link
@@ -270,7 +263,7 @@ function JobDetailsPage() {
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <Link
             to="/jobs"
-            className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
+            className="inline-flex items-center gap-2 text-xs font-semibold text-muted-foreground transition-colors hover:text-primary cursor-pointer"
           >
             <ArrowLeft className="size-4" />
             Back to Recruitments Feed
@@ -278,30 +271,30 @@ function JobDetailsPage() {
 
           <button
             onClick={handleShare}
-            className="inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2 text-sm font-medium transition-transform hover:-translate-y-px hover:bg-muted active:translate-y-0 cursor-pointer"
+            className="inline-flex items-center gap-2 rounded border border-border bg-card px-3 py-1.5 text-xs font-semibold hover:bg-muted cursor-pointer"
           >
-            <Share2 className="size-4 text-muted-foreground" />
+            <Share2 className="size-3.5 text-muted-foreground" />
             Share listing
           </button>
         </div>
 
         {/* Hero Section */}
-        <div className="relative mb-10 overflow-hidden rounded-3xl border border-border bg-card/40 p-8 backdrop-blur-sm">
+        <div className="relative mb-8 overflow-hidden rounded border border-border bg-card p-6">
           <div className="relative z-10 flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
             <div>
               <div className="flex flex-wrap items-center gap-3">
-                <span className="grid size-12 place-items-center rounded-xl bg-muted font-mono text-base font-semibold tracking-wider text-muted-foreground">
+                <span className="grid size-10 place-items-center rounded bg-muted border border-border font-mono text-xs font-bold tracking-wider text-muted-foreground">
                   {job.agencyShort}
                 </span>
                 <div>
-                  <h1 className="text-2xl font-bold tracking-tight md:text-3xl text-primary">
+                  <h1 className="text-xl font-bold tracking-tight text-primary">
                     {job.title}
                   </h1>
-                  <p className="text-sm text-muted-foreground">{job.agency}</p>
+                  <p className="text-xs text-muted-foreground">{job.agency}</p>
                 </div>
               </div>
 
-              <div className="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
+              <div className="mt-5 flex flex-wrap gap-4 text-xs text-muted-foreground">
                 <div className="flex items-center gap-1.5">
                   <Building className="size-4 text-muted-foreground" />
                   <span>{job.category}</span>
@@ -321,39 +314,37 @@ function JobDetailsPage() {
 
             <div className="flex flex-col gap-2 md:items-end">
               <StatusBadge status={job.status} />
-              <p className="mt-2 text-xs text-muted-foreground">Ref Code: {details.refCode}</p>
+              <p className="mt-1.5 font-mono-ui text-[9px] uppercase tracking-wider text-muted-foreground">Ref Code: {details.refCode}</p>
             </div>
           </div>
-
-          <div className="pointer-events-none absolute -right-20 -top-20 size-80 rounded-full bg-secondary/10 blur-3xl" />
         </div>
 
         {/* Grid Content */}
         <div className="grid gap-8 lg:grid-cols-[2.1fr_1fr]">
           {/* Main Column */}
-          <div className="space-y-8">
+          <div className="space-y-6">
             {/* Description */}
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-lg font-semibold tracking-tight mb-4 flex items-center gap-2">
-                <FileText className="size-5 text-primary" />
+            <section className="rounded border border-border bg-card p-6 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-4 flex items-center gap-2">
+                <FileText className="size-4" />
                 Recruitment Program Overview
               </h2>
-              <p className="text-muted-foreground leading-relaxed text-sm whitespace-pre-line">
+              <p className="text-muted-foreground leading-relaxed text-xs whitespace-pre-line">
                 {details.description}
               </p>
             </section>
 
             {/* Available Cadres/Positions */}
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-lg font-semibold tracking-tight mb-4 flex items-center gap-2">
-                <CheckCircle2 className="size-5 text-primary" />
+            <section className="rounded border border-border bg-card p-6 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-4 flex items-center gap-2">
+                <CheckCircle2 className="size-4" />
                 Available Positions & Cadres
               </h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {details.positions.map((position, idx) => (
                   <div
                     key={idx}
-                    className="flex items-center gap-2 rounded-xl border border-border bg-card/60 p-3.5 text-sm font-medium transition-colors hover:border-primary/20"
+                    className="flex items-center gap-2 rounded border border-border bg-muted/20 p-3 text-xs font-semibold"
                   >
                     <span className="size-1.5 rounded-full bg-primary" />
                     {position}
@@ -363,15 +354,15 @@ function JobDetailsPage() {
             </section>
 
             {/* Requirements */}
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm">
-              <h2 className="text-lg font-semibold tracking-tight mb-4 flex items-center gap-2">
-                <ShieldCheck className="size-5 text-primary" />
+            <section className="rounded border border-border bg-card p-6 shadow-sm">
+              <h2 className="text-xs font-bold uppercase tracking-wider text-primary mb-4 flex items-center gap-2">
+                <ShieldCheck className="size-4" />
                 Recruitment Requirements
               </h2>
-              <ul className="space-y-3.5 text-muted-foreground text-sm">
+              <ul className="space-y-3 text-muted-foreground text-xs">
                 {details.requirements.map((req, idx) => (
                   <li key={idx} className="flex items-start gap-3">
-                    <CheckCircle2 className="size-5 text-verified shrink-0 mt-0.5" />
+                    <CheckCircle2 className="size-4 text-verified shrink-0 mt-0.5" />
                     <span>{req}</span>
                   </li>
                 ))}
@@ -381,28 +372,28 @@ function JobDetailsPage() {
             {/* Similar Jobs */}
             {similarJobs.length > 0 && (
               <section className="space-y-4">
-                <h2 className="text-lg font-semibold tracking-tight">Similar Verified Openings</h2>
+                <h2 className="text-sm font-bold tracking-tight text-primary">Similar Verified Openings</h2>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {similarJobs.map((simJob) => (
                     <Link
                       key={simJob.id}
                       to="/jobs/$jobId"
                       params={{ jobId: simJob.id }}
-                      className="group relative flex flex-col justify-between rounded-xl border border-border bg-card p-5 hover:border-primary/30 cursor-pointer transition-all hover:-translate-y-0.5"
+                      className="group flex flex-col justify-between rounded border border-border bg-card p-5 hover:border-primary/45 cursor-pointer transition-colors"
                     >
                       <div>
                         <div className="flex items-center justify-between gap-2">
-                          <span className="text-[10px] font-mono font-bold text-muted-foreground">
+                          <span className="text-[9px] font-mono font-bold text-muted-foreground">
                             {simJob.agencyShort}
                           </span>
                           <StatusBadge status={simJob.status} />
                         </div>
-                        <h4 className="mt-2 text-sm font-semibold group-hover:text-primary transition-colors line-clamp-1">
+                        <h4 className="mt-2 text-xs font-bold text-primary group-hover:text-primary-hover line-clamp-1">
                           {simJob.title}
                         </h4>
-                        <p className="mt-1 text-xs text-muted-foreground">{simJob.agency}</p>
+                        <p className="mt-1 text-[10px] text-muted-foreground">{simJob.agency}</p>
                       </div>
-                      <div className="mt-4 flex items-center justify-between text-[11px] text-muted-foreground border-t border-border/60 pt-3">
+                      <div className="mt-4 flex items-center justify-between text-[9px] text-muted-foreground border-t border-border pt-3">
                         <span className="flex items-center gap-1">
                           <Calendar className="size-3" />
                           {simJob.deadline}
@@ -420,20 +411,22 @@ function JobDetailsPage() {
           <div className="space-y-6">
             {/* Trust and Verification Panel */}
             <section
-              className={`rounded-2xl border p-6 shadow-sm relative overflow-hidden ${getTrustColorClass(
-                details.trustScore
+              className={`rounded border p-6 shadow-sm relative overflow-hidden ${getTrustColorClass(
+                details.trustScore,
               )}`}
             >
               <div className="flex items-center justify-between gap-4 mb-4">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="size-5" />
-                  <span className="text-sm font-bold uppercase tracking-wider">Verification Score</span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider">
+                    Verification Score
+                  </span>
                 </div>
-                <div className="text-xl font-bold">{details.trustScore}%</div>
+                <div className="text-lg font-bold">{details.trustScore}%</div>
               </div>
 
               {/* Trust Score Visual Bar */}
-              <div className="h-2 w-full rounded-full bg-border/20 overflow-hidden mb-4">
+              <div className="h-1.5 w-full rounded-full bg-border/25 overflow-hidden mb-4">
                 <div
                   className="h-full rounded-full bg-current transition-all duration-500"
                   style={{ width: `${details.trustScore}%` }}
@@ -448,21 +441,21 @@ function JobDetailsPage() {
                 href={details.portalUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground transition-all hover:bg-primary/95 hover:scale-[1.01] active:scale-[0.99] shadow-sm cursor-pointer"
+                className="inline-flex w-full items-center justify-center gap-2 rounded bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/95 shadow-sm cursor-pointer"
               >
                 Apply on Official Portal
-                <ExternalLink className="size-4" />
+                <ExternalLink className="size-3.5" />
               </a>
 
-              <div className="mt-4 flex items-center justify-center gap-1.5 text-[10px] text-foreground/60">
-                <ShieldCheck className="size-3 text-verified" />
-                Verified Domain: Not a phishing clone.
+              <div className="mt-4 flex items-center justify-center gap-1.5 text-[9px] text-foreground/60 uppercase tracking-wider font-bold">
+                <ShieldCheck className="size-3.5 text-verified" />
+                Verified FGN Domain Name
               </div>
             </section>
 
             {/* Quick Information Meta Card */}
-            <section className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-4">
-              <h3 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground mb-1">
+            <section className="rounded border border-border bg-card p-6 shadow-sm space-y-4">
+              <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
                 Recruitment Details
               </h3>
 
@@ -470,21 +463,21 @@ function JobDetailsPage() {
                 <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                   <Calendar className="size-4" /> Deadline
                 </span>
-                <span className="text-xs font-semibold">{job.deadline}</span>
+                <span className="text-xs font-bold text-primary">{job.deadline}</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                   <Clock className="size-4" /> Detected
                 </span>
-                <span className="text-xs text-muted-foreground">{job.detected}</span>
+                <span className="text-xs text-muted-foreground font-mono-ui">{job.detected}</span>
               </div>
 
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <span className="text-xs text-muted-foreground flex items-center gap-1.5">
                   <Building className="size-4" /> Organization
                 </span>
-                <span className="text-xs font-semibold">{job.agencyShort}</span>
+                <span className="text-xs font-bold text-primary">{job.agencyShort}</span>
               </div>
 
               <div className="flex items-center justify-between">
@@ -496,17 +489,18 @@ function JobDetailsPage() {
             </section>
 
             {/* Join telegram CTA inside sidebar */}
-            <section className="rounded-2xl border border-primary/20 bg-primary/5 p-6 shadow-sm text-center relative overflow-hidden">
-              <Send className="mx-auto size-8 text-primary mb-3" />
-              <h3 className="text-sm font-bold text-primary">Get Instant Notifications</h3>
-              <p className="mt-1 text-xs text-muted-foreground">
-                Join our Telegram channel to receive alerts the exact minute a new federal portal launches.
+            <section className="rounded border border-border bg-card p-6 shadow-sm text-center relative overflow-hidden">
+              <Send className="mx-auto size-6 text-primary mb-3" />
+              <h3 className="text-xs font-bold text-primary uppercase tracking-wider">Get Instant Notifications</h3>
+              <p className="mt-2 text-xs text-muted-foreground leading-relaxed">
+                Join our Telegram channel to receive alerts the exact minute a new federal portal
+                launches.
               </p>
               <a
                 href="https://t.me/GovAlert"
                 target="_blank"
                 rel="noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-primary py-2 px-3 text-xs font-medium text-primary-foreground hover:bg-primary/90 transition-all cursor-pointer"
+                className="mt-4 inline-flex w-full items-center justify-center gap-1.5 rounded bg-primary py-2 px-3 text-xs font-semibold text-primary-foreground hover:bg-primary/95 transition-all cursor-pointer"
               >
                 Join GovAlert Telegram
               </a>

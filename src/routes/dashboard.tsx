@@ -1,21 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
-import {
-  Bookmark,
-  Bell,
-  User,
-  Settings,
-  Send,
-  Trash2,
-  ExternalLink,
-  ShieldCheck,
-  Calendar,
-  Building,
-  Save,
-  CheckCircle,
-  HelpCircle,
-} from "lucide-react";
+import { StatusBadge, type Status } from "./index";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard")({
@@ -29,16 +15,20 @@ const initialSavedJobs = [
     title: "Graduate Trainee Program (Engineering, 2024)",
     agency: "NNPC Limited",
     agencyShort: "NNPC",
-    status: "urgent" as const,
+    status: "urgent" as Status,
     deadline: "Oct 24, 2024",
+    detected: "2h ago",
+    positions: "Multiple Positions",
   },
   {
     id: "4120-GA",
     title: "Superintendent Cadre Recruitment",
     agency: "Nigeria Customs Service",
     agencyShort: "NCS",
-    status: "verified" as const,
+    status: "verified" as Status,
     deadline: "Nov 12, 2024",
+    detected: "6h ago",
+    positions: "Cadre Officers",
   },
 ];
 
@@ -67,35 +57,13 @@ const initialNotifications = [
   },
 ];
 
-function StatusBadge({ status }: { status: "verified" | "urgent" | "warning" | "closed" }) {
-  const styles = {
-    verified: "bg-verified/10 text-verified border-verified/20",
-    urgent: "bg-closed/10 text-closed border-closed/20",
-    warning: "bg-accent/10 text-accent border-accent/20",
-    closed: "bg-muted text-muted-foreground border-border",
-  };
-
-  const labels = {
-    verified: "Verified",
-    urgent: "Urgent",
-    warning: "Updating",
-    closed: "Closed",
-  };
-
-  return (
-    <span
-      className={`inline-flex items-center gap-1 rounded-full border px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider ${styles[status]}`}
-    >
-      {labels[status]}
-    </span>
-  );
-}
-
 function DashboardPage() {
-  const [activeTab, setActiveTab] = useState<"saved" | "notifications" | "profile" | "settings">("saved");
+  const [activeTab, setActiveTab] = useState<"saved" | "notifications" | "profile" | "settings">(
+    "saved"
+  );
   const [savedJobs, setSavedJobs] = useState(initialSavedJobs);
   const [notifications, setNotifications] = useState(initialNotifications);
-  
+
   // Telegram State
   const [telegramConnected, setTelegramConnected] = useState(false);
   const [telegramHandle, setTelegramHandle] = useState("");
@@ -143,7 +111,6 @@ function DashboardPage() {
   const handleToggleSetting = (key: keyof typeof settings) => {
     setSettings((prev) => {
       const updated = { ...prev, [key]: !prev[key] };
-      // If turning on Telegram alerts but not connected, prompt connection
       if (key === "telegramAlerts" && updated[key] && !telegramConnected) {
         toast.error("Please connect your Telegram account first!");
         return prev;
@@ -154,7 +121,6 @@ function DashboardPage() {
   };
 
   const handleStartTelegramConnection = () => {
-    // Generate a random 6-digit code
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     setPairingCode(code);
     setShowPairingModal(true);
@@ -166,52 +132,52 @@ function DashboardPage() {
       return;
     }
     setTelegramConnected(true);
-    setSettings(prev => ({ ...prev, telegramAlerts: true }));
+    setSettings((prev) => ({ ...prev, telegramAlerts: true }));
     setShowPairingModal(false);
     toast.success(`Telegram channel connected to @${telegramHandle.replace("@", "")}`);
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25">
+    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
-      <main className="mx-auto max-w-7xl px-6 py-12">
+      <main className="mx-auto max-w-[1184px] px-6 py-12">
         {/* Banner/Header */}
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-b border-border pb-8">
+        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-8">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight text-primary">Applicant Dashboard</h1>
-            <p className="mt-1 text-sm text-muted-foreground">
+            <h1 className="text-2xl font-bold tracking-tight text-primary">Applicant Dashboard</h1>
+            <p className="mt-1 text-xs text-muted-foreground">
               Manage saved applications, set alert preferences, and verify contact profiles.
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <span className="relative flex size-3">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-verified opacity-75"></span>
-              <span className="relative inline-flex size-3 rounded-full bg-verified"></span>
+            <span className="relative flex size-2">
+              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
+              <span className="relative inline-flex size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
             </span>
-            <div className="text-sm font-semibold">
-              Live Monitoring Active
-            </div>
+            <div className="text-xs font-bold uppercase tracking-wider text-primary">Live Monitoring Active</div>
           </div>
         </div>
 
-        {/* Outer Shell Grid */}
-        <div className="grid gap-8 lg:grid-cols-[220px_1fr]">
+        {/* Outer Shell Grid (240px wide sidebar) */}
+        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
           {/* Navigation Sidebar */}
-          <aside className="flex flex-row gap-2 overflow-x-auto pb-4 lg:flex-col lg:overflow-visible lg:pb-0">
+          <aside className="flex flex-row gap-2 overflow-x-auto pb-4 lg:flex-col lg:overflow-visible lg:pb-0 border-b border-border/40 lg:border-b-0 lg:border-r lg:border-border/40 lg:pr-6">
             <button
               onClick={() => setActiveTab("saved")}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center justify-between rounded-[8px] px-4 py-3 text-xs font-semibold shrink-0 cursor-pointer border transition-colors ${
                 activeTab === "saved"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-muted border-[#0a5c38]/40 dark:border-[#3fb68e]/40 text-[#0a5c38] dark:text-[#3fb68e] font-bold border-l-3 border-l-[#0a5c38] dark:border-l-[#3fb68e]"
+                  : "text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
               }`}
             >
-              <Bookmark className="size-4" />
-              Saved Jobs
+              <span className="flex items-center gap-2">
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M5 5a2 2 0 012-2h10a2 2 0 012 2v16l-7-3.5L5 21V5z" />
+                </svg>
+                Saved Jobs
+              </span>
               {savedJobs.length > 0 && (
-                <span className={`ml-auto rounded-full px-2 py-0.5 text-xs font-semibold ${
-                  activeTab === "saved" ? "bg-primary-foreground text-primary" : "bg-muted-foreground/15"
-                }`}>
+                <span className="rounded-[4px] bg-muted/60 border border-border px-1.5 py-0.5 text-[10px] font-bold">
                   {savedJobs.length}
                 </span>
               )}
@@ -219,41 +185,54 @@ function DashboardPage() {
 
             <button
               onClick={() => setActiveTab("notifications")}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center justify-between rounded-[8px] px-4 py-3 text-xs font-semibold shrink-0 cursor-pointer border transition-colors ${
                 activeTab === "notifications"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-muted border-[#0a5c38]/40 dark:border-[#3fb68e]/40 text-[#0a5c38] dark:text-[#3fb68e] font-bold border-l-3 border-l-[#0a5c38] dark:border-l-[#3fb68e]"
+                  : "text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
               }`}
             >
-              <Bell className="size-4" />
-              Notifications
-              {notifications.some(n => n.unread) && (
-                <span className="ml-auto size-2 rounded-full bg-closed animate-pulse" />
+              <span className="flex items-center gap-2">
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                </svg>
+                Notifications
+              </span>
+              {notifications.some((n) => n.unread) && (
+                <span className="size-2 rounded-full bg-[#b45309]" />
               )}
             </button>
 
             <button
               onClick={() => setActiveTab("profile")}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center rounded-[8px] px-4 py-3 text-xs font-semibold shrink-0 cursor-pointer border transition-colors ${
                 activeTab === "profile"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-muted border-[#0a5c38]/40 dark:border-[#3fb68e]/40 text-[#0a5c38] dark:text-[#3fb68e] font-bold border-l-3 border-l-[#0a5c38] dark:border-l-[#3fb68e]"
+                  : "text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
               }`}
             >
-              <User className="size-4" />
-              My Profile
+              <span className="flex items-center gap-2">
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                </svg>
+                My Profile
+              </span>
             </button>
 
             <button
               onClick={() => setActiveTab("settings")}
-              className={`flex items-center gap-3 rounded-xl px-4 py-2.5 text-sm font-medium transition-all shrink-0 cursor-pointer ${
+              className={`flex items-center rounded-[8px] px-4 py-3 text-xs font-semibold shrink-0 cursor-pointer border transition-colors ${
                 activeTab === "settings"
-                  ? "bg-primary text-primary-foreground font-semibold shadow-sm"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                  ? "bg-muted border-[#0a5c38]/40 dark:border-[#3fb68e]/40 text-[#0a5c38] dark:text-[#3fb68e] font-bold border-l-3 border-l-[#0a5c38] dark:border-l-[#3fb68e]"
+                  : "text-muted-foreground border-transparent hover:bg-muted hover:text-foreground"
               }`}
             >
-              <Settings className="size-4" />
-              Settings
+              <span className="flex items-center gap-2">
+                <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                Settings
+              </span>
             </button>
           </aside>
 
@@ -261,72 +240,75 @@ function DashboardPage() {
           <div className="space-y-6">
             {/* SAVED JOBS SCREEN */}
             {activeTab === "saved" && (
-              <section className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold tracking-tight">Saved Recruitments</h3>
-                  <p className="text-xs text-muted-foreground">
-                    You have {savedJobs.length} job(s) bookmarked
-                  </p>
+              <section className="space-y-6 text-left">
+                <div className="flex items-center justify-between border-b border-border/40 pb-3">
+                  <h3 className="text-[16px] font-bold text-primary">Saved Recruitments</h3>
+                  <span className="font-mono text-xs text-muted-foreground uppercase">
+                    {savedJobs.length} {savedJobs.length === 1 ? "job" : "jobs"} bookmarked
+                  </span>
                 </div>
 
                 {savedJobs.length > 0 ? (
-                  <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="grid gap-6 sm:grid-cols-2">
                     {savedJobs.map((job) => (
                       <div
                         key={job.id}
-                        className="group relative flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all hover:border-primary/20 shadow-sm"
+                        className="group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card"
                       >
-                        <div>
-                          <div className="flex items-start justify-between gap-4">
-                            <span className="grid size-10 place-items-center rounded bg-muted font-mono text-xs font-semibold text-muted-foreground">
-                              {job.agencyShort}
-                            </span>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-mono text-[11px] text-muted-foreground">REF: {job.id}</span>
                             <StatusBadge status={job.status} />
                           </div>
-                          <h4 className="mt-4 text-sm font-bold text-foreground line-clamp-1">
-                            {job.title}
-                          </h4>
-                          <p className="text-xs text-muted-foreground mt-0.5">{job.agency}</p>
+
+                          <div>
+                            <h4 className="text-[17px] font-semibold leading-snug text-foreground">
+                              {job.title}
+                            </h4>
+                            <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">
+                              {job.agency}
+                            </p>
+                          </div>
+
+                          <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                            <div>
+                              <span className="block text-muted-foreground text-[12px]">Deadline</span>
+                              <span className="font-medium text-foreground">{job.deadline}</span>
+                            </div>
+                            <div>
+                              <span className="block text-muted-foreground text-[12px]">Positions</span>
+                              <span className="font-medium text-foreground">{job.positions}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        <div className="mt-6 flex items-center justify-between border-t border-border/60 pt-4">
-                          <span className="flex items-center gap-1 text-[11px] text-muted-foreground">
-                            <Calendar className="size-3.5" />
-                            Deadline: {job.deadline}
-                          </span>
-                          
-                          <div className="flex items-center gap-2">
-                            <button
-                              onClick={() => handleRemoveSaved(job.id)}
-                              className="p-2 text-muted-foreground hover:text-closed hover:bg-closed/5 rounded-lg transition-colors cursor-pointer"
-                              title="Delete bookmark"
-                            >
-                              <Trash2 className="size-4" />
-                            </button>
-                            
-                            <Link
-                              to="/jobs/$jobId"
-                              params={{ jobId: job.id }}
-                              className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
-                            >
-                              Details
-                              <ExternalLink className="size-3.5" />
-                            </Link>
-                          </div>
+                        <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
+                          <button
+                            onClick={() => handleRemoveSaved(job.id)}
+                            className="inline-flex h-[32px] items-center justify-center rounded-[6px] border border-border bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-[#b91c1c] hover:border-[#b91c1c]/40 cursor-pointer"
+                          >
+                            Remove
+                          </button>
+                          <Link
+                            to="/jobs/$jobId"
+                            params={{ jobId: job.id }}
+                            className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
+                          >
+                            View details &rarr;
+                          </Link>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-16 border border-dashed border-border rounded-2xl">
-                    <Bookmark className="mx-auto size-12 text-muted-foreground" />
-                    <h4 className="mt-4 text-base font-semibold">No saved jobs yet</h4>
-                    <p className="mt-2 text-sm text-muted-foreground max-w-xs mx-auto">
+                  <div className="text-center py-16 border border-dashed border-border rounded-[8px] bg-card">
+                    <h4 className="text-sm font-bold text-primary uppercase tracking-wider">No saved jobs yet</h4>
+                    <p className="mt-2 text-xs text-muted-foreground max-w-xs mx-auto">
                       Bookmark openings on the Recruitments Feed to monitor updates and tracking deadlines here.
                     </p>
                     <Link
                       to="/jobs"
-                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/95"
+                      className="mt-6 inline-flex h-[40px] items-center justify-center rounded-[8px] bg-primary px-5 text-xs font-semibold text-primary-foreground hover:bg-[#0a5c38]/95"
                     >
                       Browse Recruitments
                     </Link>
@@ -337,38 +319,34 @@ function DashboardPage() {
 
             {/* NOTIFICATIONS SCREEN */}
             {activeTab === "notifications" && (
-              <section className="space-y-6">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold tracking-tight">Recent Alerts</h3>
+              <section className="space-y-6 text-left">
+                <div className="flex items-center justify-between border-b border-border/40 pb-3">
+                  <h3 className="text-[16px] font-bold text-primary">Recent Alerts</h3>
                   <button
                     onClick={markAllRead}
-                    className="text-xs font-semibold text-primary hover:underline cursor-pointer"
+                    className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer"
                   >
                     Mark all as read
                   </button>
                 </div>
 
-                {/* Telegram Connection Promotion Banner */}
-                <div className="rounded-2xl border border-primary/20 bg-primary/5 p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Send className="size-5 text-primary" />
-                      <h4 className="font-bold text-sm text-primary">Telegram Push Integration</h4>
-                    </div>
-                    <p className="text-xs text-muted-foreground max-w-xl">
+                {/* Telegram Connection Banner */}
+                <div className="rounded-[8px] border border-border bg-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                  <div className="space-y-1">
+                    <h4 className="font-bold text-xs uppercase tracking-wider text-primary">Telegram Push Integration</h4>
+                    <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
                       Receive critical status alerts, vetting logs, and scam warnings direct to your phone instantly. Bypass email delays.
                     </p>
                   </div>
-                  
+
                   {telegramConnected ? (
-                    <div className="flex items-center gap-2 bg-verified/10 border border-verified/20 rounded-xl px-4 py-2 text-xs font-semibold text-verified self-start md:self-auto">
-                      <CheckCircle className="size-4" />
+                    <div className="flex items-center gap-1.5 bg-[#0a5c38]/10 border border-[#0a5c38]/25 rounded-[6px] px-3 py-1.5 text-[11px] font-bold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider self-start md:self-auto">
                       Connected to @{telegramHandle.replace("@", "")}
                     </div>
                   ) : (
                     <button
                       onClick={handleStartTelegramConnection}
-                      className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs font-semibold text-primary-foreground hover:bg-primary/95 self-start md:self-auto cursor-pointer"
+                      className="inline-flex h-[40px] items-center justify-center rounded-[8px] bg-primary px-5 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer shrink-0 self-start md:self-auto"
                     >
                       Connect Alert Bot
                     </button>
@@ -380,30 +358,26 @@ function DashboardPage() {
                   {notifications.map((notif) => (
                     <div
                       key={notif.id}
-                      className={`relative flex items-start gap-4 rounded-xl border p-4 transition-colors ${
+                      className={`relative flex items-start gap-4 rounded-[8px] border p-4 transition-colors ${
                         notif.unread
-                          ? "bg-card border-primary/25 shadow-sm"
-                          : "bg-card/45 border-border"
+                          ? "bg-card border-[#0a5c38]/30 dark:border-[#3fb68e]/30 shadow-sm"
+                          : "bg-card/40 border-border"
                       }`}
                     >
                       {notif.unread && (
-                        <span className="absolute left-2 top-2 size-2 rounded-full bg-primary" />
+                        <span className="absolute left-2 top-2 size-1.5 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
                       )}
-                      
-                      <div className="mt-0.5 rounded-lg bg-muted p-2 text-muted-foreground">
-                        <Bell className="size-4" />
-                      </div>
 
                       <div className="flex-1 space-y-1">
                         <div className="flex items-center justify-between gap-4">
-                          <h4 className={`text-sm font-semibold ${notif.unread ? "text-foreground" : "text-muted-foreground"}`}>
+                          <h4 className={`text-xs font-bold ${notif.unread ? "text-primary font-semibold" : "text-muted-foreground"}`}>
                             {notif.title}
                           </h4>
                           <span className="text-[10px] text-muted-foreground font-mono">
                             {notif.time}
                           </span>
                         </div>
-                        <p className="text-xs text-muted-foreground">{notif.body}</p>
+                        <p className="text-xs text-muted-foreground leading-relaxed">{notif.body}</p>
                       </div>
                     </div>
                   ))}
@@ -413,9 +387,9 @@ function DashboardPage() {
 
             {/* PROFILE SCREEN */}
             {activeTab === "profile" && (
-              <section className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-6">
+              <section className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-6 text-left">
                 <div>
-                  <h3 className="text-lg font-semibold tracking-tight">Applicant Profile</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-primary">Applicant Profile</h3>
                   <p className="text-xs text-muted-foreground">
                     Customize your profile values to receive tailored eligibility warnings.
                   </p>
@@ -424,55 +398,67 @@ function DashboardPage() {
                 <form onSubmit={handleSaveProfile} className="space-y-4">
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">Full Name</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Full Name
+                      </label>
                       <input
                         type="text"
                         required
                         value={profileForm.name}
                         onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">Email Address</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Email Address
+                      </label>
                       <input
                         type="email"
                         required
                         value={profileForm.email}
                         onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">Phone Number</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Phone Number
+                      </label>
                       <input
                         type="text"
                         required
                         value={profileForm.phone}
                         onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">State of Origin</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        State of Origin
+                      </label>
                       <input
                         type="text"
                         required
                         value={profileForm.state}
                         onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">Highest Qualification</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Highest Qualification
+                      </label>
                       <select
                         value={profileForm.qualification}
-                        onChange={(e) => setProfileForm({ ...profileForm, qualification: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2.5 text-sm outline-none focus:border-primary"
+                        onChange={(e) =>
+                          setProfileForm({ ...profileForm, qualification: e.target.value })
+                        }
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
                       >
                         <option>Master's Degree</option>
                         <option>Bachelor's Degree</option>
@@ -483,13 +469,15 @@ function DashboardPage() {
                     </div>
 
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-muted-foreground">Field of Study</label>
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Field of Study
+                      </label>
                       <input
                         type="text"
                         required
                         value={profileForm.field}
                         onChange={(e) => setProfileForm({ ...profileForm, field: e.target.value })}
-                        className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
                   </div>
@@ -498,10 +486,9 @@ function DashboardPage() {
                     <button
                       type="submit"
                       disabled={savingProfile}
-                      className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground hover:bg-primary/95 disabled:opacity-50 cursor-pointer"
+                      className="inline-flex h-[40px] items-center justify-center rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-5 text-xs font-semibold disabled:opacity-50 cursor-pointer"
                     >
-                      <Save className="size-4" />
-                      {savingProfile ? "Saving Details..." : "Save Profile"}
+                      {savingProfile ? "Saving..." : "Save Profile"}
                     </button>
                   </div>
                 </form>
@@ -510,9 +497,9 @@ function DashboardPage() {
 
             {/* SETTINGS SCREEN */}
             {activeTab === "settings" && (
-              <section className="rounded-2xl border border-border bg-card p-6 shadow-sm space-y-6">
+              <section className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-6 text-left">
                 <div>
-                  <h3 className="text-lg font-semibold tracking-tight">System Settings</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-wider text-primary">System Settings</h3>
                   <p className="text-xs text-muted-foreground">
                     Control how and when you receive intelligence briefings.
                   </p>
@@ -521,18 +508,20 @@ function DashboardPage() {
                 <div className="space-y-4">
                   <div className="flex items-center justify-between border-b border-border pb-4">
                     <div>
-                      <h4 className="text-sm font-semibold">Email Alerts</h4>
-                      <p className="text-xs text-muted-foreground">Receive instant alerts when a verified portal launches.</p>
+                      <h4 className="text-xs font-bold text-primary uppercase">Email Alerts</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Receive instant alerts when a verified portal launches.
+                      </p>
                     </div>
                     <button
                       onClick={() => handleToggleSetting("emailAlerts")}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        settings.emailAlerts ? "bg-primary" : "bg-muted"
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                        settings.emailAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
                       }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow ring-0 transition duration-200 ease-in-out ${
-                          settings.emailAlerts ? "translate-x-5" : "translate-x-0"
+                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                          settings.emailAlerts ? "translate-x-4" : "translate-x-0"
                         }`}
                       />
                     </button>
@@ -540,37 +529,20 @@ function DashboardPage() {
 
                   <div className="flex items-center justify-between border-b border-border pb-4">
                     <div>
-                      <h4 className="text-sm font-semibold">Telegram Push Notifications</h4>
-                      <p className="text-xs text-muted-foreground">Direct-to-chat bot alerts with zero delivery delay.</p>
+                      <h4 className="text-xs font-bold text-primary uppercase">Telegram Push Notifications</h4>
+                      <p className="text-xs text-muted-foreground">
+                        Direct-to-chat bot alerts with zero delivery delay.
+                      </p>
                     </div>
                     <button
                       onClick={() => handleToggleSetting("telegramAlerts")}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        settings.telegramAlerts ? "bg-primary" : "bg-muted"
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                        settings.telegramAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
                       }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow ring-0 transition duration-200 ease-in-out ${
-                          settings.telegramAlerts ? "translate-x-5" : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center justify-between border-b border-border pb-4">
-                    <div>
-                      <h4 className="text-sm font-semibold">Weekly Intelligence Digest</h4>
-                      <p className="text-xs text-muted-foreground">A curated digest of the week's scam alerts and portal checks.</p>
-                    </div>
-                    <button
-                      onClick={() => handleToggleSetting("weeklyDigest")}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        settings.weeklyDigest ? "bg-primary" : "bg-muted"
-                      }`}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow ring-0 transition duration-200 ease-in-out ${
-                          settings.weeklyDigest ? "translate-x-5" : "translate-x-0"
+                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                          settings.telegramAlerts ? "translate-x-4" : "translate-x-0"
                         }`}
                       />
                     </button>
@@ -578,18 +550,20 @@ function DashboardPage() {
 
                   <div className="flex items-center justify-between">
                     <div>
-                      <h4 className="text-sm font-semibold">Newsletter Subscription</h4>
-                      <p className="text-xs text-muted-foreground">General articles regarding civil service guidelines and cadet courses.</p>
+                      <h4 className="text-xs font-bold text-primary uppercase">Weekly Intelligence Digest</h4>
+                      <p className="text-xs text-muted-foreground">
+                        A curated digest of the week's scam alerts and portal checks.
+                      </p>
                     </div>
                     <button
-                      onClick={() => handleToggleSetting("newsletter")}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        settings.newsletter ? "bg-primary" : "bg-muted"
+                      onClick={() => handleToggleSetting("weeklyDigest")}
+                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                        settings.weeklyDigest ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
                       }`}
                     >
                       <span
-                        className={`pointer-events-none inline-block size-5 transform rounded-full bg-background shadow ring-0 transition duration-200 ease-in-out ${
-                          settings.newsletter ? "translate-x-5" : "translate-x-0"
+                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                          settings.weeklyDigest ? "translate-x-4" : "translate-x-0"
                         }`}
                       />
                     </button>
@@ -600,13 +574,12 @@ function DashboardPage() {
           </div>
         </div>
       </main>
-      
+
       {/* Telegram Pairing Modal */}
       {showPairingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm p-4">
-          <div className="w-full max-w-md rounded-2xl border border-border bg-card p-6 shadow-xl relative overflow-hidden">
-            <h3 className="text-lg font-bold flex items-center gap-2 mb-2">
-              <Send className="size-5 text-primary" />
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-6 shadow-xl relative text-left">
+            <h3 className="text-sm font-bold flex items-center gap-2 mb-2 uppercase tracking-wider text-primary">
               Pair with Telegram Bot
             </h3>
             <p className="text-xs text-muted-foreground mb-4">
@@ -615,14 +588,14 @@ function DashboardPage() {
 
             <ol className="space-y-3.5 text-xs text-muted-foreground mb-6 pl-4 list-decimal">
               <li>
-                Open Telegram and search for <strong className="text-primary">@GovAlertBot</strong> (or click the link from our channel).
+                Open Telegram and search for <strong className="text-primary font-bold">@GovAlertBot</strong>.
               </li>
               <li>
                 Start the bot by tapping <strong className="text-foreground">/start</strong>.
               </li>
               <li>
                 Send the following pairing code to the bot:
-                <div className="mt-2 bg-muted rounded-xl p-3.5 text-center text-lg font-mono font-bold tracking-widest text-primary border border-border">
+                <div className="mt-2 bg-muted rounded-[6px] p-3 text-center text-base font-mono font-bold tracking-widest text-[#0a5c38] dark:text-[#3fb68e] border border-border">
                   {pairingCode}
                 </div>
               </li>
@@ -630,26 +603,28 @@ function DashboardPage() {
 
             <div className="space-y-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-muted-foreground">Enter Your Telegram Handle</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Enter Your Telegram Handle
+                </label>
                 <input
                   type="text"
                   placeholder="@yourhandle"
                   value={telegramHandle}
                   onChange={(e) => setTelegramHandle(e.target.value)}
-                  className="rounded-xl border border-border bg-background px-3 py-2 text-sm outline-none focus:border-primary"
+                  className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                 />
               </div>
 
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   onClick={() => setShowPairingModal(false)}
-                  className="rounded-xl border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted cursor-pointer"
+                  className="rounded-[6px] border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleCompleteConnection}
-                  className="rounded-xl bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
+                  className="rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-4 py-2 text-xs font-semibold cursor-pointer"
                 >
                   Verify pairing code
                 </button>

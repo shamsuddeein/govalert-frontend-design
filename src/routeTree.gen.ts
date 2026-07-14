@@ -9,7 +9,9 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VerificationRouteImport } from './routes/verification'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as StatusRouteImport } from './routes/status'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -27,9 +29,19 @@ import { Route as AgenciesIndexRouteImport } from './routes/agencies.index'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
 
+const VerificationRoute = VerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -126,7 +138,9 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/verification': typeof VerificationRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/agencies/': typeof AgenciesIndexRoute
@@ -143,7 +157,9 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/verification': typeof VerificationRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/agencies': typeof AgenciesIndexRoute
@@ -163,7 +179,9 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/verification': typeof VerificationRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/agencies/': typeof AgenciesIndexRoute
@@ -184,7 +202,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/status'
     | '/terms'
+    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/agencies/'
@@ -201,7 +221,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/status'
     | '/terms'
+    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/agencies'
@@ -220,7 +242,9 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/status'
     | '/terms'
+    | '/verification'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/agencies/'
@@ -240,16 +264,32 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
+  StatusRoute: typeof StatusRoute
   TermsRoute: typeof TermsRoute
+  VerificationRoute: typeof VerificationRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/verification': {
+      id: '/verification'
+      path: '/verification'
+      fullPath: '/verification'
+      preLoaderRoute: typeof VerificationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -406,7 +446,9 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
+  StatusRoute: StatusRoute,
   TermsRoute: TermsRoute,
+  VerificationRoute: VerificationRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

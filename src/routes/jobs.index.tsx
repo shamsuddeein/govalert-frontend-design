@@ -2,18 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo } from "react";
 import { Nav, Footer } from "../components/layout";
 import { latestJobs, StatusBadge, type Job, type Status } from "./index";
-import {
-  Search,
-  SlidersHorizontal,
-  ArrowUpDown,
-  ChevronLeft,
-  ChevronRight,
-  MapPin,
-  Calendar,
-  Clock,
-  Briefcase,
-  X,
-} from "lucide-react";
+import { agenciesData } from "../lib/agenciesData";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsPage,
@@ -27,9 +16,9 @@ function JobsPage() {
   const [status, setStatus] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "oldest" | "alpha" | "deadline">("recent");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const itemsPerPage = 9;
 
-  // Extract unique agencies and states from mock data dynamically
+  // Extract unique agencies, states and categories dynamically
   const agencies = useMemo(() => {
     return Array.from(new Set(latestJobs.map((j) => j.agencyShort))).sort();
   }, []);
@@ -46,7 +35,6 @@ function JobsPage() {
   const filteredAndSortedJobs = useMemo(() => {
     let result = [...latestJobs];
 
-    // Search query matching
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(
@@ -58,13 +46,11 @@ function JobsPage() {
       );
     }
 
-    // Facet filters
     if (agency) result = result.filter((j) => j.agencyShort === agency);
     if (category) result = result.filter((j) => j.category === category);
     if (state) result = result.filter((j) => j.state === state);
     if (status) result = result.filter((j) => j.status === status);
 
-    // Sorting
     result.sort((a, b) => {
       if (sortBy === "recent") {
         return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -76,10 +62,8 @@ function JobsPage() {
         return a.title.localeCompare(b.title);
       }
       if (sortBy === "deadline") {
-        // Closed jobs go to the bottom
         if (a.status === "closed" && b.status !== "closed") return 1;
         if (b.status === "closed" && a.status !== "closed") return -1;
-        // Pending status
         if (a.deadline === "Pending" && b.deadline !== "Pending") return 1;
         if (b.deadline === "Pending" && a.deadline !== "Pending") return -1;
         return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
@@ -90,7 +74,6 @@ function JobsPage() {
     return result;
   }, [search, agency, category, state, status, sortBy]);
 
-  // Pagination calculation
   const totalPages = Math.ceil(filteredAndSortedJobs.length / itemsPerPage);
   const paginatedJobs = useMemo(() => {
     const start = (currentPage - 1) * itemsPerPage;
@@ -107,276 +90,239 @@ function JobsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25">
+    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
-      <main className="mx-auto max-w-7xl px-6 py-12">
+      <main className="mx-auto max-w-[1184px] px-6 py-12">
         {/* Header */}
-        <div className="mb-10 text-left">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs text-muted-foreground">
-            <span className="relative flex size-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-verified opacity-75"></span>
-              <span className="relative inline-flex size-2 rounded-full bg-verified"></span>
+        <div className="mb-10 text-left space-y-2">
+          <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
+            <span className="relative flex h-2 w-2">
+              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
             </span>
-            Real-time verification active
+            <span>REAL-TIME VERIFICATION ACTIVE</span>
           </div>
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight text-primary md:text-5xl">
+          <h1 className="text-3xl font-bold tracking-tight text-primary md:text-[32px] leading-tight">
             Federal Recruitments Feed
           </h1>
-          <p className="mt-3 max-w-2xl text-muted-foreground">
-            Browse, search, and monitor verified federal government job openings, career pathways, and cadet courses in Nigeria.
+          <p className="text-[15px] text-muted-foreground">
+            Browse verified federal government job openings across all MDAs.
           </p>
         </div>
 
-        {/* Filter Toolbar */}
-        <div className="mb-8 rounded-2xl border border-border bg-card/40 p-6 backdrop-blur-sm">
-          <div className="flex flex-col gap-4">
-            {/* Search Input and Sort */}
-            <div className="flex flex-col gap-4 md:flex-row md:items-center">
-              <div className="relative flex-1">
-                <Search className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-                <input
-                  type="text"
-                  placeholder="Search by role title, agency, or ID..."
-                  value={search}
-                  onChange={(e) => {
-                    setSearch(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full rounded-xl border border-border bg-background py-2.5 pl-11 pr-4 text-sm text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary focus:ring-1 focus:ring-primary"
-                />
-                {search && (
-                  <button
-                    onClick={() => setSearch("")}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-muted"
-                  >
-                    <X className="size-3.5 text-muted-foreground" />
-                  </button>
-                )}
-              </div>
-
-              <div className="flex items-center gap-2 rounded-xl border border-border bg-background px-3 py-2.5">
-                <ArrowUpDown className="size-4 text-muted-foreground" />
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-transparent text-sm text-foreground outline-none border-none cursor-pointer"
-                >
-                  <option value="recent">Recently Detected</option>
-                  <option value="oldest">Oldest First</option>
-                  <option value="alpha">Alphabetical (A-Z)</option>
-                  <option value="deadline">Nearest Deadline</option>
-                </select>
-              </div>
+        {/* Search Input bar */}
+        <div className="mb-6">
+          <form
+            className="flex items-center rounded-[8px] border border-border bg-card p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
+            onSubmit={(e) => e.preventDefault()}
+          >
+            <div className="flex items-center flex-1 px-3">
+              <span className="text-muted-foreground mr-2 text-sm">🔍</span>
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => {
+                  setSearch(e.target.value);
+                  setCurrentPage(1);
+                }}
+                placeholder="Search by role title, agency, or ID..."
+                className="w-full border-none bg-transparent py-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+              />
             </div>
+          </form>
+        </div>
 
-            {/* Faceted Selectors */}
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {/* Agency Dropdown */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                  Agency
-                </label>
-                <select
-                  value={agency}
-                  onChange={(e) => {
-                    setAgency(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary"
-                >
-                  <option value="">All Agencies</option>
-                  {agencies.map((a) => (
-                    <option key={a} value={a}>
-                      {a}
-                    </option>
-                  ))}
-                </select>
-              </div>
+        {/* Filter Toolbar (4 Dropdowns side-by-side) */}
+        <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              Agency
+            </label>
+            <select
+              value={agency}
+              onChange={(e) => {
+                setAgency(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+            >
+              <option value="">All Agencies ▾</option>
+              {agencies.map((a) => (
+                <option key={a} value={a}>
+                  {a}
+                </option>
+              ))}
+            </select>
+          </div>
 
-              {/* Category Dropdown */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                  Category
-                </label>
-                <select
-                  value={category}
-                  onChange={(e) => {
-                    setCategory(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary"
-                >
-                  <option value="">All Categories</option>
-                  {categoriesList.map((c) => (
-                    <option key={c} value={c}>
-                      {c}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              Category
+            </label>
+            <select
+              value={category}
+              onChange={(e) => {
+                setCategory(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+            >
+              <option value="">All Categories ▾</option>
+              {categoriesList.map((c) => (
+                <option key={c} value={c}>
+                  {c}
+                </option>
+              ))}
+            </select>
+          </div>
 
-              {/* State Dropdown */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                  Location (State)
-                </label>
-                <select
-                  value={state}
-                  onChange={(e) => {
-                    setState(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary"
-                >
-                  <option value="">All States</option>
-                  {states.map((s) => (
-                    <option key={s} value={s}>
-                      {s}
-                    </option>
-                  ))}
-                </select>
-              </div>
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              Location
+            </label>
+            <select
+              value={state}
+              onChange={(e) => {
+                setState(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+            >
+              <option value="">All Locations ▾</option>
+              {states.map((s) => (
+                <option key={s} value={s}>
+                  {s} State
+                </option>
+              ))}
+            </select>
+          </div>
 
-              {/* Status Dropdown */}
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
-                  Status
-                </label>
-                <select
-                  value={status}
-                  onChange={(e) => {
-                    setStatus(e.target.value);
-                    setCurrentPage(1);
-                  }}
-                  className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground outline-none transition-all focus:border-primary"
-                >
-                  <option value="">All Statuses</option>
-                  <option value="verified">Verified</option>
-                  <option value="urgent">Urgent</option>
-                  <option value="warning">Updating</option>
-                  <option value="closed">Closed</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Clear Filters indicator */}
-            {(search || agency || category || state || status) && (
-              <div className="flex items-center justify-between border-t border-border pt-4">
-                <div className="flex flex-wrap gap-2">
-                  <span className="text-xs text-muted-foreground self-center">Active filters:</span>
-                  {search && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                      Search: {search}
-                    </span>
-                  )}
-                  {agency && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                      Agency: {agency}
-                    </span>
-                  )}
-                  {category && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                      Category: {category}
-                    </span>
-                  )}
-                  {state && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                      State: {state}
-                    </span>
-                  )}
-                  {status && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2.5 py-0.5 text-xs text-primary">
-                      Status: {status}
-                    </span>
-                  )}
-                </div>
-                <button
-                  onClick={handleClearFilters}
-                  className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground transition-colors hover:text-primary cursor-pointer"
-                >
-                  <SlidersHorizontal className="size-3" />
-                  Reset all filters
-                </button>
-              </div>
-            )}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+              Status
+            </label>
+            <select
+              value={status}
+              onChange={(e) => {
+                setStatus(e.target.value);
+                setCurrentPage(1);
+              }}
+              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+            >
+              <option value="">All Statuses ▾</option>
+              <option value="verified">Verified</option>
+              <option value="urgent">Urgent</option>
+              <option value="warning">Updating</option>
+              <option value="closed">Closed</option>
+            </select>
           </div>
         </div>
 
-        {/* Results Counter */}
-        <div className="mb-6 flex items-center justify-between">
-          <p className="text-sm text-muted-foreground">
+        {/* Info Counter Row */}
+        <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground">
+          <p>
             Showing <span className="font-semibold text-foreground">{filteredAndSortedJobs.length}</span> verified listings
           </p>
+          <div className="flex items-center gap-1">
+            <span>Sort:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
+              className="bg-transparent font-semibold text-foreground outline-none border-none cursor-pointer"
+            >
+              <option value="recent">Recently Detected &darr;</option>
+              <option value="oldest">Oldest First</option>
+              <option value="alpha">Alphabetical (A-Z)</option>
+              <option value="deadline">Nearest Deadline</option>
+            </select>
+          </div>
         </div>
 
         {/* Job Listings Grid */}
         {paginatedJobs.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {paginatedJobs.map((job) => (
-              <Link
-                key={job.id}
-                to="/jobs/$jobId"
-                params={{ jobId: job.id }}
-                className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/30 hover:shadow-md cursor-pointer"
-              >
-                <div>
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="grid size-12 place-items-center rounded-xl bg-muted font-mono text-sm font-semibold tracking-wider text-muted-foreground transition-colors group-hover:bg-primary/10 group-hover:text-primary">
-                      {job.agencyShort}
+            {paginatedJobs.map((job) => {
+              const agencyDataObj = agenciesData.find((a) => a.short === job.agencyShort);
+              const portalUrl = agencyDataObj ? agencyDataObj.recruitmentPortal : "#";
+              const isClosed = job.status === "closed";
+
+              return (
+                <div
+                  key={job.id}
+                  className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card ${
+                    isClosed ? "opacity-65 bg-muted/5" : ""
+                  }`}
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="font-mono text-[11px] text-muted-foreground">REF: {job.id}</span>
+                      <StatusBadge status={job.status} />
                     </div>
-                    <StatusBadge status={job.status} />
+
+                    <div>
+                      <h3 className="text-[18px] font-semibold leading-snug text-foreground">
+                        {job.title}
+                      </h3>
+                      <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
+                        <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort }}>
+                          {job.agency}
+                        </Link>
+                      </p>
+                    </div>
+
+                    <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                      <div>
+                        <span className="block text-muted-foreground text-[12px]">Deadline</span>
+                        <span className="font-medium text-foreground">{job.deadline}</span>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground text-[12px]">Positions</span>
+                        <span className="font-medium text-foreground">{job.positions || "Multiple"}</span>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground text-[12px]">Published</span>
+                        <span className="font-medium text-foreground">{job.detected}</span>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground text-[12px]">Verification</span>
+                        <a
+                          href={portalUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline inline-flex items-center gap-1 text-[12px]"
+                        >
+                          OFFICIAL SOURCE
+                          <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </div>
+                    </div>
                   </div>
 
-                  <h3 className="mt-4 text-base font-semibold tracking-tight text-foreground transition-colors group-hover:text-primary">
-                    {job.title}
-                  </h3>
-                  <p className="mt-1 text-xs text-muted-foreground">{job.agency}</p>
-
-                  <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-4">
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <Briefcase className="size-3.5" />
-                      <span>{job.category}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                      <MapPin className="size-3.5" />
-                      <span>{job.state} State</span>
-                    </div>
+                  <div className="mt-6 pt-3 flex justify-end">
+                    <Link
+                      to="/jobs/$jobId"
+                      params={{ jobId: job.id }}
+                      className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
+                    >
+                      View details &rarr;
+                    </Link>
                   </div>
                 </div>
-
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="flex flex-col gap-1">
-                    <span className="font-mono-ui text-[9px] uppercase tracking-wider text-muted-foreground">
-                      Deadline
-                    </span>
-                    <span className="flex items-center gap-1 text-xs font-semibold text-foreground">
-                      <Calendar className="size-3.5 text-muted-foreground" />
-                      {job.deadline}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-1 text-right">
-                    <span className="font-mono-ui text-[9px] uppercase tracking-wider text-muted-foreground">
-                      Detected
-                    </span>
-                    <span className="flex items-center gap-1 text-xs text-muted-foreground justify-end">
-                      <Clock className="size-3.5" />
-                      {job.detected}
-                    </span>
-                  </div>
-                </div>
-              </Link>
-            ))}
+              );
+            })}
           </div>
         ) : (
-          <div className="rounded-2xl border border-dashed border-border py-16 text-center">
-            <SlidersHorizontal className="mx-auto size-12 text-muted-foreground" />
-            <h3 className="mt-4 text-base font-semibold">No listings found</h3>
-            <p className="mt-2 text-sm text-muted-foreground max-w-sm mx-auto">
-              We couldn't find any listings matching your search or filters. Try adjusting your selections or resetting.
+          <div className="rounded-[8px] border border-dashed border-border py-12 text-center bg-card">
+            <h3 className="text-sm font-bold text-primary">No listings found</h3>
+            <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
+              We couldn't find any listings matching your search or filters. Try adjusting your
+              selections or resetting.
             </p>
             <button
               onClick={handleClearFilters}
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/95 cursor-pointer"
+              className="mt-6 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
             >
               Reset filters
             </button>
@@ -389,18 +335,18 @@ function JobsPage() {
             <button
               disabled={currentPage === 1}
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-all hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              className="inline-flex size-8 items-center justify-center rounded-[6px] border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
             >
-              <ChevronLeft className="size-4" />
+              &larr;
             </button>
 
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
               <button
                 key={page}
                 onClick={() => setCurrentPage(page)}
-                className={`inline-flex size-9 items-center justify-center rounded-lg text-sm font-medium transition-all cursor-pointer ${
+                className={`inline-flex size-8 items-center justify-center rounded-[6px] text-xs font-bold cursor-pointer ${
                   currentPage === page
-                    ? "bg-primary text-primary-foreground font-semibold"
+                    ? "bg-primary text-primary-foreground"
                     : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
                 }`}
               >
@@ -411,9 +357,9 @@ function JobsPage() {
             <button
               disabled={currentPage === totalPages}
               onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              className="inline-flex size-9 items-center justify-center rounded-lg border border-border bg-card text-muted-foreground transition-all hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+              className="inline-flex size-8 items-center justify-center rounded-[6px] border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
             >
-              <ChevronRight className="size-4" />
+              &rarr;
             </button>
           </div>
         )}

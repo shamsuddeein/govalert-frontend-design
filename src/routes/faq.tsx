@@ -51,29 +51,29 @@ function FaqPage() {
       <Nav />
       <main className="flex-1 mx-auto max-w-3xl w-full px-6 py-12">
         <div className="text-center mb-12">
-          <div className="mx-auto grid size-12 place-items-center rounded-xl bg-primary/10 text-primary">
-            <HelpCircle className="size-6" />
+          <div className="mx-auto grid size-10 place-items-center rounded bg-muted border border-border text-primary">
+            <HelpCircle className="size-5" />
           </div>
-          <h1 className="mt-4 text-3xl font-bold tracking-tight text-primary md:text-4xl">
+          <h1 className="mt-4 text-2xl font-bold tracking-tight text-primary md:text-3xl">
             Frequently Asked Questions
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-2 text-xs text-muted-foreground">
             Get answers on how we track MDA portals, calculate trust scores, and prevent scams.
           </p>
         </div>
 
         {/* Accordion List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqList.map((item, idx) => {
             const isOpen = openIndex === idx;
             return (
               <div
                 key={idx}
-                className="rounded-2xl border border-border bg-card overflow-hidden shadow-sm transition-colors duration-200"
+                className="rounded border border-border bg-card overflow-hidden shadow-sm transition-colors duration-200"
               >
                 <button
                   onClick={() => toggleIndex(idx)}
-                  className="w-full text-left px-6 py-5 flex items-center justify-between gap-4 font-semibold text-sm hover:text-primary transition-colors cursor-pointer"
+                  className="w-full text-left px-5 py-4 flex items-center justify-between gap-4 font-bold text-xs hover:text-primary transition-colors cursor-pointer"
                 >
                   <span>{item.q}</span>
                   {isOpen ? (
@@ -84,7 +84,7 @@ function FaqPage() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 text-xs text-muted-foreground leading-relaxed border-t border-border/40 pt-4 bg-muted/10">
+                  <div className="px-5 pb-5 text-xs text-muted-foreground leading-relaxed border-t border-border pt-3.5 bg-muted/10">
                     {item.a}
                   </div>
                 )}
