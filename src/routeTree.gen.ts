@@ -110,9 +110,9 @@ const AgenciesIndexRoute = AgenciesIndexRouteImport.update({
   getParentRoute: () => AgenciesRoute,
 } as any)
 const VerificationJobIdRoute = VerificationJobIdRouteImport.update({
-  id: '/$jobId',
-  path: '/$jobId',
-  getParentRoute: () => VerificationRoute,
+  id: '/verification/$jobId',
+  path: '/verification/$jobId',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const JobsJobIdRoute = JobsJobIdRouteImport.update({
   id: '/$jobId',
@@ -266,6 +266,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   StatusRoute: typeof StatusRoute
   TermsRoute: typeof TermsRoute
+  VerificationJobIdRoute: typeof VerificationJobIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -384,10 +385,10 @@ declare module '@tanstack/react-router' {
     }
     '/verification/$jobId': {
       id: '/verification/$jobId'
-      path: '/$jobId'
+      path: '/verification/$jobId'
       fullPath: '/verification/$jobId'
       preLoaderRoute: typeof VerificationJobIdRouteImport
-      parentRoute: typeof VerificationRoute
+      parentRoute: typeof rootRouteImport
     }
     '/jobs/$jobId': {
       id: '/jobs/$jobId'
@@ -447,6 +448,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   StatusRoute: StatusRoute,
   TermsRoute: TermsRoute,
+  VerificationJobIdRoute: VerificationJobIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
