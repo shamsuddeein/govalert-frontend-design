@@ -349,8 +349,17 @@ function Hero({
                 className="flex items-center rounded-[8px] border border-border bg-card p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
                 onSubmit={handleSubmit}
               >
-                <div className="flex items-center flex-1 px-3">
-                  <svg className="mr-2 size-4 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
+                <div className="relative flex-1">
+                  <svg
+                    className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                    width="16"
+                    height="16"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1.5}
+                    aria-hidden="true"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
                   </svg>
                   <input
@@ -358,7 +367,7 @@ function Hero({
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                     placeholder="Search NNPC, Customs, EFCC, Police..."
-                    className="w-full border-none bg-transparent py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
+                    className="w-full border-none bg-transparent py-3 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
                   />
                 </div>
                 <button
