@@ -353,7 +353,11 @@ export default function JobDetailsPage() {
             </div>
             
             <div className="mt-6">
-              <Link to="/agencies" className="text-[13px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
+              <Link
+                to="/agencies/$agencyShort"
+                params={{ agencyShort: job.agencyShort }}
+                className="text-[13px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
+              >
                 View full agency profile →
               </Link>
             </div>

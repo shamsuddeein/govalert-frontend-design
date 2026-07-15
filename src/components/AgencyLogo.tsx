@@ -23,9 +23,9 @@ interface Props {
  * favicon service. Falls back to a mono acronym chip if the image fails.
  */
 export function AgencyLogo({ short, size = 40, className = "", rounded = "rounded-[6px]" }: Props) {
-  const [imgSource, setImgSource] = useState<"clearbit" | "google" | "failed">("clearbit");
+  const [failed, setFailed] = useState(false);
   const [loading, setLoading] = useState(true);
-  
+
   const agency = agenciesData.find((x) => x.short.toUpperCase() === short.toUpperCase());
   const domain = agency ? (() => {
     try {
@@ -35,27 +35,21 @@ export function AgencyLogo({ short, size = 40, className = "", rounded = "rounde
     }
   })() : null;
 
-  const src = domain
-    ? imgSource === "clearbit"
-      ? `https://logo.clearbit.com/${domain}?size=128`
-      : imgSource === "google"
-        ? `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
-        : null
-    : null;
+  const src = domain && !failed ? `https://logo.clearbit.com/${domain}?size=128` : null;
 
   const boxCls = `relative grid place-items-center overflow-hidden border border-border bg-white dark:bg-[#1a2230] ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background`;
   const style = { width: size, height: size } as const;
   const altText = agency ? `${agency.name} official logo` : `${short} official logo`;
 
-  if (!src || imgSource === "failed") {
-    const fallbackBoxCls = `relative grid place-items-center overflow-hidden border border-[#0a5c38]/30 bg-[#0a5c38]/10 dark:border-[#3fb68e]/30 dark:bg-[#3fb68e]/10 ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background`;
+  if (!src) {
+    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] text-white font-sans font-bold tracking-wide ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
     return (
       <span
         tabIndex={0}
         role="img"
         aria-label={altText}
-        className={`${fallbackBoxCls} font-mono font-bold text-[#0a5c38] dark:text-[#3fb68e]`}
-        style={{ ...style, fontSize: Math.max(9, Math.round(size * 0.28)) }}
+        className={fallbackBoxCls}
+        style={{ ...style, fontSize: 12 }}
       >
         {short}
       </span>
@@ -76,12 +70,8 @@ export function AgencyLogo({ short, size = 40, className = "", rounded = "rounde
         decoding="async"
         onLoad={() => setLoading(false)}
         onError={() => {
-          if (imgSource === "clearbit") {
-            setImgSource("google");
-          } else {
-            setImgSource("failed");
-            setLoading(false);
-          }
+          setFailed(true);
+          setLoading(false);
         }}
         className={`object-contain transition-opacity duration-300 ${loading ? "opacity-0" : "opacity-100"}`}
       />
