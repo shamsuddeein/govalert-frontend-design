@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
+import { SpeedDots } from "../lib/speedIndicator";
 import { agenciesData } from "../lib/agenciesData";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 import { ExternalLink } from "lucide-react";
@@ -198,11 +199,9 @@ function AgencyProfilePage() {
             <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
             <span className="font-medium text-foreground">{agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 items-center">
             <span className="text-muted-foreground w-24 shrink-0">Response:</span>
-            <span className="font-medium text-[#0a5c38] dark:text-[#3fb68e]">
-              ●●● <span className="text-foreground ml-1">{(agency.response_time_ms ?? 0) < 1500 ? "Fast" : "Acceptable"}</span>
-            </span>
+            <SpeedDots ms={agency.response_time_ms} showLabel />
           </div>
           <div className="flex gap-2">
             <span className="text-muted-foreground w-24 shrink-0">Detected:</span>
@@ -313,20 +312,18 @@ function AgencyProfilePage() {
           <h2 className="text-[17px] font-semibold text-foreground">Portal Health</h2>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <div className="text-[14px] text-[#5a6370] dark:text-[#8b9aad]">Response time (30 days)</div>
-              <div className="mt-1 font-mono-ui text-[14px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">
-                ~{agency.response_time_ms ?? 240}ms
-              </div>
+              <div className="text-[14px] text-muted-foreground">Response speed (30 days)</div>
+              <div className="mt-1"><SpeedDots ms={agency.response_time_ms} showLabel /></div>
             </div>
             <div>
-              <div className="text-[14px] text-[#5a6370] dark:text-[#8b9aad]">Uptime</div>
+              <div className="text-[14px] text-muted-foreground">Uptime</div>
               <div className="mt-1 font-mono-ui text-[14px] font-medium text-foreground">
                 {agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}
               </div>
             </div>
             {agency.last_10_checks && agency.last_10_checks.length > 0 && (
               <div>
-                <div className="text-[14px] text-[#5a6370] dark:text-[#8b9aad]">Last 10 checks</div>
+                <div className="text-[14px] text-muted-foreground">Last 10 checks</div>
                 <div className="mt-1 flex items-center gap-1 font-mono-ui text-[#0a5c38] dark:text-[#3fb68e]">
                   {agency.last_10_checks.map((chk, i) => (
                     <span key={i} className={chk ? "text-[#0a5c38] dark:text-[#3fb68e]" : "text-destructive"}>

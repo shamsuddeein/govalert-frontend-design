@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
 import { api, ApiSystemStatus, ApiAgency } from "../lib/api";
+import { SpeedDots } from "../lib/speedIndicator";
 
 export const Route = createFileRoute("/status")({
   component: StatusPage,
@@ -160,7 +161,6 @@ function StatusPage() {
           <div className="rounded-[8px] border border-border bg-card overflow-hidden">
             <div className="divide-y divide-border font-sans">
               {agencies.map((a) => {
-                const responseTime = a.response_time_ms ? `${a.response_time_ms} ms` : "No response";
                 const isOnline = a.status === "online";
                 const isMaintenance = a.status === "maintenance";
 
@@ -172,8 +172,8 @@ function StatusPage() {
                         <p className="text-xs text-muted-foreground font-mono">{a.portal_url.replace("https://", "").replace("http://", "")}</p>
                       </div>
                       <div className="flex items-center gap-4 text-xs font-mono">
-                        <span className="text-muted-foreground">{responseTime}</span>
-                        <span className="text-muted-foreground">↺ {timeAgo(a.last_checked)}</span>
+                        <SpeedDots ms={a.response_time_ms} showLabel />
+                        <span className="text-muted-foreground">Checked {timeAgo(a.last_checked)}</span>
                         <span
                           className={`font-semibold ${
                             isOnline ? "text-[#15803D]" : isMaintenance ? "text-[#B45309]" : "text-[#64748B]"
