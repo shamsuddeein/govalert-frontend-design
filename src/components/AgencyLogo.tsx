@@ -13,35 +13,37 @@ function domainFor(short: string): string | null {
 
 interface Props {
   short: string;
+  url?: string;
   size?: number;
   className?: string;
   rounded?: string;
 }
 
 /**
- * Renders the real favicon/logo of a government agency via Google's public
- * favicon service. Falls back to a mono acronym chip if the image fails.
+ * Renders the real favicon/logo of a government agency via public favicon services.
+ * Falls back gracefully to a green acronym chip if the domain image is unavailable or fails to load.
  */
-export function AgencyLogo({ short, size = 40, className = "", rounded = "rounded-[6px]" }: Props) {
+export function AgencyLogo({ short, url, size = 40, className = "", rounded = "rounded-[6px]" }: Props) {
   const [srcIdx, setSrcIdx] = useState(0);
   const [loading, setLoading] = useState(true);
 
   const agency = agenciesData.find((x) => x.short.toUpperCase() === short.toUpperCase());
-  const domain = agency ? (() => {
-    try {
-      return new URL(agency.officialWebsite).hostname.replace(/^www\./, "");
-    } catch {
-      return null;
-    }
-  })() : null;
+  
+  const targetUrl = url || agency?.officialWebsite || agency?.recruitmentPortal || `https://${short.toLowerCase()}.gov.ng`;
 
-  const sources = domain
-    ? [
-        `https://logo.clearbit.com/${domain}?size=128`,
-        `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-        `https://icons.duckduckgo.com/ip3/${domain}.ico`,
-      ]
-    : [];
+  const domain = (() => {
+    try {
+      return new URL(targetUrl).hostname.replace(/^www\./, "");
+    } catch {
+      return `${short.toLowerCase()}.gov.ng`;
+    }
+  })();
+
+  const sources = [
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    `https://logo.clearbit.com/${domain}?size=128`,
+    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+  ];
   const src = sources[srcIdx] ?? null;
 
   const boxCls = `relative grid place-items-center overflow-hidden border border-border bg-white dark:bg-[#1a2230] ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background`;
@@ -49,14 +51,14 @@ export function AgencyLogo({ short, size = 40, className = "", rounded = "rounde
   const altText = agency ? `${agency.name} official logo` : `${short} official logo`;
 
   if (!src) {
-    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] text-white font-sans font-bold tracking-wide ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
+    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] text-white font-sans text-[12px] font-bold tracking-wide shrink-0 ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
     return (
       <span
         tabIndex={0}
         role="img"
         aria-label={altText}
         className={fallbackBoxCls}
-        style={{ ...style, fontSize: 12 }}
+        style={style}
       >
         {short}
       </span>

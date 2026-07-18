@@ -1,8 +1,9 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { toast } from "sonner";
+import { isAuthenticated, api } from "../lib/api";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -58,10 +59,13 @@ const initialNotifications = [
 ];
 
 function DashboardPage() {
+  const navigate = useNavigate();
+
   const [activeTab, setActiveTab] = useState<"saved" | "notifications" | "profile" | "settings">(
     "saved"
   );
-  const [savedJobs, setSavedJobs] = useState(initialSavedJobs);
+  const [savedJobs, setSavedJobs] = useState<any[]>([]);
+  const [loadingJobs, setLoadingJobs] = useState(true);
   const [notifications, setNotifications] = useState(initialNotifications);
 
   // Telegram State
@@ -72,14 +76,21 @@ function DashboardPage() {
 
   // Profile Form State
   const [profileForm, setProfileForm] = useState({
-    name: "Shamsuddeein Alao",
-    email: "shamsuddeein@govalert.ng",
-    phone: "+234 812 345 6789",
-    state: "Kano",
-    qualification: "Bachelor's Degree",
-    field: "Software Engineering",
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
   });
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [savingProfile, setSavingProfile] = useState(false);
+
+  // Password Form State
+  const [passwordForm, setPasswordForm] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [changingPassword, setChangingPassword] = useState(false);
 
   // Settings State
   const [settings, setSettings] = useState({
@@ -89,9 +100,68 @@ function DashboardPage() {
     weeklyDigest: false,
   });
 
-  const handleRemoveSaved = (id: string) => {
-    setSavedJobs(savedJobs.filter((j) => j.id !== id));
-    toast.success("Job removed from saved list");
+  // Load profile & saved jobs from API
+  const loadUserData = async () => {
+    if (!isAuthenticated()) {
+      navigate({ to: "/sign-in" });
+      return;
+    }
+    setLoadingJobs(true);
+    setLoadingProfile(true);
+
+    try {
+      const [profileRes, jobsRes] = await Promise.all([
+        api.getMe(),
+        api.getSavedJobs(),
+      ]);
+
+      if (profileRes) {
+        setProfileForm({
+          firstName: profileRes.first_name || "",
+          lastName: profileRes.last_name || "",
+          email: profileRes.email || "",
+          phone: profileRes.phone || "",
+        });
+        if (Array.isArray(profileRes.categories_of_interest) && profileRes.categories_of_interest.length > 0) {
+          const prefSet = new Set(profileRes.categories_of_interest);
+          setSettings({
+            emailAlerts: prefSet.has("emailAlerts"),
+            telegramAlerts: prefSet.has("telegramAlerts"),
+            newsletter: prefSet.has("newsletter"),
+            weeklyDigest: prefSet.has("weeklyDigest"),
+          });
+        }
+      }
+
+      if (jobsRes) {
+        setSavedJobs(jobsRes);
+      }
+    } catch (e) {
+      console.warn("Failed to load user dashboard data:", e);
+    } finally {
+      setLoadingJobs(false);
+      setLoadingProfile(false);
+    }
+  };
+
+  useEffect(() => {
+    loadUserData();
+  }, []);
+
+  const handleSignOut = async () => {
+    await api.logout();
+    toast.success("Signed out successfully.");
+    navigate({ to: "/sign-in" });
+  };
+
+  const handleRemoveSaved = async (ref: string) => {
+    const success = await api.unsaveJob(ref);
+    if (success) {
+      setSavedJobs((prev) => prev.filter((j) => j.ref !== ref));
+      toast.success("Job removed from saved list");
+    } else {
+      toast.error("Failed to remove saved job.");
+    }
   };
 
   const markAllRead = () => {
@@ -99,25 +169,64 @@ function DashboardPage() {
     toast.success("All notifications marked as read");
   };
 
-  const handleSaveProfile = (e: React.FormEvent) => {
+  const handleSaveProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSavingProfile(true);
-    setTimeout(() => {
-      setSavingProfile(false);
-      toast.success("Profile details updated successfully!");
-    }, 800);
+    const res = await api.updateMe({
+      first_name: profileForm.firstName,
+      last_name: profileForm.lastName,
+      phone: profileForm.phone,
+    });
+    setSavingProfile(false);
+    if (res) {
+      toast.success("Profile updated successfully!");
+    } else {
+      toast.error("Failed to update profile.");
+    }
   };
 
-  const handleToggleSetting = (key: keyof typeof settings) => {
-    setSettings((prev) => {
-      const updated = { ...prev, [key]: !prev[key] };
-      if (key === "telegramAlerts" && updated[key] && !telegramConnected) {
-        toast.error("Please connect your Telegram account first!");
-        return prev;
-      }
-      toast.success("Settings preference saved");
-      return updated;
-    });
+  const handleChangePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+      toast.error("New passwords do not match!");
+      return;
+    }
+    if (passwordForm.newPassword.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+    setChangingPassword(true);
+    const success = await api.changePassword(passwordForm.oldPassword, passwordForm.newPassword);
+    setChangingPassword(false);
+    if (success) {
+      toast.success("Password changed successfully!");
+      setPasswordForm({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    } else {
+      toast.error("Failed to change password. Check old password.");
+    }
+  };
+
+  const handleToggleSetting = async (key: keyof typeof settings) => {
+    const nextVal = !settings[key];
+    if (key === "telegramAlerts" && nextVal && !telegramConnected) {
+      toast.error("Please connect your Telegram account first!");
+      return;
+    }
+
+    const updatedSettings = { ...settings, [key]: nextVal };
+    setSettings(updatedSettings);
+
+    // Save preferences to backend user profile
+    const activePreferences = Object.keys(updatedSettings).filter(
+      (k) => updatedSettings[k as keyof typeof settings]
+    );
+    const success = await api.updateMe({ categories_of_interest: activePreferences });
+
+    if (success) {
+      toast.success("Settings preference saved to database!");
+    } else {
+      toast.error("Failed to save settings preference.");
+    }
   };
 
   const handleStartTelegramConnection = () => {
@@ -250,55 +359,59 @@ function DashboardPage() {
 
                 {savedJobs.length > 0 ? (
                   <div className="grid gap-6 sm:grid-cols-2">
-                    {savedJobs.map((job) => (
-                      <div
-                        key={job.id}
-                        className="group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card"
-                      >
-                        <div className="space-y-4">
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-mono text-[11px] text-muted-foreground">REF: {job.id}</span>
-                            <StatusBadge status={job.status} />
+                    {savedJobs.map((job) => {
+                      const ref = job.ref || job.id;
+                      const agency = job.agency_name || job.agency;
+                      return (
+                        <div
+                          key={ref}
+                          className="group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card"
+                        >
+                          <div className="space-y-4">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="font-mono text-[11px] text-muted-foreground">REF: {ref}</span>
+                              <StatusBadge status={job.status === "new_opening" ? "new" : job.status} />
+                            </div>
+
+                            <div>
+                              <h4 className="text-[17px] font-semibold leading-snug text-foreground">
+                                {job.title}
+                              </h4>
+                              <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">
+                                {agency}
+                              </p>
+                            </div>
+
+                            <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                              <div>
+                                <span className="block text-muted-foreground text-[12px]">Deadline</span>
+                                <span className="font-medium text-foreground">{job.deadline || "Pending"}</span>
+                              </div>
+                              <div>
+                                <span className="block text-muted-foreground text-[12px]">Positions</span>
+                                <span className="font-medium text-foreground">{job.positions || "Multiple"}</span>
+                              </div>
+                            </div>
                           </div>
 
-                          <div>
-                            <h4 className="text-[17px] font-semibold leading-snug text-foreground">
-                              {job.title}
-                            </h4>
-                            <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e]">
-                              {job.agency}
-                            </p>
-                          </div>
-
-                          <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
-                            <div>
-                              <span className="block text-muted-foreground text-[12px]">Deadline</span>
-                              <span className="font-medium text-foreground">{job.deadline}</span>
-                            </div>
-                            <div>
-                              <span className="block text-muted-foreground text-[12px]">Positions</span>
-                              <span className="font-medium text-foreground">{job.positions}</span>
-                            </div>
+                          <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
+                            <button
+                              onClick={() => handleRemoveSaved(ref)}
+                              className="inline-flex h-[32px] items-center justify-center rounded-[6px] border border-border bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-[#b91c1c] hover:border-[#b91c1c]/40 cursor-pointer"
+                            >
+                              Remove
+                            </button>
+                            <Link
+                              to="/jobs/$jobId"
+                              params={{ jobId: ref }}
+                              className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
+                            >
+                              View details &rarr;
+                            </Link>
                           </div>
                         </div>
-
-                        <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
-                          <button
-                            onClick={() => handleRemoveSaved(job.id)}
-                            className="inline-flex h-[32px] items-center justify-center rounded-[6px] border border-border bg-card px-3 text-xs font-semibold text-muted-foreground hover:text-[#b91c1c] hover:border-[#b91c1c]/40 cursor-pointer"
-                          >
-                            Remove
-                          </button>
-                          <Link
-                            to="/jobs/$jobId"
-                            params={{ jobId: job.id }}
-                            className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
-                          >
-                            View details &rarr;
-                          </Link>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center py-16 border border-dashed border-border rounded-[8px] bg-card">
@@ -391,7 +504,7 @@ function DashboardPage() {
                 <div>
                   <h3 className="text-sm font-bold uppercase tracking-wider text-primary">Applicant Profile</h3>
                   <p className="text-xs text-muted-foreground">
-                    Customize your profile values to receive tailored eligibility warnings.
+                    Manage your account details and profile information.
                   </p>
                 </div>
 
@@ -399,13 +512,26 @@ function DashboardPage() {
                   <div className="grid gap-4 sm:grid-cols-2">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        Full Name
+                        First Name
                       </label>
                       <input
                         type="text"
                         required
-                        value={profileForm.name}
-                        onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
+                        value={profileForm.firstName}
+                        onChange={(e) => setProfileForm({ ...profileForm, firstName: e.target.value })}
+                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                        Last Name
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={profileForm.lastName}
+                        onChange={(e) => setProfileForm({ ...profileForm, lastName: e.target.value })}
                         className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
@@ -416,10 +542,9 @@ function DashboardPage() {
                       </label>
                       <input
                         type="email"
-                        required
+                        disabled
                         value={profileForm.email}
-                        onChange={(e) => setProfileForm({ ...profileForm, email: e.target.value })}
-                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                        className="rounded-[6px] border border-border bg-muted/50 opacity-70 px-3 py-2 text-xs outline-none cursor-not-allowed"
                       />
                     </div>
 
@@ -429,54 +554,9 @@ function DashboardPage() {
                       </label>
                       <input
                         type="text"
-                        required
+                        placeholder="+234 812 345 6789"
                         value={profileForm.phone}
                         onChange={(e) => setProfileForm({ ...profileForm, phone: e.target.value })}
-                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        State of Origin
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={profileForm.state}
-                        onChange={(e) => setProfileForm({ ...profileForm, state: e.target.value })}
-                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
-                      />
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        Highest Qualification
-                      </label>
-                      <select
-                        value={profileForm.qualification}
-                        onChange={(e) =>
-                          setProfileForm({ ...profileForm, qualification: e.target.value })
-                        }
-                        className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
-                      >
-                        <option>Master's Degree</option>
-                        <option>Bachelor's Degree</option>
-                        <option>HND (Higher National Diploma)</option>
-                        <option>OND (Ordinary National Diploma)</option>
-                        <option>WASSCE / NECO (O'level)</option>
-                      </select>
-                    </div>
-
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                        Field of Study
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={profileForm.field}
-                        onChange={(e) => setProfileForm({ ...profileForm, field: e.target.value })}
                         className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                       />
                     </div>
@@ -497,79 +577,147 @@ function DashboardPage() {
 
             {/* SETTINGS SCREEN */}
             {activeTab === "settings" && (
-              <section className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-6 text-left">
-                <div>
-                  <h3 className="text-sm font-bold uppercase tracking-wider text-primary">System Settings</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Control how and when you receive intelligence briefings.
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-border pb-4">
-                    <div>
-                      <h4 className="text-xs font-bold text-primary uppercase">Email Alerts</h4>
-                      <p className="text-xs text-muted-foreground">
-                        Receive instant alerts when a verified portal launches.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleToggleSetting("emailAlerts")}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
-                        settings.emailAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
-                      }`}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
-                          settings.emailAlerts ? "translate-x-4" : "translate-x-0"
-                        }`}
-                      />
-                    </button>
+              <div className="space-y-6">
+                <section className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-6 text-left">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-primary">System Settings</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Control how and when you receive intelligence briefings.
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between border-b border-border pb-4">
-                    <div>
-                      <h4 className="text-xs font-bold text-primary uppercase">Telegram Push Notifications</h4>
-                      <p className="text-xs text-muted-foreground">
-                        Direct-to-chat bot alerts with zero delivery delay.
-                      </p>
-                    </div>
-                    <button
-                      onClick={() => handleToggleSetting("telegramAlerts")}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
-                        settings.telegramAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
-                      }`}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
-                          settings.telegramAlerts ? "translate-x-4" : "translate-x-0"
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-border pb-4">
+                      <div>
+                        <h4 className="text-xs font-bold text-primary uppercase">Email Alerts</h4>
+                        <p className="text-xs text-muted-foreground">
+                          Receive instant alerts when a verified portal launches.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleToggleSetting("emailAlerts")}
+                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                          settings.emailAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
                         }`}
-                      />
-                    </button>
+                      >
+                        <span
+                          className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                            settings.emailAlerts ? "translate-x-4" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between border-b border-border pb-4">
+                      <div>
+                        <h4 className="text-xs font-bold text-primary uppercase">Telegram Push Notifications</h4>
+                        <p className="text-xs text-muted-foreground">
+                          Direct-to-chat bot alerts with zero delivery delay.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleToggleSetting("telegramAlerts")}
+                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                          settings.telegramAlerts ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                            settings.telegramAlerts ? "translate-x-4" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="text-xs font-bold text-primary uppercase">Weekly Intelligence Digest</h4>
+                        <p className="text-xs text-muted-foreground">
+                          A curated digest of the week's scam alerts and portal checks.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleToggleSetting("weeklyDigest")}
+                        className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
+                          settings.weeklyDigest ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
+                        }`}
+                      >
+                        <span
+                          className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
+                            settings.weeklyDigest ? "translate-x-4" : "translate-x-0"
+                          }`}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </section>
+
+                {/* Change Password Card */}
+                <section className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-6 text-left">
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider text-primary">Security & Password</h3>
+                    <p className="text-xs text-muted-foreground">
+                      Update your account security credentials.
+                    </p>
                   </div>
 
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h4 className="text-xs font-bold text-primary uppercase">Weekly Intelligence Digest</h4>
-                      <p className="text-xs text-muted-foreground">
-                        A curated digest of the week's scam alerts and portal checks.
-                      </p>
+                  <form onSubmit={handleChangePassword} className="space-y-4">
+                    <div className="grid gap-4 sm:grid-cols-3">
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          Current Password
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          placeholder="••••••••"
+                          value={passwordForm.oldPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, oldPassword: e.target.value })}
+                          className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          New Password
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          placeholder="••••••••"
+                          value={passwordForm.newPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                          className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                        />
+                      </div>
+
+                      <div className="flex flex-col gap-1.5">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                          Confirm New Password
+                        </label>
+                        <input
+                          type="password"
+                          required
+                          placeholder="••••••••"
+                          value={passwordForm.confirmPassword}
+                          onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                          className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                        />
+                      </div>
                     </div>
-                    <button
-                      onClick={() => handleToggleSetting("weeklyDigest")}
-                      className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border border-transparent transition-colors duration-150 ease-in-out focus:outline-none ${
-                        settings.weeklyDigest ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted"
-                      }`}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block size-4 transform rounded-full bg-background shadow ring-0 transition duration-150 ease-in-out ${
-                          settings.weeklyDigest ? "translate-x-4" : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                </div>
-              </section>
+
+                    <div className="border-t border-border pt-4 flex justify-end">
+                      <button
+                        type="submit"
+                        disabled={changingPassword}
+                        className="inline-flex h-[40px] items-center justify-center rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-5 text-xs font-semibold disabled:opacity-50 cursor-pointer"
+                      >
+                        {changingPassword ? "Updating..." : "Update Password"}
+                      </button>
+                    </div>
+                  </form>
+                </section>
+              </div>
             )}
           </div>
         </div>

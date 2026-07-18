@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
+import { isAuthenticated, api } from "../lib/api";
 
 export function Logo() {
   return (
@@ -97,6 +98,17 @@ export function ThemeToggle() {
 
 export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [authed, setAuthed] = useState(false);
+
+  useEffect(() => {
+    setAuthed(isAuthenticated());
+  }, []);
+
+  const handleLogout = async () => {
+    await api.logout();
+    setAuthed(false);
+    window.location.href = "/sign-in";
+  };
 
   return (
     <>
@@ -130,7 +142,7 @@ export function Nav() {
                 Agencies
               </Link>
               <Link
-                to="/faq"
+                to="/verification"
                 className="nav-link-underline text-[14px] font-medium text-muted-foreground transition-colors hover:text-primary py-1"
                 activeProps={{ className: "text-primary font-semibold" }}
               >
@@ -148,19 +160,38 @@ export function Nav() {
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
-            <Link
-              to="/login"
-              className="hidden text-[14px] font-medium text-muted-foreground hover:text-primary md:inline-flex cursor-pointer transition-colors"
-            >
-              Sign In
-            </Link>
-            <Link
-              to="/dashboard"
-              className="hidden text-[14px] font-medium text-muted-foreground hover:text-primary md:inline-flex cursor-pointer transition-colors"
-              activeProps={{ className: "text-primary font-semibold" }}
-            >
-              Dashboard
-            </Link>
+            {authed ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="hidden text-[14px] font-medium text-muted-foreground hover:text-primary md:inline-flex cursor-pointer transition-colors"
+                  activeProps={{ className: "text-primary font-semibold" }}
+                >
+                  Dashboard
+                </Link>
+                <button
+                  onClick={handleLogout}
+                  className="hidden text-[14px] font-medium text-muted-foreground hover:text-red-600 md:inline-flex cursor-pointer transition-colors"
+                >
+                  Sign Out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/sign-in"
+                  className="hidden text-[14px] font-medium text-muted-foreground hover:text-primary md:inline-flex cursor-pointer transition-colors"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/register"
+                  className="hidden text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline md:inline-flex cursor-pointer transition-colors"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
             <a
               href="https://t.me/GovAlert"
               target="_blank"
@@ -200,7 +231,7 @@ export function Nav() {
               <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Home</Link>
               <Link to="/jobs" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Jobs</Link>
               <Link to="/agencies" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Agencies</Link>
-              <Link to="/faq" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Verification</Link>
+              <Link to="/verification" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Verification</Link>
               <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">About</Link>
             </div>
 
@@ -208,8 +239,17 @@ export function Nav() {
 
             {/* Section 2: Account */}
             <div className="flex flex-col space-y-3">
-              <Link to="/login" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Sign In</Link>
-              <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Dashboard</Link>
+              {authed ? (
+                <>
+                  <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Dashboard</Link>
+                  <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} className="text-left text-[15px] font-medium text-muted-foreground hover:text-red-600">Sign Out</button>
+                </>
+              ) : (
+                <>
+                  <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Sign In</Link>
+                  <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-semibold text-[#0a5c38] dark:text-[#3fb68e]">Sign Up</Link>
+                </>
+              )}
             </div>
 
             <hr className="my-4 border-border/60" />
@@ -251,7 +291,7 @@ export function Footer() {
     {
       heading: "Resources",
       links: [
-        { label: "Verification FAQ", to: "/faq" },
+        { label: "Verification FAQ", to: "/verification" },
         { label: "Monitored Agencies", to: "/agencies" },
         { label: "System Status", to: "/status" },
       ],
@@ -322,7 +362,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 md:flex-row md:items-center">
           <p className="font-sans text-[11px] text-muted-foreground max-w-xl">
-            © 2024 GovAlert. Independent monitoring. Not affiliated with the Federal Government.
+            © {new Date().getFullYear()} GovAlert. Independent monitoring. Not affiliated with the Federal Government.
           </p>
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">

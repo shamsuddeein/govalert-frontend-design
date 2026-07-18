@@ -44,7 +44,7 @@ const faqList: FaqItem[] = [
   },
 ];
 
-export default function FaqPage() {
+function FaqPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   const toggleIndex = (idx: number) => {

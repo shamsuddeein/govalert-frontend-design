@@ -1,9 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
-import { latestJobs, StatusBadge, type Job, type Status } from "./index";
-import { agenciesData } from "../lib/agenciesData";
+import { StatusBadge, latestJobs, type Job, type Status } from "./index";
+import { api, ApiAgency, isAuthenticated } from "../lib/api";
+import { Bookmark, BookmarkCheck } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsPage,
@@ -17,69 +19,131 @@ function JobsPage() {
   const [status, setStatus] = useState("");
   const [sortBy, setSortBy] = useState<"recent" | "oldest" | "alpha" | "deadline">("recent");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 9;
+  const PAGE_SIZE = 20;
 
-  // Extract unique agencies, states and categories dynamically
-  const agencies = useMemo(() => {
-    return Array.from(new Set(latestJobs.map((j) => j.agencyShort))).sort();
+  const [jobs, setJobs] = useState<Job[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [savedRefMap, setSavedRefMap] = useState<Record<string, boolean>>({});
+  const [agenciesList, setAgenciesList] = useState<ApiAgency[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const loadAgenciesAndSaved = async () => {
+      try {
+        const res = await api.getAgencies();
+        if (res && res.results) {
+          setAgenciesList(res.results);
+        }
+        if (isAuthenticated()) {
+          const saved = await api.getSavedJobs();
+          const map: Record<string, boolean> = {};
+          saved.forEach((j) => {
+            map[j.ref] = true;
+          });
+          setSavedRefMap(map);
+        }
+      } catch (e) {}
+    };
+    loadAgenciesAndSaved();
   }, []);
 
-  const states = useMemo(() => {
-    return Array.from(new Set(latestJobs.map((j) => j.state))).sort();
-  }, []);
-
-  const categoriesList = useMemo(() => {
-    return Array.from(new Set(latestJobs.map((j) => j.category))).sort();
-  }, []);
-
-  // Filter and sort jobs
-  const filteredAndSortedJobs = useMemo(() => {
-    let result = [...latestJobs];
-
-    if (search.trim()) {
-      const q = search.toLowerCase();
-      result = result.filter(
-        (j) =>
-          j.title.toLowerCase().includes(q) ||
-          j.agency.toLowerCase().includes(q) ||
-          j.agencyShort.toLowerCase().includes(q) ||
-          j.id.toLowerCase().includes(q)
-      );
+  const handleToggleBookmark = async (ref: string, e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isAuthenticated()) {
+      toast.error("Please sign in to save jobs!");
+      return;
     }
+    const isBookmarked = savedRefMap[ref];
+    if (isBookmarked) {
+      const success = await api.unsaveJob(ref);
+      if (success) {
+        setSavedRefMap((prev) => ({ ...prev, [ref]: false }));
+        toast.success("Job removed from saved list.");
+      }
+    } else {
+      const success = await api.saveJob(ref);
+      if (success) {
+        setSavedRefMap((prev) => ({ ...prev, [ref]: true }));
+        toast.success("Job saved to dashboard!");
+      }
+    }
+  };
 
-    if (agency) result = result.filter((j) => j.agencyShort === agency);
-    if (category) result = result.filter((j) => j.category === category);
-    if (state) result = result.filter((j) => j.state === state);
-    if (status) result = result.filter((j) => j.status === status);
+  const fetchFilteredJobs = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const orderingMap: Record<string, string> = {
+        recent: "-published_at",
+        oldest: "published_at",
+        alpha: "title",
+        deadline: "deadline",
+      };
+      const res = await api.getJobs({
+        search: search || undefined,
+        category: category || undefined,
+        location: state || undefined,
+        status: status || undefined,
+        ordering: orderingMap[sortBy] || undefined,
+        agency: agency || undefined,
+        page: currentPage,
+        page_size: PAGE_SIZE,
+      });
 
-    result.sort((a, b) => {
-      if (sortBy === "recent") {
-        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      if (res && res.results && res.results.length > 0) {
+        const mapped = res.results.map((j) => ({
+          id: j.ref,
+          agency: j.agency_name,
+          agencyShort: j.agency_acronym,
+          title: j.title,
+          deadline: j.deadline || "Pending",
+          status: (j.status === "new_opening" ? "new" : j.status) as Status,
+          detected: new Date(j.published_at).toLocaleDateString(),
+          category: j.category,
+          state: j.location_state,
+          createdAt: j.published_at,
+          positions: j.positions || "Multiple Positions",
+          officialUrl: j.official_url,
+        }));
+        setJobs(mapped);
+        setTotalCount(res.count);
+      } else {
+        setJobs(latestJobs);
+        setTotalCount(latestJobs.length);
       }
-      if (sortBy === "oldest") {
-        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
-      }
-      if (sortBy === "alpha") {
-        return a.title.localeCompare(b.title);
-      }
-      if (sortBy === "deadline") {
-        if (a.status === "closed" && b.status !== "closed") return 1;
-        if (b.status === "closed" && a.status !== "closed") return -1;
-        if (a.deadline === "Pending" && b.deadline !== "Pending") return 1;
-        if (b.deadline === "Pending" && a.deadline !== "Pending") return -1;
-        return new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
-      }
-      return 0;
-    });
+    } catch (err: any) {
+      setJobs(latestJobs);
+      setTotalCount(latestJobs.length);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return result;
+  // Re-fetch when filters or page changes
+  useEffect(() => {
+    fetchFilteredJobs();
+  }, [search, agency, category, state, status, sortBy, currentPage]);
+
+  // Reset to page 1 when filters change
+  useEffect(() => {
+    setCurrentPage(1);
   }, [search, agency, category, state, status, sortBy]);
 
-  const totalPages = Math.ceil(filteredAndSortedJobs.length / itemsPerPage);
-  const paginatedJobs = useMemo(() => {
-    const start = (currentPage - 1) * itemsPerPage;
-    return filteredAndSortedJobs.slice(start, start + itemsPerPage);
-  }, [filteredAndSortedJobs, currentPage]);
+  const agencies = useMemo(() => {
+    return agenciesList.map((a) => a.acronym).sort();
+  }, [agenciesList]);
+
+  const states = useMemo(() => {
+    return Array.from(new Set(jobs.map((j) => j.state))).sort();
+  }, [jobs]);
+
+  const categoriesList = useMemo(() => {
+    return ["Security", "Finance", "Utilities", "Health", "Education", "Transport", "Statistics", "Judiciary", "Other"];
+  }, []);
+
+  const totalPages = Math.ceil(totalCount / PAGE_SIZE);
 
   const handleClearFilters = () => {
     setSearch("");
@@ -107,7 +171,7 @@ function JobsPage() {
             Federal Recruitments Feed
           </h1>
           <p className="text-[15px] text-muted-foreground">
-            Browse verified federal government job openings across all MDAs.
+            Live surveillance index of verified recruitment notices across Nigerian Federal Ministries, Departments, and Agencies.
           </p>
         </div>
 
@@ -117,8 +181,19 @@ function JobsPage() {
             className="flex items-center rounded-[8px] border border-border bg-card p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
             onSubmit={(e) => e.preventDefault()}
           >
-            <div className="flex items-center flex-1 px-3">
-              <span className="text-muted-foreground mr-2 text-sm">🔍</span>
+            <div className="relative flex-1">
+              <svg
+                className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                width="16"
+                height="16"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                aria-hidden="true"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
+              </svg>
               <input
                 type="text"
                 value={search}
@@ -127,13 +202,27 @@ function JobsPage() {
                   setCurrentPage(1);
                 }}
                 placeholder="Search by role title, agency, or ID..."
-                className="w-full border-none bg-transparent py-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:outline-none"
+                className="w-full border-none bg-transparent py-3 pl-10 pr-3 text-[14px] text-foreground placeholder:text-muted-foreground focus:outline-none"
               />
             </div>
           </form>
         </div>
 
-        {/* Filter Toolbar (4 Dropdowns side-by-side) */}
+        {/* Filter Toolbar */}
+        <div className="mb-6 flex items-center justify-between">
+          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground font-mono">
+            Filter Parameters
+          </span>
+          {(search || agency || category || state || status) && (
+            <button
+              onClick={handleClearFilters}
+              className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer"
+            >
+              Reset all filters
+            </button>
+          )}
+        </div>
+
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
@@ -145,14 +234,18 @@ function JobsPage() {
                 setAgency(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+              className="h-[44px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
             >
-              <option value="">All Agencies ▾</option>
-              {agencies.map((a) => (
-                <option key={a} value={a}>
-                  {a}
-                </option>
-              ))}
+              <option value="" className="bg-card text-foreground">All Agencies ▾</option>
+              {agencies.length === 0 ? (
+                <option value="" disabled className="bg-card text-muted-foreground">Loading agencies...</option>
+              ) : (
+                agencies.map((a) => (
+                  <option key={a} value={a} className="bg-card text-foreground">
+                    {a}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -166,11 +259,11 @@ function JobsPage() {
                 setCategory(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+              className="h-[44px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
             >
-              <option value="">All Categories ▾</option>
+              <option value="" className="bg-card text-foreground">All Categories ▾</option>
               {categoriesList.map((c) => (
-                <option key={c} value={c}>
+                <option key={c} value={c} className="bg-card text-foreground">
                   {c}
                 </option>
               ))}
@@ -187,11 +280,11 @@ function JobsPage() {
                 setState(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+              className="h-[44px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
             >
-              <option value="">All Locations ▾</option>
+              <option value="" className="bg-card text-foreground">All Locations ▾</option>
               {states.map((s) => (
-                <option key={s} value={s}>
+                <option key={s} value={s} className="bg-card text-foreground">
                   {s} State
                 </option>
               ))}
@@ -208,164 +301,193 @@ function JobsPage() {
                 setStatus(e.target.value);
                 setCurrentPage(1);
               }}
-              className="h-[40px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+              className="h-[44px] w-full rounded-[6px] border border-border bg-card px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
             >
-              <option value="">All Statuses ▾</option>
-              <option value="verified">Verified</option>
-              <option value="urgent">Urgent</option>
-              <option value="warning">Updating</option>
-              <option value="closed">Closed</option>
+              <option value="" className="bg-card text-foreground">All Statuses ▾</option>
+              <option value="verified" className="bg-card text-foreground">Verified</option>
+              <option value="urgent" className="bg-card text-foreground">Urgent</option>
+              <option value="warning" className="bg-card text-foreground">Updating</option>
+              <option value="closed" className="bg-card text-foreground">Closed</option>
             </select>
           </div>
         </div>
 
-        {/* Info Counter Row */}
-        <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground">
-          <p>
-            Showing <span className="font-semibold text-foreground">{filteredAndSortedJobs.length}</span> verified listings
-          </p>
-          <div className="flex items-center gap-1">
-            <span>Sort:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-              className="bg-transparent font-semibold text-foreground outline-none border-none cursor-pointer"
-            >
-              <option value="recent">Recently Detected &darr;</option>
-              <option value="oldest">Oldest First</option>
-              <option value="alpha">Alphabetical (A-Z)</option>
-              <option value="deadline">Nearest Deadline</option>
-            </select>
+        {/* Loading and Error States */}
+        {loading && (
+          <div className="py-20 flex flex-col items-center justify-center space-y-4">
+            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
+            <p className="text-sm text-muted-foreground">Loading verified listings...</p>
           </div>
-        </div>
+        )}
 
-        {/* Job Listings Grid */}
-        {paginatedJobs.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {paginatedJobs.map((job) => {
-              const agencyDataObj = agenciesData.find((a) => a.short === job.agencyShort);
-              const portalUrl = agencyDataObj ? agencyDataObj.recruitmentPortal : "#";
-              const isClosed = job.status === "closed";
-
-              return (
-                <div
-                  key={job.id}
-                  className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card ${
-                    isClosed ? "opacity-65 bg-muted/5" : ""
-                  }`}
-                >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <AgencyLogo short={job.agencyShort} size={32} />
-                        <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
-                      </div>
-                      <StatusBadge status={job.status} />
-                    </div>
-
-                    <div>
-                      <h3 className="text-[18px] font-semibold leading-snug text-foreground">
-                        {job.title}
-                      </h3>
-                      <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
-                        <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort }}>
-                          {job.agency}
-                        </Link>
-                      </p>
-                    </div>
-
-                    <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
-                      <div>
-                        <span className="block text-muted-foreground text-[12px]">Deadline</span>
-                        <span className="font-medium text-foreground">{job.deadline}</span>
-                      </div>
-                      <div>
-                        <span className="block text-muted-foreground text-[12px]">Positions</span>
-                        <span className="font-medium text-foreground">{job.positions || "Multiple"}</span>
-                      </div>
-                      <div>
-                        <span className="block text-muted-foreground text-[12px]">Published</span>
-                        <span className="font-medium text-foreground">{job.detected}</span>
-                      </div>
-                      <div>
-                        <span className="block text-muted-foreground text-[12px]">Verification</span>
-                        <a
-                          href={portalUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline inline-flex items-center gap-1 text-[12px]"
-                        >
-                          OFFICIAL SOURCE
-                          <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-6 pt-3 flex justify-end">
-                    <Link
-                      to="/jobs/$jobId"
-                      params={{ jobId: job.id }}
-                      className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
-                    >
-                      View details &rarr;
-                    </Link>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <div className="rounded-[8px] border border-dashed border-border py-12 text-center bg-card">
-            <h3 className="text-sm font-bold text-primary">No listings found</h3>
-            <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
-              We couldn't find any listings matching your search or filters. Try adjusting your
-              selections or resetting.
-            </p>
+        {error && (
+          <div className="rounded-[8px] border border-red-200 bg-red-50/50 p-6 text-center max-w-md mx-auto space-y-4 my-10">
+            <p className="text-sm font-medium text-red-600">{error}</p>
             <button
-              onClick={handleClearFilters}
-              className="mt-6 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
+              onClick={fetchFilteredJobs}
+              className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-[6px] cursor-pointer hover:bg-red-700"
             >
-              Reset filters
+              Retry
             </button>
           </div>
         )}
 
-        {/* Pagination Controls */}
-        {totalPages > 1 && (
-          <div className="mt-12 flex items-center justify-center gap-2 border-t border-border pt-8">
-            <button
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
-              className="inline-flex size-8 items-center justify-center rounded-[6px] border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
-              &larr;
-            </button>
+        {!loading && !error && (
+          <>
+            {/* Info Counter Row */}
+            <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground">
+              <p>
+                Showing <span className="font-semibold text-foreground">{jobs.length}</span> verified listings
+              </p>
+              <div className="flex items-center gap-1">
+                <span>Sort:</span>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value as any)}
+                  className="bg-transparent font-semibold text-foreground outline-none border-none cursor-pointer"
+                >
+                  <option value="recent">Recently Detected &darr;</option>
+                  <option value="oldest">Oldest First</option>
+                  <option value="alpha">Alphabetical (A-Z)</option>
+                  <option value="deadline">Nearest Deadline</option>
+                </select>
+              </div>
+            </div>
 
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`inline-flex size-8 items-center justify-center rounded-[6px] text-xs font-bold cursor-pointer ${
-                  currentPage === page
-                    ? "bg-primary text-primary-foreground"
-                    : "border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground"
-                }`}
-              >
-                {page}
-              </button>
-            ))}
+            {/* Job Listings Grid */}
+            {jobs.length > 0 ? (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                {jobs.map((job) => {
+                  const portalUrl = job.officialUrl || "#";
+                  const isClosed = job.status === "closed";
 
-            <button
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
-              className="inline-flex size-8 items-center justify-center rounded-[6px] border border-border bg-card text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
-            >
-              &rarr;
-            </button>
-          </div>
+                  return (
+                    <div
+                      key={job.id}
+                      className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card ${
+                        isClosed ? "opacity-65 bg-muted/5" : ""
+                      }`}
+                    >
+                      <div className="space-y-4">
+                        <div className="flex items-center justify-between gap-2">
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <AgencyLogo short={job.agencyShort} size={32} />
+                            <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
+                          </div>
+                          <StatusBadge status={job.status} />
+                        </div>
+
+                        <div>
+                          <h3 className="text-[18px] font-semibold leading-snug text-foreground">
+                            {job.title}
+                          </h3>
+                          <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
+                            <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort || job.agency || "NNPC" }}>
+                              {job.agency}
+                            </Link>
+                          </p>
+                        </div>
+
+                        <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                          <div>
+                            <span className="block text-muted-foreground text-[12px]">Deadline</span>
+                            <span className="font-medium text-foreground">{job.deadline}</span>
+                          </div>
+                          <div>
+                            <span className="block text-muted-foreground text-[12px]">Positions</span>
+                            <span className="font-medium text-foreground">{job.positions || "Multiple"}</span>
+                          </div>
+                          <div>
+                            <span className="block text-muted-foreground text-[12px]">Published</span>
+                            <span className="font-medium text-foreground">{job.detected}</span>
+                          </div>
+                          <div>
+                            <span className="block text-muted-foreground text-[12px]">Verification</span>
+                            <a
+                              href={portalUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline inline-flex items-center gap-1 text-[12px]"
+                            >
+                              OFFICIAL SOURCE
+                              <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                              </svg>
+                            </a>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
+                        <button
+                          onClick={(e) => handleToggleBookmark(job.id, e)}
+                          className={`inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors cursor-pointer ${
+                            savedRefMap[job.id]
+                              ? "text-[#0a5c38] dark:text-[#3fb68e]"
+                              : "text-muted-foreground hover:text-foreground"
+                          }`}
+                        >
+                          {savedRefMap[job.id] ? (
+                            <BookmarkCheck className="size-4 fill-current" />
+                          ) : (
+                            <Bookmark className="size-4" />
+                          )}
+                          <span>{savedRefMap[job.id] ? "Saved" : "Save"}</span>
+                        </button>
+
+                        <Link
+                          to="/jobs/$jobId"
+                          params={{ jobId: job.id }}
+                          className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
+                        >
+                          View details &rarr;
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="rounded-[8px] border border-dashed border-border py-12 text-center bg-card">
+                <h3 className="text-sm font-bold text-primary">No listings found</h3>
+                <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
+                  We couldn't find any listings matching your search or filters. Try adjusting your
+                  selections or resetting.
+                </p>
+                <button
+                  onClick={handleClearFilters}
+                  className="mt-6 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
+                >
+                  Reset filters
+                </button>
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {totalPages > 1 && (
+              <div className="mt-12 flex items-center justify-center gap-2 border-t border-border pt-8">
+                <button
+                  disabled={currentPage === 1}
+                  onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
+                  className="inline-flex h-8 px-3 items-center justify-center rounded-[6px] border border-border bg-card text-xs text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                >
+                  ← Prev
+                </button>
+
+                <span className="text-xs text-muted-foreground font-mono px-3">
+                  Page {currentPage} of {totalPages} &nbsp;·&nbsp; {totalCount} results
+                </span>
+
+                <button
+                  disabled={currentPage === totalPages}
+                  onClick={() => setCurrentPage((p) => Math.min(p + 1, totalPages))}
+                  className="inline-flex h-8 px-3 items-center justify-center rounded-[6px] border border-border bg-card text-xs text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+                >
+                  Next →
+                </button>
+              </div>
+            )}
+          </>
         )}
       </main>
       <Footer />

@@ -35,7 +35,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  console.error("Root Route Error:", error);
   const router = useRouter();
 
   return (
@@ -47,6 +47,11 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
         <p className="mt-2 text-sm text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
+        {error?.message && (
+          <div className="mt-3 p-3 text-xs font-mono text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400 rounded border border-red-200 dark:border-red-900 text-left overflow-auto max-h-32">
+            {error.message}
+          </div>
+        )}
         <div className="mt-6 flex flex-wrap justify-center gap-2">
           <button
             onClick={() => {

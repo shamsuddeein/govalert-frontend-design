@@ -85,7 +85,7 @@ function ForgotPasswordPage() {
 
           <div className="mt-8 border-t border-border pt-6 text-center text-xs">
             <Link
-              to="/login"
+              to="/sign-in"
               className="inline-flex items-center gap-1.5 font-semibold text-primary hover:underline"
             >
               <ArrowLeft className="size-3.5" /> Back to Sign In

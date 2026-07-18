@@ -1,8 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Nav, Footer } from "../components/layout";
-import { latestJobs, StatusBadge } from "./index";
+import { StatusBadge } from "./index";
 import { AgencyLogo } from "../components/AgencyLogo";
+import { api, ApiJob } from "../lib/api";
 import {
   Search as SearchIcon,
   Building,
@@ -11,10 +12,10 @@ import {
   Briefcase,
   SlidersHorizontal,
   BellRing,
-  HelpCircle,
   X,
   Sliders,
   Calendar,
+  Loader2,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -22,58 +23,104 @@ export const Route = createFileRoute("/search")({
   component: SearchPage,
 });
 
+type DisplayJob = {
+  id: string;
+  agency: string;
+  agencyShort: string;
+  title: string;
+  deadline: string;
+  status: string;
+  detected: string;
+  category: string;
+  state: string;
+};
+
+const CATEGORIES = [
+  "Security",
+  "Finance",
+  "Utilities",
+  "Health",
+  "Education",
+  "Transport",
+  "Statistics",
+  "Judiciary",
+  "Other",
+];
+
+const STATES = [
+  "Federal",
+  "Abuja",
+  "Lagos",
+  "Rivers",
+  "Kano",
+  "Kaduna",
+  "Oyo",
+  "Enugu",
+  "Delta",
+  "Anambra",
+  "Borno",
+];
+
 function SearchPage() {
   const [keyword, setKeyword] = useState("");
-  const [agency, setAgency] = useState("");
+  const [debouncedKeyword, setDebouncedKeyword] = useState("");
   const [category, setCategory] = useState("");
-  const [state, setState] = useState("");
+  const [location, setLocation] = useState("");
   const [status, setStatus] = useState("");
   const [showAdvanced, setShowAdvanced] = useState(true);
 
-  // Extract list of unique agencies & categories
-  const agencies = useMemo(() => {
-    return Array.from(new Set(latestJobs.map((j) => j.agencyShort))).sort();
-  }, []);
+  const [results, setResults] = useState<DisplayJob[]>([]);
+  const [totalCount, setTotalCount] = useState(0);
+  const [loading, setLoading] = useState(false);
 
-  const categories = useMemo(() => {
-    return Array.from(new Set(latestJobs.map((j) => j.category))).sort();
-  }, []);
+  // Debounce keyword input
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedKeyword(keyword), 400);
+    return () => clearTimeout(id);
+  }, [keyword]);
 
-  const states = [
-    "Abuja (FCT)",
-    "Lagos State",
-    "Rivers State",
-    "Kano State",
-    "Kaduna State",
-    "Oyo State",
-    "Enugu State",
-    "Delta State",
-  ];
+  const fetchResults = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await api.getJobs({
+        search: debouncedKeyword || undefined,
+        category: category || undefined,
+        location: location || undefined,
+        status: status || undefined,
+        page_size: 50,
+      });
 
-  const filteredJobs = useMemo(() => {
-    return latestJobs.filter((job) => {
-      if (
-        keyword &&
-        !job.title.toLowerCase().includes(keyword.toLowerCase()) &&
-        !job.agency.toLowerCase().includes(keyword.toLowerCase())
-      ) {
-        return false;
+      if (res && res.results) {
+        const mapped: DisplayJob[] = res.results.map((j: ApiJob) => ({
+          id: j.ref,
+          agency: j.agency_name,
+          agencyShort: j.agency_acronym,
+          title: j.title,
+          deadline: j.deadline || "Pending",
+          status: j.status === "new_opening" ? "new" : j.status,
+          detected: j.published_at
+            ? new Date(j.published_at).toLocaleDateString()
+            : "Unknown",
+          category: j.category,
+          state: j.location_state,
+        }));
+        setResults(mapped);
+        setTotalCount(res.count);
+      } else {
+        setResults([]);
+        setTotalCount(0);
       }
-      if (agency && job.agencyShort !== agency) {
-        return false;
-      }
-      if (category && job.category !== category) {
-        return false;
-      }
-      if (state && !job.state.includes(state.split(" ")[0])) {
-        return false;
-      }
-      if (status && job.status !== status) {
-        return false;
-      }
-      return true;
-    });
-  }, [keyword, agency, category, state, status]);
+    } catch {
+      setResults([]);
+      setTotalCount(0);
+    } finally {
+      setLoading(false);
+    }
+  }, [debouncedKeyword, category, location, status]);
+
+  useEffect(() => {
+    fetchResults();
+  }, [fetchResults]);
 
   const handleSaveSearchAlert = () => {
     toast.success(
@@ -83,11 +130,13 @@ function SearchPage() {
 
   const handleReset = () => {
     setKeyword("");
-    setAgency("");
+    setDebouncedKeyword("");
     setCategory("");
-    setState("");
+    setLocation("");
     setStatus("");
   };
+
+  const hasActiveFilters = keyword || category || location || status;
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
@@ -110,8 +159,9 @@ function SearchPage() {
               <div className="relative flex-1">
                 <SearchIcon className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <input
+                  id="search-keyword"
                   type="text"
-                  placeholder="Search by keywords (e.g., Engineer, Trainee, Custom)..."
+                  placeholder="Search by keywords (e.g., Engineer, Trainee, Customs)..."
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
                   className="w-full rounded border border-border bg-background py-2 pl-10 pr-4 text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary"
@@ -132,6 +182,9 @@ function SearchPage() {
               >
                 <SlidersHorizontal className="size-4" />
                 Filters
+                {hasActiveFilters && (
+                  <span className="ml-1 h-2 w-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
+                )}
               </button>
             </div>
 
@@ -140,36 +193,17 @@ function SearchPage() {
               <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 border-t border-border pt-4 mt-1">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Building className="size-3" /> MDA Agency
-                  </label>
-                  <select
-                    value={agency}
-                    onChange={(e) => setAgency(e.target.value)}
-                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
-                  >
-                    <option value="">All Agencies</option>
-                    {agencies.map((a) => (
-                      <option key={a} value={a}>
-                        {a}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <Briefcase className="size-3" /> Job Category
                   </label>
                   <select
+                    id="search-category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                   >
                     <option value="">All Categories</option>
-                    {categories.map((c) => (
-                      <option key={c} value={c}>
-                        {c}
-                      </option>
+                    {CATEGORIES.map((c) => (
+                      <option key={c} value={c.toLowerCase()}>{c}</option>
                     ))}
                   </select>
                 </div>
@@ -179,32 +213,32 @@ function SearchPage() {
                     <MapPin className="size-3" /> Location (State)
                   </label>
                   <select
-                    value={state}
-                    onChange={(e) => setState(e.target.value)}
+                    id="search-location"
+                    value={location}
+                    onChange={(e) => setLocation(e.target.value)}
                     className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                   >
                     <option value="">All Locations</option>
-                    {states.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
+                    {STATES.map((s) => (
+                      <option key={s} value={s}>{s}</option>
                     ))}
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Clock className="size-3" /> Status Vetting
+                    <Building className="size-3" /> Status Vetting
                   </label>
                   <select
+                    id="search-status"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
                     className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
                   >
                     <option value="">All Statuses</option>
                     <option value="verified">Verified</option>
-                    <option value="urgent">Urgent</option>
-                    <option value="warning">Warning</option>
+                    <option value="new_opening">New Opening</option>
+                    <option value="updating">Updating</option>
                     <option value="closed">Closed</option>
                   </select>
                 </div>
@@ -231,17 +265,25 @@ function SearchPage() {
           </div>
         </div>
 
-        {/* Results grid */}
-        <div className="mb-6 flex justify-between items-center">
-          <p className="text-xs text-muted-foreground">
-            Found <span className="font-semibold text-foreground">{filteredJobs.length}</span>{" "}
-            matching recruitments
-          </p>
+        {/* Results Header */}
+        <div className="mb-6 flex justify-between items-center min-h-[24px]">
+          {loading ? (
+            <span className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Loader2 className="size-3.5 animate-spin" />
+              Searching live database...
+            </span>
+          ) : (
+            <p className="text-xs text-muted-foreground">
+              Found <span className="font-semibold text-foreground">{totalCount}</span>{" "}
+              matching recruitment{totalCount !== 1 ? "s" : ""} in GovAlert database
+            </p>
+          )}
         </div>
 
-        {filteredJobs.length > 0 ? (
+        {/* Results Grid */}
+        {!loading && results.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {filteredJobs.map((job) => (
+            {results.map((job) => (
               <Link
                 key={job.id}
                 to="/jobs/$jobId"
@@ -251,10 +293,10 @@ function SearchPage() {
                 <div>
                   <div className="flex items-start justify-between gap-4">
                     <AgencyLogo short={job.agencyShort} size={40} />
-                    <StatusBadge status={job.status} />
+                    <StatusBadge status={job.status as any} />
                   </div>
 
-                  <h3 className="mt-4 text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-primary line-clamp-1">
+                  <h3 className="mt-4 text-sm font-bold tracking-tight text-foreground transition-colors group-hover:text-primary line-clamp-2">
                     {job.title}
                   </h3>
                   <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{job.agency}</p>
@@ -277,13 +319,13 @@ function SearchPage() {
                     Detected {job.detected}
                   </span>
                   <span className="inline-flex items-center gap-1 font-semibold text-primary group-hover:underline">
-                    View & Apply &rarr;
+                    View &amp; Apply &rarr;
                   </span>
                 </div>
               </Link>
             ))}
           </div>
-        ) : (
+        ) : !loading ? (
           <div className="rounded border border-dashed border-border py-12 text-center bg-card">
             <Sliders className="mx-auto size-10 text-muted-foreground" />
             <h3 className="mt-4 text-sm font-bold text-primary">No results found</h3>
@@ -291,8 +333,16 @@ function SearchPage() {
               Try adjusting your keywords or filter parameters. All job entries on GovAlert are
               sourced from official government bulletins.
             </p>
+            {hasActiveFilters && (
+              <button
+                onClick={handleReset}
+                className="mt-4 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
+              >
+                Clear all filters
+              </button>
+            )}
           </div>
-        )}
+        ) : null}
       </main>
       <Footer />
     </div>

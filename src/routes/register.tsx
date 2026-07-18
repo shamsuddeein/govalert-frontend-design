@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
 import { ShieldCheck, User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
+import { api } from "../lib/api";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
@@ -18,7 +19,7 @@ function RegisterPage() {
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
@@ -30,11 +31,15 @@ function RegisterPage() {
     }
     setLoading(true);
 
-    setTimeout(() => {
-      setLoading(false);
+    const tokens = await api.register(name, email, password);
+    setLoading(false);
+
+    if (tokens) {
       toast.success("Account created successfully!");
       navigate({ to: "/dashboard" });
-    }, 1000);
+    } else {
+      toast.error("Failed to create account. Email may already be in use.");
+    }
   };
 
   return (
@@ -43,12 +48,14 @@ function RegisterPage() {
       <main className="flex-1 flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-md rounded border border-border bg-card p-8 shadow-sm relative">
           <div className="text-center mb-8">
-            <div className="mx-auto grid size-10 place-items-center rounded border border-border bg-muted text-primary">
-              <ShieldCheck className="size-5" />
+            <div className="flex items-center justify-center gap-2 mb-4">
+              <span className="text-2xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
+                GovAlert
+              </span>
             </div>
-            <h1 className="mt-4 text-xl font-bold tracking-tight text-primary">Get started</h1>
+            <h1 className="text-xl font-bold tracking-tight text-primary">Create an account</h1>
             <p className="mt-1.5 text-xs text-muted-foreground">
-              Create an account to monitor portal openings.
+              Monitor portal openings and receive instant recruitment updates.
             </p>
           </div>
 
@@ -159,7 +166,7 @@ function RegisterPage() {
 
           <div className="mt-8 border-t border-border pt-6 text-center text-xs text-muted-foreground">
             Already have an account?{" "}
-            <Link to="/login" className="font-semibold text-primary hover:underline">
+            <Link to="/sign-in" className="font-semibold text-primary hover:underline">
               Sign in
             </Link>
           </div>

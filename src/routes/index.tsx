@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
+import { api, ApiAgency, ApiJob, ApiSystemStatus, ApiLiveFeedItem } from "../lib/api";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -235,11 +236,11 @@ export function StatusBadge({ status }: { status: Status }) {
       ),
     },
     warning: {
-      label: "Updating",
-      cls: "bg-[#3b4bbf] text-white",
+      label: "Warning",
+      cls: "bg-[#b45309] text-white",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
         </svg>
       ),
     },
@@ -277,10 +278,12 @@ function Hero({
   searchQuery,
   setSearchQuery,
   onTagClick,
+  liveFeed,
 }: {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onTagClick: (tag: string) => void;
+  liveFeed: ApiLiveFeedItem[];
 }) {
   const [inputValue, setInputValue] = useState(searchQuery);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
@@ -319,8 +322,8 @@ function Hero({
               recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e]">intelligence.</span>
             </h1>
 
-            <p className="text-[15px] leading-relaxed text-muted-foreground max-w-[400px]">
-              Every federal recruitment verified from official MDA portals. No rumors. No scams. Just facts.
+            <p className="text-[15px] leading-relaxed text-muted-foreground max-w-[440px]">
+              Automated surveillance and verification across 41 federal MDA recruitment portals.
             </p>
 
             <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -408,42 +411,45 @@ function Hero({
           </div>
 
           {/* Right Side Live Feed Terminal */}
-          <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-[380px] justify-self-end bg-[#0c1015] border border-[#1e2a38] rounded-[8px] p-5 text-left text-white`}>
+          <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-full lg:max-w-[380px] justify-self-end bg-card border border-border rounded-[8px] p-5 text-left`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[11px] text-[#3fb68e] tracking-wider font-bold">
+                <span className="font-mono text-[11px] text-[#0a5c38] dark:text-[#3fb68e] tracking-wider font-bold">
                   LIVE FEED
                 </span>
                 <span className="relative flex h-1.5 w-1.5">
-                  <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#3fb68e] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#3fb68e]"></span>
+                  <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
                 </span>
               </div>
-              <span className="font-mono text-[11px] text-[#5a6a7a]">Updated 2m ago</span>
+              <span className="font-mono text-[11px] text-muted-foreground">Updated 1m ago</span>
             </div>
 
-            <div className="border-t border-[#1e2a38] my-3" />
+            <div className="border-t border-border/60 my-3" />
 
             <div className="space-y-4">
-              {[
-                { agency: "NNPC Limited", status: "verified" as Status, time: "2m ago" },
-                { agency: "Nigeria Customs Service", status: "verified" as Status, time: "6m ago" },
-                { agency: "Central Bank of Nigeria", status: "updating" as Status, time: "3h ago" },
-                { agency: "Nigeria Police Force", status: "urgent" as Status, time: "4d ago" },
-              ].map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between border-b border-[#1e2a38]/60 pb-3 last:border-0 last:pb-0">
+              {(liveFeed && liveFeed.length > 0
+                ? liveFeed.slice(0, 4)
+                : [
+                    { agency_name: "NNPC Limited", event_type: "verified" as const, time_ago: "2m ago", agency_acronym: "NNPC" },
+                    { agency_name: "Nigeria Customs Service", event_type: "verified" as const, time_ago: "6m ago", agency_acronym: "NCS" },
+                    { agency_name: "Central Bank of Nigeria", event_type: "updating" as const, time_ago: "3h ago", agency_acronym: "CBN" },
+                    { agency_name: "Nigeria Police Force", event_type: "urgent" as const, time_ago: "4d ago", agency_acronym: "NPF" },
+                  ]
+              ).map((item, idx) => (
+                <div key={idx} className="flex items-center justify-between border-b border-border/40 pb-3 last:border-0 last:pb-0">
                   <div className="space-y-1">
-                    <p className="font-sans text-[13px] font-semibold text-[#e8edf2]">{item.agency}</p>
-                    <StatusBadge status={item.status} />
+                    <p className="font-sans text-[13px] font-semibold text-foreground">{item.agency_name} ({item.agency_acronym})</p>
+                    <StatusBadge status={item.event_type === "urgent" ? "warning" : item.event_type === "new_opening" ? "new" : item.event_type === "verified" ? "verified" : "no-change"} />
                   </div>
-                  <span className="font-mono text-[11px] text-[#5a6a7a] self-start pt-1">{item.time}</span>
+                  <span className="font-mono text-[11px] text-muted-foreground self-start pt-1">{item.time_ago}</span>
                 </div>
               ))}
             </div>
 
-            <div className="border-t border-[#1e2a38] mt-4 pt-3 flex items-center justify-between">
-              <span className="font-mono text-[10px] text-[#3a4a5a]">
-                11 campaigns active &middot; 15m cycle
+            <div className="border-t border-border/60 mt-4 pt-3 flex items-center justify-between">
+              <span className="font-mono text-[10px] text-muted-foreground">
+                41 portals monitored &middot; 15m cycle
               </span>
             </div>
           </div>
@@ -454,11 +460,10 @@ function Hero({
   );
 }
 
-function Stats() {
-  const onlineCount = agenciesData.filter((a) => a.portalStatus === "online").length;
-  const maintenanceCount = agenciesData.filter(
-    (a) => a.portalStatus === "review" || a.portalStatus === "warning"
-  ).length;
+function Stats({ status }: { status: ApiSystemStatus | null }) {
+  const onlineCount = status?.agencies_online ?? 0;
+  const maintenanceCount = status?.agencies_maintenance ?? 0;
+  const offlineCount = status?.agencies_offline ?? 0;
 
   return (
     <div className="border-y border-border bg-card dark:bg-[#1a2230] py-2.5">
@@ -474,15 +479,15 @@ function Stats() {
           </div>
           <div className="flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-[#b91c1c]" />
-            <span>3 Down</span>
+            <span>{offlineCount} Down</span>
           </div>
         </div>
         <div className="font-mono text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-4">
-          <span>11 campaigns</span>
+          <span>{status?.active_campaigns ?? 0} campaigns</span>
           <span>&middot;</span>
-          <span>15m cycle</span>
+          <span>{status?.monitoring_interval_minutes ?? 15}m cycle</span>
           <span>&middot;</span>
-          <span>Last audit 2m ago</span>
+          <span>Last audit {status?.last_audit_at ? new Date(status.last_audit_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
         </div>
       </div>
     </div>
@@ -602,7 +607,7 @@ function LatestJobs({
                           {job.title}
                         </h3>
                         <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
-                          <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort }}>
+                          <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort || job.agency || "NNPC" }}>
                             {job.agency}
                           </Link>
                         </p>
@@ -736,14 +741,7 @@ function LatestJobs({
   );
 }
 
-function RecentlyUpdatedRecruitments() {
-  const events = [
-    { title: "NNPC recruitment updated", time: "10:23", badge: "verified" as Status },
-    { title: "Federal Fire Service portal checked", time: "10:18", badge: "no-change" as Status },
-    { title: "Police recruitment detected", time: "10:11", badge: "new" as Status },
-    { title: "NIMC portal scanned", time: "10:07", badge: "verified" as Status },
-  ];
-
+function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[] }) {
   return (
     <section className="py-10 bg-background border-t border-border">
       <div className="mx-auto max-w-[1184px] px-6">
@@ -755,17 +753,32 @@ function RecentlyUpdatedRecruitments() {
         </div>
 
         <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60 shadow-sm">
-          {events.map((e, idx) => (
-            <div key={idx} className="flex items-center justify-between p-4 text-sm">
-              <div className="space-y-1">
-                <p className="font-semibold text-primary">{e.title}</p>
-                <div className="flex items-center gap-1.5">
-                  <StatusBadge status={e.badge} />
-                </div>
-              </div>
-              <span className="font-mono text-xs text-muted-foreground">{e.time}</span>
+          {liveFeed.length === 0 ? (
+            <div className="p-8 text-center text-muted-foreground text-sm">
+              No scan activities to display.
             </div>
-          ))}
+          ) : (
+            liveFeed.map((e, idx) => (
+              <div key={idx} className="flex items-center justify-between p-4 text-sm">
+                <div className="space-y-1">
+                  <p className="font-semibold text-primary">
+                    {e.agency_name} ({e.agency_acronym})
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs text-muted-foreground">
+                      {e.event_type === "new_opening" && "New opening detected"}
+                      {e.event_type === "verified" && "Manually verified"}
+                      {e.event_type === "urgent" && "Critical outage / incident"}
+                      {e.event_type === "no_changes" && "Checked: no changes"}
+                    </span>
+                    <span className="text-muted-foreground text-xs">&middot;</span>
+                    <StatusBadge status={e.event_type === "urgent" ? "warning" : e.event_type === "new_opening" ? "new" : e.event_type === "verified" ? "verified" : "no-change"} />
+                  </div>
+                </div>
+                <span className="font-mono text-xs text-muted-foreground">{e.time_ago}</span>
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>
@@ -811,7 +824,7 @@ function VettedArc({ score }: { score: number }) {
   );
 }
 
-function PortalHealth() {
+function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
   return (
     <section id="health" className="py-16 bg-background border-t border-border">
       <div className="mx-auto max-w-[1184px] px-6">
@@ -831,114 +844,132 @@ function PortalHealth() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
-          {agenciesData.slice(0, 8).map((a) => {
-            const activeCount = latestJobs.filter(
-              (j) => j.agencyShort.toUpperCase() === a.short.toUpperCase() && j.status !== "closed"
-            ).length;
+          {agencies.length === 0 ? (
+            Array.from({ length: 8 }).map((_, idx) => (
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
+                <div className="h-6 bg-muted rounded w-3/4" />
+                <div className="h-4 bg-muted rounded w-1/2" />
+                <div className="h-10 bg-muted rounded w-full" />
+              </div>
+            ))
+          ) : (
+            agencies.slice(0, 8).map((a) => {
+              const activeCount = a.jobs_available;
 
-            const isOnline = a.portalStatus === "online";
-            const isMaintenance = a.portalStatus === "review" || a.portalStatus === "warning";
+              const isOnline = a.status === "online";
+              const isMaintenance = a.status === "maintenance";
 
-            // Determine response time dots
-            const resMs = a.short === "NNPC" ? 340 : a.short === "NCS" ? 410 : a.short === "EFCC" ? 280 : 520;
-            let dots = null;
-            if (resMs < 400) {
-              dots = (
-                <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
-                  <span>●</span><span>●</span><span>●</span>
-                </span>
-              );
-            } else if (resMs <= 700) {
-              dots = (
-                <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
-                  <span>●</span><span>●</span><span className="opacity-30">○</span>
-                </span>
-              );
-            } else {
-              dots = (
-                <span className="flex items-center gap-0.5 text-[#b45309]">
-                  <span>●</span><span className="opacity-30">○</span><span className="opacity-30">○</span>
-                </span>
-              );
-            }
+              // Determine response time dots
+              const resMs = a.response_time_ms ?? 500;
+              let dots = null;
+              if (resMs < 400) {
+                dots = (
+                  <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
+                    <span>●</span><span>●</span><span>●</span>
+                  </span>
+                );
+              } else if (resMs <= 700) {
+                dots = (
+                  <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
+                    <span>●</span><span>●</span><span className="opacity-30">○</span>
+                  </span>
+                );
+              } else {
+                dots = (
+                  <span className="flex items-center gap-0.5 text-[#b45309]">
+                    <span>●</span><span className="opacity-30">○</span><span className="opacity-30">○</span>
+                  </span>
+                );
+              }
 
-            return (
-              <div
-                key={a.short}
-                className="rounded-[8px] border border-border bg-card p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <AgencyLogo short={a.short} size={36} />
-                      <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
-                        {a.short}
-                      </span>
+              const lastCheckedText = a.last_checked
+                ? new Date(a.last_checked).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                : "Recently";
+
+              const vettedScore = a.vetted_score ?? 90;
+
+              return (
+                <div
+                  key={a.acronym}
+                  className="rounded-[8px] border border-border bg-card p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between border-b border-border/40 pb-3">
+                      <div className="flex items-center gap-2.5 min-w-0">
+                        <AgencyLogo short={a.acronym} size={36} />
+                        <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
+                          {a.acronym}
+                        </span>
+                      </div>
+                      <VettedArc score={vettedScore} />
                     </div>
-                    <VettedArc score={a.trustScore} />
-                  </div>
-                  
-                  <div>
-                    <h3 className="text-[16px] font-bold text-foreground truncate">{a.name}</h3>
                     
-                    {/* Status Row */}
-                    <div className="flex items-center gap-1.5 mt-1.5 text-[13px] font-medium">
-                      <span className={`size-2 rounded-full ${
-                        isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
-                      }`} />
-                      <span className="text-foreground">
-                        {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
-                      </span>
+                    <div>
+                      <h3 className="text-[16px] font-bold text-foreground truncate">{a.name}</h3>
+                      
+                      {/* Status Row */}
+                      <div className="flex items-center gap-1.5 mt-1.5 text-[13px] font-medium">
+                        <span className={`size-2 rounded-full ${
+                          isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
+                        }`} />
+                        <span className="text-foreground">
+                          {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
+                        </span>
+                      </div>
                     </div>
-                  </div>
 
-                  <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs border-t border-border/40 pt-3">
-                    <div>
-                      <span className="block text-muted-foreground">Jobs available</span>
-                      <span className="font-semibold text-foreground">
-                        {activeCount} {activeCount === 1 ? "active opening" : "active openings"}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="block text-muted-foreground">Last checked</span>
-                      <span className="font-mono text-foreground font-semibold">&thinsp;&thinsp;&#8635; {a.lastChecked}</span>
-                    </div>
-                    <div>
-                      <span className="block text-muted-foreground">Response time</span>
-                      <div className="font-sans text-[12px]">{dots}</div>
-                    </div>
-                    <div>
-                      <span className="block text-muted-foreground">Verification</span>
-                      <div className="mt-1 h-1.5 w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
-                        <div
-                          className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]"
-                          style={{ width: `${a.trustScore}%` }}
-                        />
+                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs border-t border-border/40 pt-3">
+                      <div>
+                        <span className="block text-muted-foreground">Jobs available</span>
+                        <span className="font-semibold text-foreground">
+                          {activeCount} {activeCount === 1 ? "opening" : "openings"}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground">Last checked</span>
+                        <span className="font-mono text-foreground font-semibold">&thinsp;&#8635; {lastCheckedText}</span>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground">Response time</span>
+                        <div className="font-sans text-[12px]">{dots}</div>
+                      </div>
+                      <div>
+                        <span className="block text-muted-foreground">Verification</span>
+                        <div className="mt-1 h-1.5 w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
+                          <div
+                            className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]"
+                            style={{ width: `${vettedScore}%` }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
 
-                <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs">
-                  <a
-                    href={a.recruitmentPortal}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-primary underline hover:text-accent font-semibold"
-                  >
-                    Official website
-                  </a>
-                  <Link
-                    to="/agencies/$agencyShort"
-                    params={{ agencyShort: a.short }}
-                    className="text-muted-foreground hover:text-primary font-semibold"
-                  >
-                    View profile &rarr;
-                  </Link>
+                  <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs">
+                    {a.portal_url ? (
+                      <a
+                        href={a.portal_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-primary underline hover:text-accent font-semibold"
+                      >
+                        Official website
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground">No portal URL</span>
+                    )}
+                    <Link
+                      to="/agencies/$agencyShort"
+                      params={{ agencyShort: a.slug || a.acronym }}
+                      className="text-muted-foreground hover:text-primary font-semibold"
+                    >
+                      View profile &rarr;
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
         </div>
       </div>
     </section>
@@ -947,8 +978,10 @@ function PortalHealth() {
 
 function AgencyDirectory({
   onAgencyFilter,
+  agencies,
 }: {
   onAgencyFilter: (agencyShort: string) => void;
+  agencies: ApiAgency[];
 }) {
   const topAgencies = [
     { short: "NNPC", name: "NNPC Limited" },
@@ -974,8 +1007,8 @@ function AgencyDirectory({
         </div>
         <div className="grid gap-2 grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
           {topAgencies.map((a) => {
-            const agencyObj = agenciesData.find((ad) => ad.short === a.short);
-            const website = agencyObj?.officialWebsite || agencyObj?.recruitmentPortal;
+            const agencyObj = agencies.find((ad) => ad.acronym.toUpperCase() === a.short.toUpperCase());
+            const website = agencyObj?.portal_url;
 
             return (
               <button
@@ -1116,22 +1149,74 @@ function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const filteredJobs = latestJobs.filter((job) => {
+  const [jobs, setJobs] = useState<ApiJob[]>([]);
+  const [agencies, setAgencies] = useState<ApiAgency[]>([]);
+  const [status, setStatus] = useState<ApiSystemStatus | null>(null);
+  const [liveFeed, setLiveFeed] = useState<ApiLiveFeedItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadData = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const [jobsRes, agenciesRes, statusRes, liveFeedRes] = await Promise.all([
+        api.getJobs({ page_size: 20 }),
+        api.getAgencies({ page_size: 100 }),
+        api.getSystemStatus(),
+        api.getLiveFeed(),
+      ]);
+
+      if (jobsRes && jobsRes.results && jobsRes.results.length > 0) {
+        const mappedJobs = jobsRes.results.map((j) => ({
+          id: j.ref,
+          agency: j.agency_name,
+          agencyShort: j.agency_acronym,
+          title: j.title,
+          deadline: j.deadline || "Pending",
+          status: (j.status === "new_opening" ? "new" : j.status) as Status,
+          detected: new Date(j.published_at).toLocaleDateString(),
+          category: j.category,
+          state: j.location_state,
+          createdAt: j.published_at,
+          positions: j.positions || "Multiple Positions",
+        }));
+        setJobs(mappedJobs);
+      } else {
+        setJobs(latestJobs);
+      }
+
+      if (agenciesRes && agenciesRes.results) setAgencies(agenciesRes.results);
+      if (statusRes) setStatus(statusRes);
+      if (liveFeedRes && liveFeedRes.length > 0) setLiveFeed(liveFeedRes);
+    } catch (err: any) {
+      // Silently fall back to static data — don't crash the homepage
+      console.warn("API unavailable, using static data:", err);
+      setJobs(latestJobs);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    loadData();
+    // Poll live feed every 60 seconds
+    const stopPolling = api.pollEndpoint(
+      api.getLiveFeed,
+      (data) => { if (data && data.length > 0) setLiveFeed(data); },
+      60000
+    );
+    return stopPolling;
+  }, []);
+
+  const filteredJobs = jobs.filter((job) => {
     const matchesSearch =
       searchQuery === "" ||
       job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.agency.toLowerCase().includes(searchQuery.toLowerCase()) ||
       job.agencyShort.toLowerCase().includes(searchQuery.toLowerCase());
 
-    let jobCategory = "";
-    if (job.agencyShort === "NNPC") jobCategory = "Engineering & Energy";
-    else if (job.agencyShort === "NCS") jobCategory = "Revenue & Finance";
-    else if (job.agencyShort === "EFCC") jobCategory = "Law Enforcement";
-    else if (job.agencyShort === "CBN") jobCategory = "Revenue & Finance";
-    else if (job.agencyShort === "NAF") jobCategory = "Military & Paramilitary";
-    else if (job.agencyShort === "FFS") jobCategory = "Military & Paramilitary";
-
-    const matchesCategory = selectedCategory === null || jobCategory === selectedCategory;
+    const matchesCategory = selectedCategory === null || job.category === selectedCategory;
 
     return matchesSearch && matchesCategory;
   });
@@ -1146,6 +1231,19 @@ function Index() {
     document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
+        <Nav />
+        <main className="flex-1 flex flex-col items-center justify-center py-20 space-y-4">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
+          <p className="text-sm font-medium text-muted-foreground">Loading GovAlert data from live API...</p>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
@@ -1155,7 +1253,7 @@ function Index() {
           setSearchQuery={setSearchQuery}
           onTagClick={handleTagClick}
         />
-        <Stats />
+        <Stats status={status} />
         <LatestJobs
           jobs={filteredJobs}
           searchQuery={searchQuery}
@@ -1163,9 +1261,9 @@ function Index() {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
-        <RecentlyUpdatedRecruitments />
-        <PortalHealth />
-        <AgencyDirectory onAgencyFilter={handleAgencyClick} />
+        <RecentlyUpdatedRecruitments liveFeed={liveFeed} />
+        <PortalHealth agencies={agencies} />
+        <AgencyDirectory onAgencyFilter={handleAgencyClick} agencies={agencies} />
         <VerificationMethodology />
         <TelegramCTA />
       </main>
