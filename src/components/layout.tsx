@@ -113,7 +113,7 @@ export function Nav() {
   return (
     <>
       {/* Brand Top Border Indicator (Nigerian Flag Green) */}
-      <div className="h-[3px] w-full bg-[#006b3c]" />
+      <div className="h-[3px] w-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
 
       <nav className="sticky top-0 z-50 border-b border-border bg-background h-[60px]">
         <div className="mx-auto flex h-full max-w-[1184px] items-center justify-between px-6">
@@ -196,7 +196,7 @@ export function Nav() {
               href="https://t.me/GovAlert"
               target="_blank"
               rel="noreferrer"
-              className="hidden md:inline-flex h-[36px] items-center gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-[16px] text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer"
+              className="hidden md:inline-flex h-[40px] items-center gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-[16px] text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer"
             >
               <svg className="size-[14px] fill-current" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
@@ -269,12 +269,13 @@ export function Nav() {
 
             <hr className="my-4 border-border/60" />
 
-            {/* Section 4: Legal */}
+            {/* Section 4: Legal & Verification Links */}
             <div>
               <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-                Legal
+                Legal & Governance
               </p>
               <div className="flex flex-col space-y-2">
+                <Link to="/verification" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Verification FAQ</Link>
                 <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Privacy Policy</Link>
                 <Link to="/terms" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Terms of Service</Link>
               </div>

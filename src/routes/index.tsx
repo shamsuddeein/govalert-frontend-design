@@ -30,26 +30,26 @@ export const latestJobs: Job[] = [
     id: "8829-GA",
     agency: "NNPC Limited",
     agencyShort: "NNPC",
-    title: "Graduate Trainee Program (Engineering, 2024)",
-    deadline: "Oct 24, 2024",
+    title: "Graduate Trainee Program (Engineering Intake)",
+    deadline: new Date(Date.now() + 12 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     status: "urgent",
     detected: "2h ago",
     category: "Engineering & Energy",
     state: "Rivers",
-    createdAt: "2024-10-12T16:00:00Z",
-    positions: "Multiple Positions",
+    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
+    positions: "Multiple Openings",
   },
   {
     id: "4120-GA",
     agency: "Nigeria Customs Service",
     agencyShort: "NCS",
     title: "Superintendent Cadre Recruitment",
-    deadline: "Nov 12, 2024",
+    deadline: new Date(Date.now() + 21 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     status: "verified",
     detected: "6h ago",
     category: "Revenue & Finance",
     state: "Cross River",
-    createdAt: "2024-10-12T12:00:00Z",
+    createdAt: new Date(Date.now() - 6 * 3600000).toISOString(),
     positions: "Cadre Officers",
   },
   {
@@ -57,12 +57,12 @@ export const latestJobs: Job[] = [
     agency: "EFCC Academy",
     agencyShort: "EFCC",
     title: "Detective Assistant Cadet Course",
-    deadline: "Nov 02, 2024",
+    deadline: new Date(Date.now() + 15 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     status: "verified",
     detected: "1d ago",
     category: "Law Enforcement",
     state: "Abuja",
-    createdAt: "2024-10-11T18:00:00Z",
+    createdAt: new Date(Date.now() - 86400000).toISOString(),
     positions: "Cadet Intake",
   },
   {
@@ -75,7 +75,7 @@ export const latestJobs: Job[] = [
     detected: "3h ago",
     category: "Revenue & Finance",
     state: "Lagos",
-    createdAt: "2024-10-12T15:00:00Z",
+    createdAt: new Date(Date.now() - 3 * 3600000).toISOString(),
     positions: "Analyst Openings",
   },
   {
@@ -88,7 +88,7 @@ export const latestJobs: Job[] = [
     detected: "2d ago",
     category: "Military & Paramilitary",
     state: "Kaduna",
-    createdAt: "2024-10-10T09:00:00Z",
+    createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
     positions: "DSSC Officers",
   },
   {
@@ -96,104 +96,13 @@ export const latestJobs: Job[] = [
     agency: "Federal Fire Service",
     agencyShort: "FFS",
     title: "General Duty Officers Batch B",
-    deadline: "Nov 20, 2024",
+    deadline: new Date(Date.now() + 28 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     status: "verified",
     detected: "5h ago",
     category: "Military & Paramilitary",
     state: "Abuja",
-    createdAt: "2024-10-12T13:00:00Z",
+    createdAt: new Date(Date.now() - 5 * 3600000).toISOString(),
     positions: "General Duty",
-  },
-  {
-    id: "1023-GA",
-    agency: "National Identity Management Commission",
-    agencyShort: "NIMC",
-    title: "Lead Cloud Infrastructure Engineer",
-    deadline: "Dec 05, 2024",
-    status: "verified",
-    detected: "12h ago",
-    category: "Engineering & Energy",
-    state: "Abuja",
-    createdAt: "2024-10-12T06:00:00Z",
-    positions: "1 Technical Role",
-  },
-  {
-    id: "1024-GA",
-    agency: "Federal Inland Revenue Service",
-    agencyShort: "FIRS",
-    title: "Tax Auditor II (Large Taxpayers)",
-    deadline: "Nov 30, 2024",
-    status: "verified",
-    detected: "3d ago",
-    category: "Revenue & Finance",
-    state: "Lagos",
-    createdAt: "2024-10-09T10:00:00Z",
-    positions: "Auditor Roles",
-  },
-  {
-    id: "1025-GA",
-    agency: "Nigeria Police Force",
-    agencyShort: "NPF",
-    title: "Cadet Inspector of Police Intake",
-    deadline: "Dec 15, 2024",
-    status: "urgent",
-    detected: "4d ago",
-    category: "Law Enforcement",
-    state: "Kano",
-    createdAt: "2024-10-08T11:00:00Z",
-    positions: "Inspector Cadets",
-  },
-  {
-    id: "1026-GA",
-    agency: "Nigerian Ports Authority",
-    agencyShort: "NPA",
-    title: "Marine Engineering Trainees",
-    deadline: "Pending",
-    status: "warning",
-    detected: "5d ago",
-    category: "Engineering & Energy",
-    state: "Rivers",
-    createdAt: "2024-10-07T08:00:00Z",
-    positions: "20 Trainee Roles",
-  },
-  {
-    id: "1027-GA",
-    agency: "Federal Ministry of Health",
-    agencyShort: "FMOH",
-    title: "Medical Officers & Resident Physicians",
-    deadline: "Nov 15, 2024",
-    status: "verified",
-    detected: "1w ago",
-    category: "Health & Medical",
-    state: "Oyo",
-    createdAt: "2024-10-05T14:00:00Z",
-    positions: "Multiple Openings",
-  },
-  {
-    id: "1028-GA",
-    agency: "Federal Ministry of Education",
-    agencyShort: "FMOE",
-    title: "Secondary School Education Instructors",
-    deadline: "Closed",
-    status: "closed",
-    detected: "2w ago",
-    category: "Education",
-    state: "Enugu",
-    createdAt: "2024-09-28T09:00:00Z",
-    positions: "FGC Instructors",
-  },
-  {
-    id: "1029-GA",
-    agency: "Supreme Court of Nigeria",
-    agencyShort: "SCN",
-    title: "Senior Legal Research Officers",
-    deadline: "Dec 01, 2024",
-    status: "verified",
-    detected: "1d ago",
-    category: "Judiciary",
-    state: "Abuja",
-    createdAt: "2024-10-11T17:00:00Z",
-    positions: "8 Positions",
   },
 ];
 
@@ -201,7 +110,7 @@ export function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; cls: string; icon: React.ReactNode }> = {
     verified: {
       label: "Verified",
-      cls: "bg-[#0a5c38] text-white",
+      cls: "bg-[#0a5c38] text-white dark:bg-[#3fb68e] dark:text-[#0c1015]",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
@@ -246,7 +155,7 @@ export function StatusBadge({ status }: { status: Status }) {
     },
     closed: {
       label: "Closed",
-      cls: "bg-[#e5e7eb] text-[#6b7280] dark:bg-[#242c38] dark:text-[#8b9aad]",
+      cls: "bg-muted text-muted-foreground border border-border",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -255,7 +164,7 @@ export function StatusBadge({ status }: { status: Status }) {
     },
     "no-change": {
       label: "No Changes",
-      cls: "bg-[#f3f4f6] text-[#6b7280] dark:bg-[#242c38] dark:text-[#8b9aad]",
+      cls: "bg-muted text-muted-foreground border border-border",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
@@ -466,7 +375,7 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
   const offlineCount = status?.agencies_offline ?? 0;
 
   return (
-    <div className="border-y border-border bg-card dark:bg-[#1a2230] py-2.5">
+    <div className="border-y border-border bg-card py-2.5">
       <div className="mx-auto max-w-[1184px] px-6 flex flex-wrap items-center justify-between gap-4 text-xs font-sans text-muted-foreground font-medium">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">
           <div className="flex items-center gap-1.5">
@@ -1252,6 +1161,7 @@ function Index() {
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           onTagClick={handleTagClick}
+          liveFeed={liveFeed}
         />
         <Stats status={status} />
         <LatestJobs

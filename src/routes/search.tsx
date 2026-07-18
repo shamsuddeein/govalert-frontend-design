@@ -152,7 +152,7 @@ function SearchPage() {
         </div>
 
         {/* Search Panel Card */}
-        <div className="rounded border border-border bg-card p-5 shadow-sm mb-8">
+        <div className="rounded-[8px] border border-border bg-card p-5 shadow-sm mb-8">
           <div className="flex flex-col gap-4">
             {/* Primary Search Row */}
             <div className="flex gap-3">
@@ -164,7 +164,7 @@ function SearchPage() {
                   placeholder="Search by keywords (e.g., Engineer, Trainee, Customs)..."
                   value={keyword}
                   onChange={(e) => setKeyword(e.target.value)}
-                  className="w-full rounded border border-border bg-background py-2 pl-10 pr-4 text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-primary"
+                  className="w-full h-[44px] rounded-[6px] border border-border bg-background py-2 pl-10 pr-4 text-xs text-foreground outline-none transition-all placeholder:text-muted-foreground focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
                 />
                 {keyword && (
                   <button
@@ -178,7 +178,7 @@ function SearchPage() {
 
               <button
                 onClick={() => setShowAdvanced(!showAdvanced)}
-                className="flex items-center gap-2 px-3 py-2 text-xs font-semibold rounded border border-border hover:bg-muted/50 cursor-pointer"
+                className="flex items-center gap-2 h-[44px] px-4 text-xs font-semibold rounded-[6px] border border-border hover:bg-muted/50 cursor-pointer"
               >
                 <SlidersHorizontal className="size-4" />
                 Filters
@@ -192,76 +192,71 @@ function SearchPage() {
             {showAdvanced && (
               <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 border-t border-border pt-4 mt-1">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                     <Briefcase className="size-3" /> Job Category
                   </label>
                   <select
                     id="search-category"
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                    className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
                   >
-                    <option value="">All Categories</option>
-                    {CATEGORIES.map((c) => (
-                      <option key={c} value={c.toLowerCase()}>{c}</option>
+                    <option value="" className="bg-card text-foreground">All Categories</option>
+                    {CATEGORIES.map((cat) => (
+                      <option key={cat} value={cat} className="bg-card text-foreground">
+                        {cat}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <MapPin className="size-3" /> Location (State)
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                    <MapPin className="size-3" /> State / Territory
                   </label>
                   <select
                     id="search-location"
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                    className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
                   >
-                    <option value="">All Locations</option>
-                    {STATES.map((s) => (
-                      <option key={s} value={s}>{s}</option>
+                    <option value="" className="bg-card text-foreground">All Locations</option>
+                    {STATES.map((st) => (
+                      <option key={st} value={st} className="bg-card text-foreground">
+                        {st}
+                      </option>
                     ))}
                   </select>
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Building className="size-3" /> Status Vetting
+                  <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                    <Sliders className="size-3" /> Status
                   </label>
                   <select
                     id="search-status"
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="rounded border border-border bg-background px-3 py-2 text-xs outline-none focus:border-primary"
+                    className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-xs text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
                   >
-                    <option value="">All Statuses</option>
-                    <option value="verified">Verified</option>
-                    <option value="new_opening">New Opening</option>
-                    <option value="updating">Updating</option>
-                    <option value="closed">Closed</option>
+                    <option value="" className="bg-card text-foreground">All Statuses</option>
+                    <option value="verified" className="bg-card text-foreground">Verified</option>
+                    <option value="urgent" className="bg-card text-foreground">Urgent</option>
+                    <option value="warning" className="bg-card text-foreground">Updating</option>
+                    <option value="closed" className="bg-card text-foreground">Closed</option>
                   </select>
+                </div>
+
+                <div className="flex flex-col justify-end gap-1.5">
+                  <button
+                    onClick={handleReset}
+                    className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-xs font-semibold text-muted-foreground hover:bg-muted hover:text-foreground cursor-pointer"
+                  >
+                    Clear Filters
+                  </button>
                 </div>
               </div>
             )}
-
-            {/* Panel Buttons */}
-            <div className="flex items-center justify-between border-t border-border pt-4 mt-2">
-              <button
-                onClick={handleReset}
-                className="text-xs font-semibold text-muted-foreground hover:text-foreground cursor-pointer"
-              >
-                Reset Search Filters
-              </button>
-
-              <button
-                onClick={handleSaveSearchAlert}
-                className="inline-flex items-center gap-2 rounded border border-border bg-card px-4 py-2 text-xs font-semibold text-primary hover:bg-muted cursor-pointer"
-              >
-                <BellRing className="size-3.5" />
-                Save Search Alert
-              </button>
-            </div>
           </div>
         </div>
 

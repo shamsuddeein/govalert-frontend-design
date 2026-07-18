@@ -19,7 +19,7 @@ function AboutPage() {
             <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
               ABOUT GOVALERT
             </span>
-            <h1 className="text-4xl font-display font-normal text-foreground md:text-[40px]">
+            <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-[36px]">
               Vetting Nigeria's Public Sector Opportunities
             </h1>
             <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
@@ -71,7 +71,7 @@ function AboutPage() {
           {/* No boxes, no cards. Just type and negative space. */}
           <div className="grid gap-8 sm:grid-cols-3">
             <div className="space-y-3">
-              <span className="font-display text-[48px] font-normal text-[#0a5c38] dark:text-[#3fb68e] opacity-30 block leading-none">01</span>
+              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">01</span>
               <h4 className="font-bold text-[16px] text-foreground">Digital DNS & SSL Vetting</h4>
               <p className="text-[14px] text-muted-foreground leading-relaxed">
                 We verify domain name servers and enterprise EV SSL encryption schemas to ensure the registration link is a legitimate .gov.ng site, not a phishing clone.
@@ -79,7 +79,7 @@ function AboutPage() {
             </div>
 
             <div className="space-y-3">
-              <span className="font-display text-[48px] font-normal text-[#0a5c38] dark:text-[#3fb68e] opacity-30 block leading-none">02</span>
+              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">02</span>
               <h4 className="font-bold text-[16px] text-foreground">Gazette Cross-Referencing</h4>
               <p className="text-[14px] text-muted-foreground leading-relaxed">
                 Our intelligence officers cross-reference recruitment announcements with federal gazettes, official agency directives, or verified public authorities.
@@ -87,7 +87,7 @@ function AboutPage() {
             </div>
 
             <div className="space-y-3">
-              <span className="font-display text-[48px] font-normal text-[#0a5c38] dark:text-[#3fb68e] opacity-30 block leading-none">03</span>
+              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">03</span>
               <h4 className="font-bold text-[16px] text-foreground">Signed & Timestamped Pushes</h4>
               <p className="text-[14px] text-muted-foreground leading-relaxed">
                 Once vetted, the alert is logged, timestamped, and immediately transmitted to dashboard subscribers and Telegram channels.

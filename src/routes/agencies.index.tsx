@@ -157,7 +157,7 @@ function AgenciesIndexPage() {
                 placeholder="Search by MDA name or acronym..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="h-[40px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
+                className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none placeholder:text-muted-foreground focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
               />
             </div>
 
@@ -166,11 +166,11 @@ function AgenciesIndexPage() {
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="h-[40px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+                className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
               >
-                <option value="">All Categories ▾</option>
+                <option value="" className="bg-card text-foreground">All Categories ▾</option>
                 {categories.map((c) => (
-                  <option key={c} value={c}>
+                  <option key={c} value={c} className="bg-card text-foreground">
                     {c}
                   </option>
                 ))}
@@ -182,12 +182,12 @@ function AgenciesIndexPage() {
               <select
                 value={status}
                 onChange={(e) => setSearchStatus(e.target.value)}
-                className="h-[40px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
+                className="h-[44px] w-full rounded-[6px] border border-border bg-background px-3 text-[14px] text-foreground outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] cursor-pointer"
               >
-                <option value="">All Portal Statuses ▾</option>
-                <option value="online">Online</option>
-                <option value="maintenance">Maintenance</option>
-                <option value="offline">Offline</option>
+                <option value="" className="bg-card text-foreground">All Portal Statuses ▾</option>
+                <option value="online" className="bg-card text-foreground">Online</option>
+                <option value="maintenance" className="bg-card text-foreground">Maintenance</option>
+                <option value="offline" className="bg-card text-foreground">Offline</option>
               </select>
             </div>
           </div>
@@ -196,7 +196,7 @@ function AgenciesIndexPage() {
           {(search || status || category) && (
             <div className="flex items-center justify-between border-t border-border pt-4">
               <div className="flex flex-wrap gap-2">
-                <span className="text-[10px] text-muted-foreground self-center uppercase font-bold">Active filters:</span>
+                <span className="text-[10px] text-muted-foreground self-center uppercase font-bold font-mono">Active filters:</span>
                 {search && (
                   <span className="inline-flex items-center gap-1 rounded bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
                     Search: {search}
@@ -225,15 +225,27 @@ function AgenciesIndexPage() {
 
         {/* Loading and Error States */}
         {loading && (
-          <div className="py-20 flex flex-col items-center justify-center space-y-4">
-            <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
-            <p className="text-sm text-muted-foreground">Loading agencies directories...</p>
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 my-8">
+            {Array.from({ length: 6 }).map((_, idx) => (
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
+                <div className="flex justify-between items-center">
+                  <div className="h-6 bg-muted rounded w-1/3" />
+                  <div className="h-4 bg-muted rounded w-1/4" />
+                </div>
+                <div className="h-6 bg-muted rounded w-3/4" />
+                <div className="h-4 bg-muted rounded w-full" />
+                <div className="border-t border-border/40 pt-4 grid grid-cols-2 gap-4">
+                  <div className="h-4 bg-muted rounded w-full" />
+                  <div className="h-4 bg-muted rounded w-full" />
+                </div>
+              </div>
+            ))}
           </div>
         )}
 
         {error && (
-          <div className="rounded-[8px] border border-red-200 bg-red-50/50 p-6 text-center max-w-md mx-auto space-y-4 my-10">
-            <p className="text-sm font-medium text-red-600">{error}</p>
+          <div className="rounded-[8px] border border-red-200 bg-red-50/50 dark:bg-red-950/30 dark:border-red-900 p-6 text-center max-w-md mx-auto space-y-4 my-10">
+            <p className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>
             <button
               onClick={fetchAgencies}
               className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-[6px] cursor-pointer hover:bg-red-700"
@@ -248,7 +260,7 @@ function AgenciesIndexPage() {
             {/* Results count */}
             <div className="mb-6 border-b border-border/40 pb-3">
               <p className="text-[13px] text-muted-foreground">
-                Showing <span className="font-semibold text-foreground">{filteredAgencies.length}</span> registered MDAs
+                Monitoring <span className="font-semibold text-foreground font-mono">{filteredAgencies.length}</span> registered Federal MDAs
               </p>
             </div>
 

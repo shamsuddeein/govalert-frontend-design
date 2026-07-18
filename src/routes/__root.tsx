@@ -79,7 +79,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GovAlert — Verified Nigerian Government Recruitment Intelligence" },
+      { title: "GovAlert | Verified Nigerian Government Recruitment Intelligence" },
       {
         name: "description",
         content:
@@ -88,7 +88,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "GovAlert" },
       {
         property: "og:title",
-        content: "GovAlert — Verified Nigerian Government Recruitment Intelligence",
+        content: "GovAlert | Verified Nigerian Government Recruitment Intelligence",
       },
       {
         property: "og:description",

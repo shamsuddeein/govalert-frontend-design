@@ -327,7 +327,7 @@ function JobDetailsPage() {
             {isClosed ? (
               <button
                 disabled
-                className="inline-flex h-[40px] items-center justify-center rounded-[8px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
+                className="inline-flex h-[44px] items-center justify-center rounded-[8px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
               >
                 Recruitment Portal Closed
               </button>
@@ -336,7 +336,7 @@ function JobDetailsPage() {
                 href={job.official_url}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-[40px] items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] px-[20px] text-[14px] font-semibold text-white dark:text-[#0c1015] hover:opacity-90 cursor-pointer"
+                className="inline-flex h-[44px] items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] px-[20px] text-[14px] font-semibold text-white dark:text-[#0c1015] hover:opacity-90 cursor-pointer"
               >
                 Apply on Official Portal (External) <ExternalLink className="size-4" />
               </a>
@@ -345,7 +345,7 @@ function JobDetailsPage() {
             <button
               onClick={handleToggleSave}
               disabled={saving}
-              className={`inline-flex h-[40px] items-center gap-2 rounded-[8px] border px-[20px] text-[14px] font-semibold transition-colors cursor-pointer ${
+              className={`inline-flex h-[44px] items-center gap-2 rounded-[8px] border px-[20px] text-[14px] font-semibold transition-colors cursor-pointer ${
                 isSaved
                   ? "bg-[#0a5c38]/10 border-[#0a5c38] text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:border-[#3fb68e] dark:text-[#3fb68e]"
                   : "border-border bg-card text-foreground hover:bg-muted"
@@ -364,7 +364,7 @@ function JobDetailsPage() {
           <h2 className="text-[17px] font-semibold text-foreground">Portal Status</h2>
           <div className="mt-6 rounded-[8px] border border-border bg-card p-6">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center rounded bg-muted px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-foreground">
+              <span className="inline-flex items-center rounded bg-muted px-2 py-1 text-[11px] font-semibold font-mono uppercase tracking-wider text-foreground">
                 {job.agency_acronym}
               </span>
               <span className={`flex items-center gap-1.5 text-[13px] font-medium ${
@@ -378,7 +378,7 @@ function JobDetailsPage() {
             <div className="mt-5 grid grid-cols-1 gap-y-3 sm:grid-cols-2 text-[13px]">
               <div className="flex gap-2">
                 <span className="text-muted-foreground w-28">Last checked:</span>
-                <span className="font-mono-ui">
+                <span className="font-mono">
                   ↺ {safeFormatTime(job.portal_last_checked, "Recently")}
                 </span>
               </div>
@@ -395,14 +395,14 @@ function JobDetailsPage() {
               </div>
               <div className="flex gap-2">
                 <span className="text-muted-foreground w-28">Portal uptime:</span>
-                <span>{job.portal_uptime_percent ? `${job.portal_uptime_percent}%` : "99.8%"}</span>
+                <span className="font-mono">{job.portal_uptime_percent ? `${job.portal_uptime_percent}%` : "99.8%"}</span>
               </div>
             </div>
             
             <div className="mt-6">
               <Link
                 to="/agencies/$agencyShort"
-                params={{ agencyShort: job.agency_acronym || job.agency_slug || (job as any).agencyShort || "NNPC" }}
+                params={{ agencyShort: job.agency_acronym || job.agency_slug || "" }}
                 className="text-[13px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
               >
                 View full agency profile →

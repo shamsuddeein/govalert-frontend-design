@@ -108,9 +108,14 @@ function AgencyProfilePage() {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
-        <main className="flex-1 flex flex-col items-center justify-center py-20 space-y-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
-          <p className="text-sm font-medium text-muted-foreground">Loading agency profile...</p>
+        <main className="mx-auto max-w-[720px] w-full px-6 py-12 space-y-6">
+          <div className="h-6 bg-muted rounded w-1/4 animate-pulse" />
+          <div className="h-8 bg-muted rounded w-1/2 animate-pulse" />
+          <div className="h-16 bg-muted rounded w-full animate-pulse" />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="h-10 bg-muted rounded w-full animate-pulse" />
+            <div className="h-10 bg-muted rounded w-full animate-pulse" />
+          </div>
         </main>
         <Footer />
       </div>
@@ -271,7 +276,7 @@ function AgencyProfilePage() {
                 href="https://t.me/GovAlert"
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 inline-flex h-[36px] items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[16px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10"
+                className="mt-6 inline-flex h-[44px] items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[20px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10 cursor-pointer"
               >
                 Subscribe to alerts for this agency
               </a>

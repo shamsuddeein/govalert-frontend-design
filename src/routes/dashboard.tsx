@@ -13,13 +13,13 @@ export const Route = createFileRoute("/dashboard")({
 const initialSavedJobs = [
   {
     id: "8829-GA",
-    title: "Graduate Trainee Program (Engineering, 2024)",
+    title: "Graduate Trainee Program (Engineering Intake)",
     agency: "NNPC Limited",
     agencyShort: "NNPC",
     status: "urgent" as Status,
-    deadline: "Oct 24, 2024",
+    deadline: new Date(Date.now() + 12 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     detected: "2h ago",
-    positions: "Multiple Positions",
+    positions: "Multiple Openings",
   },
   {
     id: "4120-GA",
@@ -27,7 +27,7 @@ const initialSavedJobs = [
     agency: "Nigeria Customs Service",
     agencyShort: "NCS",
     status: "verified" as Status,
-    deadline: "Nov 12, 2024",
+    deadline: new Date(Date.now() + 21 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
     detected: "6h ago",
     positions: "Cadre Officers",
   },
