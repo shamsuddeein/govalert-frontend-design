@@ -155,7 +155,10 @@ function VerificationReportPage() {
           {/* AI Red Flags */}
           {report.ai_red_flags && report.ai_red_flags.length > 0 && (
             <div className="mt-4 pt-4 border-t border-border">
-              <span className="text-[12px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wide">⚠ AI Red Flags Detected</span>
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wide">
+                <AlertTriangle className="size-3.5" aria-hidden />
+                AI Red Flags Detected
+              </span>
               <ul className="mt-2 space-y-1">
                 {report.ai_red_flags.map((flag, i) => (
                   <li key={i} className="text-[13px] text-red-700 dark:text-red-400 flex items-start gap-2">
@@ -236,9 +239,9 @@ function VerificationReportPage() {
               ).map((factor, idx) => (
                 <li key={idx} className="flex gap-2">
                   {factor.passed ? (
-                    <span className="font-mono text-green-600 dark:text-green-400">✓</span>
+                    <Check className="size-4 mt-0.5 shrink-0 text-[#0a5c38] dark:text-[#3fb68e]" aria-hidden />
                   ) : (
-                    <span className="font-mono text-amber-600 dark:text-amber-400">!</span>
+                    <AlertTriangle className="size-4 mt-0.5 shrink-0 text-amber-600 dark:text-amber-400" aria-hidden />
                   )}
                   <span>{factor.label}</span>
                 </li>
