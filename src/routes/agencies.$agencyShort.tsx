@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
+import { SpeedDots } from "../lib/speedIndicator";
 import { agenciesData } from "../lib/agenciesData";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 import { ExternalLink } from "lucide-react";

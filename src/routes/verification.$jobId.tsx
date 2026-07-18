@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { Download, Share2, CheckCircle2, AlertTriangle, XCircle } from "lucide-react";
+import { Download, Share2, CheckCircle2, AlertTriangle, XCircle, Check } from "lucide-react";
 import { toast } from "sonner";
 import { api, ApiJobVerification } from "../lib/api";
 
