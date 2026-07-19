@@ -240,7 +240,7 @@ function AdminAgenciesComponent() {
       {/* Deactivation Confirmation Dialog */}
       {deactivatingAgency && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-card border border-destructive/40 rounded-[8px] p-6 max-w-md w-full shadow-2xl space-y-4 font-sans text-xs">
+          <div className="bg-card border border-destructive/40 rounded-[8px] p-6 max-w-md w-full shadow-lg space-y-4 font-sans text-xs">
             <div className="flex items-center gap-3 text-destructive font-sans font-bold text-sm">
               <AlertTriangle className="h-5 w-5 shrink-0" />
               <span>Confirm Agency Deactivation</span>
@@ -357,7 +357,7 @@ function AgencyFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-4 font-sans text-xs">
+      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-lg space-y-4 font-sans text-xs">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
             <Building2 className="h-5 w-5 text-primary" />

@@ -390,7 +390,7 @@ function PortalDetailFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
+      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-lg space-y-5 font-sans text-xs">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">

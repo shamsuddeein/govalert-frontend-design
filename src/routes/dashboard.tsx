@@ -726,7 +726,7 @@ function DashboardPage() {
       {/* Telegram Pairing Modal */}
       {showPairingModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-6 shadow-xl relative text-left">
+          <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-6 shadow-lg relative text-left">
             <h3 className="text-sm font-bold flex items-center gap-2 mb-2 uppercase tracking-wider text-primary">
               Pair with Telegram Bot
             </h3>
