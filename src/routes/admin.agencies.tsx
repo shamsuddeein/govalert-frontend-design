@@ -185,7 +185,7 @@ function AdminAgenciesComponent() {
                           <CheckCircle className="h-3 w-3" /> Active
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400 bg-slate-500/10 border border-slate-500/20 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider font-sans">
+                        <span className="inline-flex items-center gap-1 text-muted-foreground bg-[color:var(--closed)]/10 border border-[color:var(--closed)]/20 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider font-sans">
                           <XCircle className="h-3 w-3" /> Inactive
                         </span>
                       )}

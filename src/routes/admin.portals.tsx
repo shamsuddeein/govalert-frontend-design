@@ -67,8 +67,8 @@ function getHealthBadgeStyle(status?: string) {
   }
   // UNKNOWN or unrecognized status -> Neutral Gray (NOT GREEN, NOT RED!)
   return {
-    dotColor: "bg-slate-400",
-    badgeClass: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20",
+    dotColor: "bg-[color:var(--closed)]",
+    badgeClass: "bg-[color:var(--closed)]/10 text-muted-foreground border-[color:var(--closed)]/20",
     label: norm || "UNKNOWN",
   };
 }
