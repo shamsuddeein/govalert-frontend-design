@@ -7,7 +7,9 @@
  * cookies set by backend API responses are recommended.
  */
 
-const ADMIN_API_BASE = "http://localhost:8000/api/v1/admin";
+const DEFAULT_BACKEND_URL = "https://govalert-production.up.railway.app";
+const BASE_HOST = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL) || DEFAULT_BACKEND_URL;
+const ADMIN_API_BASE = `${BASE_HOST.replace(/\/$/, "")}/api/v1/admin`;
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 

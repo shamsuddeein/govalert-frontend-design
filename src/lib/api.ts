@@ -1,7 +1,10 @@
 // GovAlert API Client Module
 
-const API_BASE = "http://localhost:8000/api/v1";
-const AUTH_BASE = "http://localhost:8000/api/auth";
+const DEFAULT_BACKEND_URL = "https://govalert-production.up.railway.app";
+const BASE_HOST = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL) || DEFAULT_BACKEND_URL;
+const CLEAN_BASE = BASE_HOST.replace(/\/$/, "");
+const API_BASE = `${CLEAN_BASE}/api/v1`;
+const AUTH_BASE = `${CLEAN_BASE}/api/auth`;
 
 // ─── Interfaces ────────────────────────────────────────────────────────────────
 
