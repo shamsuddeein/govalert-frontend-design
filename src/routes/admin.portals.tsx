@@ -46,22 +46,22 @@ function getHealthBadgeStyle(status?: string) {
   const norm = (status || "UNKNOWN").toUpperCase();
   if (norm === "ONLINE") {
     return {
-      dotColor: "bg-emerald-500",
-      badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+      dotColor: "bg-[#0a5c38]",
+      badgeClass: "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30",
       label: "ONLINE",
     };
   }
   if (norm === "OFFLINE") {
     return {
-      dotColor: "bg-red-500",
-      badgeClass: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+      dotColor: "bg-destructive",
+      badgeClass: "bg-destructive/10 text-destructive border-destructive/30",
       label: "OFFLINE",
     };
   }
   if (norm === "MAINTENANCE" || norm === "BLOCKED" || norm === "CAPTCHA" || norm === "RATE_LIMITED") {
     return {
-      dotColor: "bg-amber-500",
-      badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
+      dotColor: "bg-[color:var(--warning)]",
+      badgeClass: "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30",
       label: norm === "MAINTENANCE" ? "MAINTENANCE" : norm,
     };
   }
@@ -241,12 +241,12 @@ function AdminPortalsComponent() {
                       {/* STEP 5: Failure Badge */}
                       <td className="p-3.5 font-sans">
                         {isHighFailure ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/30 font-sans">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-destructive/10 text-destructive border border-destructive/30 font-sans">
                             <AlertTriangle className="h-3 w-3 shrink-0" />
                             <span>{portal.consecutive_failures} Failing</span>
                           </span>
                         ) : portal.consecutive_failures > 0 ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-sans">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-[color:var(--warning)]/10 text-[color:var(--warning)] border border-[color:var(--warning)]/30 font-sans">
                             <span>{portal.consecutive_failures} Failures</span>
                           </span>
                         ) : (
@@ -445,8 +445,8 @@ function PortalDetailFormModal({
                         className={cn(
                           "h-3.5 w-3.5 rounded-full border shadow-sm transition-transform group-hover:scale-125 cursor-pointer",
                           isSuccess
-                            ? "bg-emerald-500 border-emerald-600 dark:border-emerald-400"
-                            : "bg-red-500 border-red-600 dark:border-red-400"
+                            ? "bg-[#0a5c38] border-emerald-600 dark:border-emerald-400"
+                            : "bg-destructive border-red-600 dark:border-red-400"
                         )}
                       />
 

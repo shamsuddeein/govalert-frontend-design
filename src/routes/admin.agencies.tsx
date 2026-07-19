@@ -181,7 +181,7 @@ function AdminAgenciesComponent() {
                     <td className="p-3.5 font-sans text-muted-foreground">{agency.category}</td>
                     <td className="p-3.5 font-sans">
                       {agency.is_active ? (
-                        <span className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider font-sans">
+                        <span className="inline-flex items-center gap-1 text-[#0a5c38] dark:text-[#3fb68e] bg-[#0a5c38]/10 border border-[#0a5c38]/30 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider font-sans">
                           <CheckCircle className="h-3 w-3" /> Active
                         </span>
                       ) : (
