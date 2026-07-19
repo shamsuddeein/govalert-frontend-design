@@ -381,7 +381,7 @@ export const api = {
   getAgencies: async (params?: {
     page_size?: number;
     page?: number;
-  }): Promise<{ results: ApiAgency[]; count: number }> => {
+  }): Promise<{ results: ApiAgency[]; count: number } | null> => {
     const q = new URLSearchParams();
     q.set("page_size", String(params?.page_size || 100));
     if (params?.page) q.set("page", String(params.page));
@@ -411,7 +411,7 @@ export const api = {
     page?: number;
     agency?: string;
     agency_slug?: string;
-  }): Promise<{ results: ApiJob[]; count: number }> => {
+  }): Promise<{ results: ApiJob[]; count: number } | null> => {
     const q = new URLSearchParams();
     q.set("page_size", String(params?.page_size || 20));
     if (params?.page) q.set("page", String(params.page));
