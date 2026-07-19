@@ -138,7 +138,7 @@ function AdminPortalsComponent() {
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-md cursor-pointer self-start md:self-auto"
+          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-sm cursor-pointer self-start md:self-auto"
         >
           <Plus className="h-4 w-4" />
           <span>Add Portal</span>
@@ -146,7 +146,7 @@ function AdminPortalsComponent() {
       </div>
 
       {/* Filter Dropdowns */}
-      <div className="flex flex-col md:flex-row items-center gap-3 bg-card p-3.5 rounded-xl border border-border">
+      <div className="flex flex-col md:flex-row items-center gap-3 bg-card p-3.5 rounded-[8px] border border-border">
         <div className="w-full md:w-72 font-sans">
           <select
             value={selectedAgency}
@@ -187,11 +187,11 @@ function AdminPortalsComponent() {
           <span className="text-xs font-sans">Loading portal configurations...</span>
         </div>
       ) : portals.length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-12 text-center text-muted-foreground text-xs font-sans">
+        <div className="bg-card border border-border rounded-[8px] p-12 text-center text-muted-foreground text-xs font-sans">
           No portals found matching criteria.
         </div>
       ) : (
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+        <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-muted border-b border-border text-muted-foreground font-sans font-semibold uppercase tracking-wider">
@@ -390,7 +390,7 @@ function PortalDetailFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-xl p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
+      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
@@ -451,7 +451,7 @@ function PortalDetailFormModal({
                       />
 
                       {/* Tooltip on Hover */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-xl whitespace-nowrap text-[10px] pointer-events-none font-sans">
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-sm whitespace-nowrap text-[10px] pointer-events-none font-sans">
                         <div className="font-bold text-primary">
                           {isSuccess ? `HTTP ${snap.status_code}` : `HTTP ${snap.status_code || "FAIL"}`}
                         </div>
@@ -598,7 +598,7 @@ function PortalDetailFormModal({
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-md cursor-pointer"
+                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer"
               >
                 {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>Save Portal</span>

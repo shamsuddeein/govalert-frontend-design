@@ -98,7 +98,7 @@ function AdminAlertsComponent() {
 
       {/* 1. Stat Cards Header */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Pending Review</span>
             <Clock className="h-4 w-4 text-amber-500" />
@@ -109,7 +109,7 @@ function AdminAlertsComponent() {
           <div className="text-[11px] text-muted-foreground font-sans">Awaiting human decision</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Approved Today</span>
             <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -120,7 +120,7 @@ function AdminAlertsComponent() {
           <div className="text-[11px] text-muted-foreground font-sans">Verified & dispatched</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Rejected Today</span>
             <XCircle className="h-4 w-4 text-red-500" />
@@ -131,7 +131,7 @@ function AdminAlertsComponent() {
           <div className="text-[11px] text-muted-foreground font-sans">Flagged false / fake</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Oldest Pending</span>
             <Sparkles className="h-4 w-4 text-blue-500" />
@@ -179,7 +179,7 @@ function AdminAlertsComponent() {
         /* 3. Pending Queue Full Cards View */
         alerts.length === 0 ? (
           /* 5. Empty State for Pending Queue */
-          <div className="bg-card border border-border rounded-xl p-12 text-center space-y-3 my-8 shadow-sm">
+          <div className="bg-card border border-border rounded-[8px] p-12 text-center space-y-3 my-8 shadow-sm">
             <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
               <CheckCircle2 className="h-6 w-6" />
             </div>
@@ -283,7 +283,7 @@ function PendingAlertCard({
   return (
     <div
       className={cn(
-        "bg-card border border-border rounded-xl p-6 space-y-5 shadow-sm transition-all duration-300 font-sans",
+        "bg-card border border-border rounded-[8px] p-6 space-y-5 shadow-sm transition-all duration-300 font-sans",
         isFadingOut && "opacity-0 scale-95 pointer-events-none"
       )}
     >
@@ -465,7 +465,7 @@ function PendingAlertCard({
           <button
             onClick={handleApprove}
             disabled={actionInFlight !== null}
-            className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-md cursor-pointer"
+            className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {actionInFlight === "approve" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -487,14 +487,14 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-12 text-center text-muted-foreground text-xs font-sans">
+      <div className="bg-card border border-border rounded-[8px] p-12 text-center text-muted-foreground text-xs font-sans">
         No alerts found for status "{status}".
       </div>
     );
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+    <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead className="bg-muted border-b border-border text-muted-foreground font-sans font-semibold uppercase tracking-wider">

@@ -99,7 +99,7 @@ function AdminAgenciesComponent() {
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-md cursor-pointer self-start md:self-auto"
+          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-sm cursor-pointer self-start md:self-auto"
         >
           <Plus className="h-4 w-4" />
           <span>Add Agency</span>
@@ -107,7 +107,7 @@ function AdminAgenciesComponent() {
       </div>
 
       {/* Filter & Search Bar */}
-      <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-card p-3.5 rounded-xl border border-border">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-card p-3.5 rounded-[8px] border border-border">
         <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80 font-sans">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <input
@@ -146,11 +146,11 @@ function AdminAgenciesComponent() {
           <span className="text-xs font-sans">Loading agency roster...</span>
         </div>
       ) : agencies.length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-12 text-center text-muted-foreground text-xs font-sans">
+        <div className="bg-card border border-border rounded-[8px] p-12 text-center text-muted-foreground text-xs font-sans">
           No agencies match your search.
         </div>
       ) : (
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+        <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-muted border-b border-border text-muted-foreground font-sans font-semibold uppercase tracking-wider">
@@ -240,7 +240,7 @@ function AdminAgenciesComponent() {
       {/* Deactivation Confirmation Dialog */}
       {deactivatingAgency && (
         <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-card border border-destructive/40 rounded-xl p-6 max-w-md w-full shadow-2xl space-y-4 font-sans text-xs">
+          <div className="bg-card border border-destructive/40 rounded-[8px] p-6 max-w-md w-full shadow-2xl space-y-4 font-sans text-xs">
             <div className="flex items-center gap-3 text-destructive font-sans font-bold text-sm">
               <AlertTriangle className="h-5 w-5 shrink-0" />
               <span>Confirm Agency Deactivation</span>
@@ -357,7 +357,7 @@ function AgencyFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-xl p-6 max-w-xl w-full shadow-2xl space-y-4 font-sans text-xs">
+      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-4 font-sans text-xs">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
             <Building2 className="h-5 w-5 text-primary" />
@@ -510,7 +510,7 @@ function AgencyFormModal({
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-md cursor-pointer"
+                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer"
               >
                 {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>Save Agency</span>

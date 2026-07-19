@@ -187,7 +187,7 @@ function AdminSystemHealthComponent() {
       {/* 1. Top Stat Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 font-sans">
         {/* Online */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Online</span>
             <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -199,7 +199,7 @@ function AdminSystemHealthComponent() {
         </div>
 
         {/* Offline */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Offline</span>
             <XCircle className="h-4 w-4 text-red-500" />
@@ -211,7 +211,7 @@ function AdminSystemHealthComponent() {
         </div>
 
         {/* Maintenance */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Maintenance</span>
             <Wrench className="h-4 w-4 text-amber-500" />
@@ -223,7 +223,7 @@ function AdminSystemHealthComponent() {
         </div>
 
         {/* Checks Today */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Checks Today</span>
             <Server className="h-4 w-4 text-blue-500" />
@@ -237,7 +237,7 @@ function AdminSystemHealthComponent() {
         </div>
 
         {/* Success Rate */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Success Rate</span>
             <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -263,7 +263,7 @@ function AdminSystemHealthComponent() {
             {attentionPortals.map((portal) => (
               <div
                 key={portal.id}
-                className="bg-card border-2 border-red-500/40 rounded-xl p-5 shadow-md space-y-3 relative overflow-hidden font-sans"
+                className="bg-card border-2 border-red-500/40 rounded-[8px] p-5 shadow-sm space-y-3 relative overflow-hidden font-sans"
               >
                 <div className="flex items-center justify-between border-b border-border pb-2.5">
                   <div className="flex items-center gap-2">
@@ -312,7 +312,7 @@ function AdminSystemHealthComponent() {
           </div>
         ) : (
           /* Calm Green Confirmation State when no portals fail */
-          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 flex items-center gap-4 text-emerald-700 dark:text-emerald-400 shadow-sm font-sans">
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-[8px] p-6 flex items-center gap-4 text-emerald-700 dark:text-emerald-400 shadow-sm font-sans">
             <div className="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
               <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
             </div>
@@ -327,7 +327,7 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 3. 7-Day Reliability & Checks Trend Chart (Recharts) */}
-      <div className="bg-card border border-border rounded-xl p-6 space-y-4 shadow-sm font-sans">
+      <div className="bg-card border border-border rounded-[8px] p-6 space-y-4 shadow-sm font-sans">
         <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border pb-3 gap-2">
           <div>
             <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
@@ -365,7 +365,7 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 4. Recent Failures Table (20 Most Recent Failed Snapshots) */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans space-y-4">
+      <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans space-y-4">
         <div className="p-5 border-b border-border flex items-center justify-between">
           <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
             <AlertTriangle className="h-4 w-4 text-amber-500" />
@@ -419,7 +419,7 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 5. Complete Monitored Portals Roster with Corrected Health Mapping */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+      <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
         <div className="p-5 border-b border-border">
           <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
             <Server className="h-4 w-4 text-primary" />

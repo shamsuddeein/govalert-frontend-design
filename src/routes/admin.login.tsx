@@ -41,7 +41,7 @@ function AdminLoginComponent() {
       <div className="h-[3px] w-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
 
       <div className="flex-1 flex items-center justify-center p-4">
-        <div className="w-full max-w-md bg-card border border-border rounded-xl p-8 shadow-xl space-y-6 relative">
+        <div className="w-full max-w-md bg-card border border-border rounded-[8px] p-8 shadow-sm space-y-6 relative">
           <div className="absolute top-4 right-4">
             <ThemeToggle />
           </div>
@@ -109,7 +109,7 @@ function AdminLoginComponent() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-2 py-3 px-4 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold text-sm rounded-[6px] transition-all flex items-center justify-center gap-2 shadow-md cursor-pointer font-sans"
+              className="w-full mt-2 py-3 px-4 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold text-sm rounded-[6px] transition-all flex items-center justify-center gap-2 shadow-sm cursor-pointer font-sans"
             >
               {loading ? (
                 <>
