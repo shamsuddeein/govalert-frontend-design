@@ -1,12 +1,13 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { StatusBadge, type Status } from "./index";
+import { StatusBadge, JobsEmptyState, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
 import { SpeedDots } from "../lib/speedIndicator";
 import { agenciesData } from "../lib/agenciesData";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 import { ExternalLink } from "lucide-react";
+import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
   component: AgencyProfilePage,
@@ -221,18 +222,13 @@ function AgencyProfilePage() {
         </div>
 
         {/* Official Portal Link */}
-        {agency.portal_url && (
-          <div className="mt-6">
-            <a
-              href={agency.portal_url}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center gap-1.5 text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
-            >
-              <ExternalLink className="size-4" /> {portalUrlDisplay}
-            </a>
-          </div>
-        )}
+        <div className="mt-6">
+          <OfficialSourceLink
+            url={agency.portal_url}
+            label={agency.portal_url ? portalUrlDisplay : "Official Portal"}
+            className="text-[14px]"
+          />
+        </div>
 
         <Divider />
 

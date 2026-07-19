@@ -22,6 +22,7 @@ import {
   AdminSnapshot,
 } from "../lib/adminApi";
 import { cn } from "../lib/utils";
+import { AccessibleModal } from "../components/AccessibleModal";
 
 export const Route = createFileRoute("/admin/portals")({
   component: AdminPortalsComponent,
@@ -389,224 +390,217 @@ function PortalDetailFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
-        {/* Modal Header */}
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
-            <Globe className="h-5 w-5 text-primary" />
-            {portal ? `Portal Detail: ${portal.name}` : "Add New Scraper Portal"}
-          </h3>
-          <button onClick={onClose} className="p-1 text-muted-foreground hover:text-foreground rounded">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        {/* 10-Check History Visualizer Dots (If editing existing portal) */}
-        {portal && (
-          <div className="bg-muted/40 p-4 rounded-[6px] border border-border space-y-2 font-sans">
-            <div className="flex items-center justify-between">
-              <span className="text-[11px] font-semibold text-foreground font-sans">
-                Last 10 Checks History (Hover dot for timestamp + latency):
-              </span>
-              {onTriggerCheck && (
-                <button
-                  type="button"
-                  onClick={() => onTriggerCheck(portal.id, portal.name)}
-                  disabled={isTriggering}
-                  className="px-3 py-1 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 disabled:opacity-50 text-white dark:text-[#0c1015] font-semibold rounded-[6px] text-[11px] flex items-center gap-1.5 transition-all cursor-pointer font-sans"
-                >
-                  {isTriggering ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
-                  ) : (
-                    <Play className="h-3 w-3 fill-current" />
-                  )}
-                  <span>Check now</span>
-                </button>
-              )}
-            </div>
-
-            {loadingHistory ? (
-              <div className="flex items-center gap-2 text-muted-foreground py-1 text-[11px] font-sans">
-                <Loader2 className="h-3 w-3 animate-spin text-primary" /> Loading check history...
-              </div>
-            ) : snapshots.length === 0 ? (
-              <div className="text-muted-foreground py-1 text-[11px] font-sans">No check snapshots recorded yet.</div>
-            ) : (
-              <div className="flex items-center gap-3 pt-1 font-sans">
-                {snapshots.map((snap) => {
-                  const isSuccess = snap.status_code && snap.status_code < 400;
-                  const timeText = new Date(snap.created_at || snap.timestamp).toLocaleString();
-                  const latencyText = snap.response_time_ms ? `${snap.response_time_ms}ms` : "no latency";
-
-                  return (
-                    <div key={snap.id} className="relative group">
-                      <div
-                        className={cn(
-                          "h-3.5 w-3.5 rounded-full border shadow-sm transition-transform group-hover:scale-125 cursor-pointer",
-                          isSuccess
-                            ? "bg-[#0a5c38] border-emerald-600 dark:border-emerald-400"
-                            : "bg-destructive border-red-600 dark:border-red-400"
-                        )}
-                      />
-
-                      {/* Tooltip on Hover */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-sm whitespace-nowrap text-[10px] pointer-events-none font-sans">
-                        <div className="font-bold text-primary">
-                          {isSuccess ? `HTTP ${snap.status_code}` : `HTTP ${snap.status_code || "FAIL"}`}
-                        </div>
-                        <div className="text-muted-foreground font-mono">{timeText}</div>
-                        <div className="text-muted-foreground font-mono">{latencyText}</div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
+    <AccessibleModal
+      isOpen={true}
+      onClose={onClose}
+      title={portal ? `Portal Detail: ${portal.name}` : "Add New Scraper Portal"}
+      description="Configure web scrapers, monitor consecutive failure thresholds, trigger on-demand checks, and inspect check histories."
+      maxWidth="max-w-xl"
+    >
+      {/* 10-Check History Visualizer Dots (If editing existing portal) */}
+      {portal && (
+        <div className="bg-muted/40 p-4 rounded-[6px] border border-border space-y-2 font-sans mb-4">
+          <div className="flex items-center justify-between">
+            <span className="text-[11px] font-semibold text-foreground font-sans">
+              Last 10 Checks History (Hover dot for timestamp + latency):
+            </span>
+            {onTriggerCheck && (
+              <button
+                type="button"
+                onClick={() => onTriggerCheck(portal.id, portal.name)}
+                disabled={isTriggering}
+                className="px-3 py-1 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 disabled:opacity-50 text-white dark:text-[#0c1015] font-semibold rounded-[6px] text-[11px] flex items-center gap-1.5 transition-all cursor-pointer font-sans"
+              >
+                {isTriggering ? (
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                ) : (
+                  <Play className="h-3 w-3 fill-current" />
+                )}
+                <span>Check now</span>
+              </button>
             )}
           </div>
-        )}
 
-        {/* Form Fields */}
-        <form onSubmit={handleSubmit} className="space-y-4 font-sans">
+          {loadingHistory ? (
+            <div className="flex items-center gap-2 text-muted-foreground py-1 text-[11px] font-sans">
+              <Loader2 className="h-3 w-3 animate-spin text-primary" /> Loading check history...
+            </div>
+          ) : snapshots.length === 0 ? (
+            <div className="text-muted-foreground py-1 text-[11px] font-sans">No check snapshots recorded yet.</div>
+          ) : (
+            <div className="flex items-center gap-3 pt-1 font-sans">
+              {snapshots.map((snap) => {
+                const isSuccess = snap.status_code && snap.status_code < 400;
+                const timeText = new Date(snap.created_at || snap.timestamp).toLocaleString();
+                const latencyText = snap.response_time_ms ? `${snap.response_time_ms}ms` : "no latency";
+
+                return (
+                  <div key={snap.id} className="relative group">
+                    <div
+                      className={cn(
+                        "h-3.5 w-3.5 rounded-full border shadow-sm transition-transform group-hover:scale-125 cursor-pointer",
+                        isSuccess
+                          ? "bg-[#0a5c38] border-emerald-600 dark:border-emerald-400"
+                          : "bg-destructive border-red-600 dark:border-red-400"
+                      )}
+                    />
+
+                    {/* Tooltip on Hover */}
+                    <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-sm whitespace-nowrap text-[10px] pointer-events-none font-sans">
+                      <div className="font-bold text-primary">
+                        {isSuccess ? `HTTP ${snap.status_code}` : `HTTP ${snap.status_code || "FAIL"}`}
+                      </div>
+                      <div className="text-muted-foreground font-mono">{timeText}</div>
+                      <div className="text-muted-foreground font-mono">{latencyText}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Form Fields */}
+      <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs">
+        <div className="space-y-1">
+          <label className="block font-sans text-muted-foreground font-semibold">Target Agency *</label>
+          <select
+            value={agencyId}
+            onChange={(e) => setAgencyId(Number(e.target.value))}
+            className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
+          >
+            {agencies.map((a) => (
+              <option key={a.id} value={a.id}>
+                {a.acronym} — {a.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="space-y-1">
+          <label className="block font-sans text-muted-foreground font-semibold">Portal Name *</label>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. NCS Recruitment Portal"
+            className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
+            required
+          />
+        </div>
+
+        <div className="space-y-1">
+          <label className="block font-sans text-muted-foreground font-semibold">Target Scrape URL *</label>
+          <input
+            type="url"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="https://customs.gov.ng/careers"
+            className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Target Agency *</label>
+            <label className="block font-sans text-muted-foreground font-semibold">Scrape Method</label>
             <select
-              value={agencyId}
-              onChange={(e) => setAgencyId(Number(e.target.value))}
+              value={scrapeMethod}
+              onChange={(e) => setScrapeMethod(e.target.value)}
               className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
             >
-              {agencies.map((a) => (
-                <option key={a.id} value={a.id}>
-                  {a.acronym} — {a.name}
-                </option>
-              ))}
+              <option value="REQUESTS">HTTP Requests (BeautifulSoup)</option>
+              <option value="PLAYWRIGHT">Headless Browser (Playwright)</option>
+              <option value="PDF">PDF Parser</option>
+              <option value="RSS">RSS Feed</option>
+              <option value="API">REST API</option>
             </select>
           </div>
 
           <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Portal Name *</label>
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="e.g. NCS Recruitment Portal"
-              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
-              required
-            />
+            <label className="block font-sans text-muted-foreground font-semibold">Priority Level</label>
+            <select
+              value={priority}
+              onChange={(e) => setPriority(e.target.value)}
+              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
+            >
+              <option value="HIGH">HIGH (Fast Poll)</option>
+              <option value="MEDIUM">MEDIUM (Standard)</option>
+              <option value="LOW">LOW (Infrequent)</option>
+            </select>
           </div>
+        </div>
 
+        <div className="grid grid-cols-2 gap-3">
           <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Target Scrape URL *</label>
+            <label className="block font-sans text-muted-foreground font-semibold">Poll Interval (seconds)</label>
             <input
-              type="url"
-              value={url}
-              onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://customs.gov.ng/careers"
+              type="number"
+              value={pollInterval}
+              onChange={(e) => setPollInterval(Number(e.target.value))}
               className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
-              required
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Scrape Method</label>
-              <select
-                value={scrapeMethod}
-                onChange={(e) => setScrapeMethod(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
-              >
-                <option value="REQUESTS">HTTP Requests (BeautifulSoup)</option>
-                <option value="PLAYWRIGHT">Headless Browser (Playwright)</option>
-                <option value="PDF">PDF Parser</option>
-                <option value="RSS">RSS Feed</option>
-                <option value="API">REST API</option>
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Priority Level</label>
-              <select
-                value={priority}
-                onChange={(e) => setPriority(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
-              >
-                <option value="HIGH">HIGH (Fast Poll)</option>
-                <option value="MEDIUM">MEDIUM (Standard)</option>
-                <option value="LOW">LOW (Infrequent)</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Poll Interval (seconds)</label>
-              <input
-                type="number"
-                value={pollInterval}
-                onChange={(e) => setPollInterval(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
-              />
-            </div>
-
-            <div className="space-y-1 flex items-center pt-5 gap-2">
-              <input
-                type="checkbox"
-                id="portal_active_cb_modal"
-                checked={isActive}
-                onChange={(e) => setIsActive(e.target.checked)}
-                className="h-4 w-4 rounded bg-background border-border text-primary focus:ring-0"
-              />
-              <label htmlFor="portal_active_cb_modal" className="font-sans text-foreground font-semibold">
-                Is Active
-              </label>
-            </div>
-          </div>
-
-          <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Admin Notes</label>
-            <textarea
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              rows={2}
-              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
+          <div className="space-y-1 flex items-center pt-5 gap-2">
+            <input
+              type="checkbox"
+              id="portal_active_cb_modal"
+              checked={isActive}
+              onChange={(e) => setIsActive(e.target.checked)}
+              className="h-4 w-4 rounded bg-background border-border text-primary focus:ring-0"
             />
+            <label htmlFor="portal_active_cb_modal" className="font-sans text-foreground font-semibold">
+              Is Active
+            </label>
           </div>
+        </div>
 
-          {/* Form Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-border font-sans">
-            {portal && portal.is_active ? (
-              <button
-                type="button"
-                onClick={handleDeactivate}
-                className="px-3 py-2 border border-destructive/40 text-destructive hover:bg-destructive/10 rounded-[6px] flex items-center gap-1 text-xs font-semibold cursor-pointer"
-              >
-                <Trash2 className="h-3.5 w-3.5" />
-                <span>Deactivate</span>
-              </button>
-            ) : (
-              <div />
-            )}
+        <div className="space-y-1">
+          <label className="block font-sans text-muted-foreground font-semibold">Admin Notes</label>
+          <textarea
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            rows={2}
+            className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
+          />
+        </div>
 
-            <div className="flex items-center gap-2 font-sans">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-[6px] font-semibold cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer"
-              >
-                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                <span>Save Portal</span>
-              </button>
-            </div>
+        {/* Form Actions */}
+        <div className="flex items-center justify-between pt-4 border-t border-border font-sans">
+          {portal && portal.is_active ? (
+            <button
+              type="button"
+              onClick={handleDeactivate}
+              className="px-3 py-2 border border-destructive/40 text-destructive hover:bg-destructive/10 rounded-[6px] flex items-center gap-1 text-xs font-semibold cursor-pointer"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              <span>Deactivate</span>
+            </button>
+          ) : (
+            <div />
+          )}
+
+          <div className="flex items-center gap-2 font-sans">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-[6px] font-semibold cursor-pointer text-xs"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer text-xs"
+            >
+              {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              <span>Save Portal</span>
+            </button>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </AccessibleModal>
   );
 }

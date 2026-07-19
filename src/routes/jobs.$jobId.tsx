@@ -7,6 +7,7 @@ import { api, ApiJob, isAuthenticated } from "../lib/api";
 import { safeFormatDate, safeFormatDateTime, safeFormatTime } from "../lib/formatDate";
 import { ExternalLink, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
+import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
 export const Route = createFileRoute("/jobs/$jobId")({
   component: JobDetailsPage,
@@ -206,9 +207,7 @@ function JobDetailsPage() {
           </div>
           <div>
             <div className="font-mono-ui text-[11px] uppercase text-muted-foreground">Official source</div>
-            <a href={job.official_url} target="_blank" rel="noreferrer" className="mt-1 inline-flex items-center gap-1 font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
-              {job.agency_acronym} Portal <ExternalLink className="size-3" />
-            </a>
+            <OfficialSourceLink url={job.official_url} label={`${job.agency_acronym} Portal`} />
           </div>
           <div>
             <div className="font-mono-ui text-[11px] uppercase text-muted-foreground">Category</div>
@@ -336,9 +335,17 @@ function JobDetailsPage() {
               >
                 Recruitment Portal Closed
               </button>
+            ) : !job.official_url || job.official_url.trim() === "" || job.official_url.trim() === "#" ? (
+              <button
+                disabled
+                title="Official direct portal URL is not provided in source notice"
+                className="inline-flex h-[44px] items-center justify-center gap-2 rounded-[8px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border font-sans"
+              >
+                <span>No Direct Application Link Available</span>
+              </button>
             ) : (
               <a
-                href={job.official_url}
+                href={job.official_url.trim()}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-[44px] items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] px-[20px] text-[14px] font-semibold text-white dark:text-[#0c1015] hover:opacity-90 cursor-pointer"

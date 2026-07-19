@@ -14,6 +14,7 @@ import {
 import { toast } from "sonner";
 import { adminApi, AdminAgency } from "../lib/adminApi";
 import { cn } from "../lib/utils";
+import { AccessibleModal } from "../components/AccessibleModal";
 
 export const Route = createFileRoute("/admin/agencies")({
   component: AdminAgenciesComponent,
@@ -356,169 +357,143 @@ function AgencyFormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-4 font-sans text-xs">
-        <div className="flex items-center justify-between border-b border-border pb-3">
-          <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
-            <Building2 className="h-5 w-5 text-primary" />
-            {agency ? `Edit Agency: ${agency.acronym}` : "Create New Agency"}
-          </h3>
-          <button onClick={onClose} className="p-1 text-muted-foreground hover:text-foreground rounded">
-            <X className="h-4 w-4" />
-          </button>
-        </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4 font-sans">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Agency Name *</label>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g. Nigeria Customs Service"
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
-                required
-              />
-            </div>
-
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Acronym *</label>
-              <input
-                type="text"
-                value={acronym}
-                onChange={(e) => setAcronym(e.target.value)}
-                placeholder="e.g. NCS"
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
-                required
-              />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Category</label>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
-              >
-                <option value="SECURITY">Security & Law Enforcement</option>
-                <option value="FINANCE">Finance & Revenue</option>
-                <option value="UTILITIES">Utilities & Energy</option>
-                <option value="HEALTH">Health & Pharma</option>
-                <option value="EDUCATION">Education & Research</option>
-                <option value="TRANSPORT">Transport & Aviation</option>
-                <option value="STATISTICS">Statistics & Data</option>
-                <option value="JUDICIARY">Judiciary & Legal</option>
-                <option value="OTHER">Other</option>
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="block font-sans text-muted-foreground font-semibold">Vetted Score (0–100)</label>
-              <input
-                type="number"
-                min={0}
-                max={100}
-                value={vettedScore}
-                onChange={(e) => setVettedScore(Number(e.target.value))}
-                className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
-              />
-            </div>
-          </div>
-
-          {/* Official Domains Multi-Tag Input */}
-          <div className="space-y-1.5">
-            <label className="block font-sans text-muted-foreground font-semibold">
-              Official Whitelisted Domains (Tag Input — Press Enter or Comma):
-            </label>
-            <div className="p-2.5 bg-background border border-border rounded-[6px] flex flex-wrap gap-2 items-center min-h-12 font-sans">
-              {domains.map((domain, index) => (
-                <span
-                  key={index}
-                  className="inline-flex items-center gap-1 bg-muted text-primary border border-border font-mono text-[11px] px-2 py-0.5 rounded-[6px]"
-                >
-                  <Globe className="h-3 w-3 shrink-0" />
-                  <span>{domain}</span>
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveDomain(index)}
-                    className="hover:text-destructive ml-1"
-                  >
-                    <X className="h-3 w-3" />
-                  </button>
-                </span>
-              ))}
-              <input
-                type="text"
-                value={domainInput}
-                onChange={(e) => setDomainInput(e.target.value)}
-                onKeyDown={handleDomainKeyDown}
-                onBlur={handleAddDomain}
-                placeholder={domains.length === 0 ? "Type domain and press Enter (e.g. customs.gov.ng)..." : "Add domain..."}
-                className="flex-1 bg-transparent border-none focus:outline-none text-foreground font-mono text-xs min-w-32"
-              />
-            </div>
+    <AccessibleModal
+      isOpen={true}
+      onClose={onClose}
+      title={agency ? `Edit Agency: ${agency.acronym}` : "Create New Agency"}
+      description="Configure official recruitment agency details, whitelisted domains, and monitoring thresholds."
+      maxWidth="max-w-xl"
+    >
+      <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs pt-1">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <label className="block font-sans text-muted-foreground font-semibold">Agency Name *</label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="e.g. Nigeria Customs Service"
+              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
+              required
+            />
           </div>
 
           <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Logo URL (Optional)</label>
+            <label className="block font-sans text-muted-foreground font-semibold">Acronym *</label>
             <input
-              type="url"
-              value={logoUrl}
-              onChange={(e) => setLogoUrl(e.target.value)}
-              placeholder="https://example.com/logo.png"
+              type="text"
+              value={acronym}
+              onChange={(e) => setAcronym(e.target.value)}
+              placeholder="e.g. NCS"
+              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <div className="space-y-1">
+            <label className="block font-sans text-muted-foreground font-semibold">Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-sans focus:outline-none focus:border-primary"
+            >
+              <option value="SECURITY">Security & Law Enforcement</option>
+              <option value="FINANCE">Finance & Revenue</option>
+              <option value="UTILITIES">Utilities & Energy</option>
+              <option value="HEALTH">Health & Pharma</option>
+              <option value="EDUCATION">Education & Research</option>
+              <option value="TRANSPORT">Transport & Aviation</option>
+              <option value="STATISTICS">Statistics & Data</option>
+              <option value="JUDICIARY">Judiciary & Legal</option>
+              <option value="OTHER">Other</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="block font-sans text-muted-foreground font-semibold">Vetted Score (0–100)</label>
+            <input
+              type="number"
+              min={0}
+              max={100}
+              value={vettedScore}
+              onChange={(e) => setVettedScore(Number(e.target.value))}
               className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground font-mono focus:outline-none focus:border-primary"
             />
           </div>
+        </div>
 
-          <div className="space-y-1">
-            <label className="block font-sans text-muted-foreground font-semibold">Description</label>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              rows={2}
-              placeholder="Official mandate and portal details..."
-              className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-foreground focus:outline-none focus:border-primary font-sans"
+        {/* Official Domains Multi-Tag Input */}
+        <div className="space-y-1.5">
+          <label className="block font-sans text-muted-foreground font-semibold">
+            Official Whitelisted Domains (Tag Input — Press Enter or Comma):
+          </label>
+          <div className="p-2.5 bg-background border border-border rounded-[6px] flex flex-wrap gap-2 items-center min-h-12 font-sans">
+            {domains.map((domain, index) => (
+              <span
+                key={index}
+                className="inline-flex items-center gap-1 bg-muted text-primary border border-border font-mono text-[11px] px-2 py-0.5 rounded-[6px]"
+              >
+                {domain}
+                <button
+                  type="button"
+                  onClick={() => handleRemoveDomain(index)}
+                  className="text-muted-foreground hover:text-destructive cursor-pointer"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </span>
+            ))}
+            <input
+              type="text"
+              value={domainInput}
+              onChange={(e) => setDomainInput(e.target.value)}
+              onKeyDown={handleDomainKeyDown}
+              onBlur={handleAddDomain}
+              placeholder={domains.length === 0 ? "Type domain (e.g. customs.gov.ng) & press Enter..." : "Add another domain..."}
+              className="flex-1 min-w-[200px] bg-transparent text-foreground placeholder:text-muted-foreground focus:outline-none font-mono text-xs"
             />
           </div>
+          <p className="text-[10px] text-muted-foreground font-sans">
+            Only links matching these domains will receive the "Official Whitelisted Source" badge.
+          </p>
+        </div>
 
-          {/* Deactivate Button & Form Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-border font-sans">
-            {agency && agency.is_active && onDeactivateRequest ? (
-              <button
-                type="button"
-                onClick={onDeactivateRequest}
-                className="px-3 py-2 border border-destructive/40 text-destructive hover:bg-destructive/10 rounded-[6px] flex items-center gap-1 text-xs font-semibold cursor-pointer"
-              >
-                <XCircle className="h-3.5 w-3.5" />
-                <span>Deactivate</span>
-              </button>
-            ) : (
-              <div />
-            )}
+        {/* Action Buttons */}
+        <div className="pt-3 border-t border-border flex items-center justify-between">
+          {agency ? (
+            <button
+              type="button"
+              onClick={onDeactivateRequest}
+              className="px-3 py-1.5 rounded-[6px] font-semibold flex items-center gap-1 transition-colors cursor-pointer text-xs font-sans bg-destructive/10 text-destructive hover:bg-destructive/20"
+            >
+              <XCircle className="h-3.5 w-3.5" />
+              <span>Deactivate Agency</span>
+            </button>
+          ) : (
+            <div />
+          )}
 
-            <div className="flex items-center gap-2 font-sans">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-[6px] font-semibold cursor-pointer"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={saving}
-                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer"
-              >
-                {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-                <span>Save Agency</span>
-              </button>
-            </div>
+          <div className="flex items-center gap-2 font-sans">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 bg-muted hover:bg-muted/80 text-foreground rounded-[6px] font-semibold cursor-pointer text-xs"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer text-xs"
+            >
+              {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+              <span>Save Agency</span>
+            </button>
           </div>
-        </form>
-      </div>
-    </div>
+        </div>
+      </form>
+    </AccessibleModal>
   );
 }

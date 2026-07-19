@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { toast } from "sonner";
 import { isAuthenticated, api } from "../lib/api";
+import { AccessibleModal } from "../components/AccessibleModal";
 
 export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
@@ -724,63 +725,60 @@ function DashboardPage() {
       </main>
 
       {/* Telegram Pairing Modal */}
-      {showPairingModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-          <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-6 shadow-xl relative text-left">
-            <h3 className="text-sm font-bold flex items-center gap-2 mb-2 uppercase tracking-wider text-primary">
-              Pair with Telegram Bot
-            </h3>
-            <p className="text-xs text-muted-foreground mb-4">
-              Connect your account to GovAlert Telegram Bot in three simple steps:
-            </p>
-
-            <ol className="space-y-3.5 text-xs text-muted-foreground mb-6 pl-4 list-decimal">
-              <li>
-                Open Telegram and search for <strong className="text-primary font-bold">@GovAlertBot</strong>.
-              </li>
-              <li>
-                Start the bot by tapping <strong className="text-foreground">/start</strong>.
-              </li>
-              <li>
-                Send the following pairing code to the bot:
-                <div className="mt-2 bg-muted rounded-[6px] p-3 text-center text-base font-mono font-bold tracking-widest text-[#0a5c38] dark:text-[#3fb68e] border border-border">
-                  {pairingCode}
-                </div>
-              </li>
-            </ol>
-
-            <div className="space-y-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
-                  Enter Your Telegram Handle
-                </label>
-                <input
-                  type="text"
-                  placeholder="@yourhandle"
-                  value={telegramHandle}
-                  onChange={(e) => setTelegramHandle(e.target.value)}
-                  className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e]"
-                />
-              </div>
-
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  onClick={() => setShowPairingModal(false)}
-                  className="rounded-[6px] border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleCompleteConnection}
-                  className="rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-4 py-2 text-xs font-semibold cursor-pointer"
-                >
-                  Verify pairing code
-                </button>
-              </div>
+      <AccessibleModal
+        isOpen={showPairingModal}
+        onClose={() => setShowPairingModal(false)}
+        title="Pair with Telegram Bot"
+        description="Connect your account to GovAlert Telegram Bot in three simple steps:"
+        maxWidth="max-w-md"
+      >
+        <ol className="space-y-3.5 text-xs text-muted-foreground mb-6 pl-4 list-decimal font-sans">
+          <li>
+            Open Telegram and search for <strong className="text-primary font-bold">@GovAlertBot</strong>.
+          </li>
+          <li>
+            Start the bot by tapping <strong className="text-foreground">/start</strong>.
+          </li>
+          <li>
+            Send the following pairing code to the bot:
+            <div className="mt-2 bg-muted rounded-[6px] p-3 text-center text-base font-mono font-bold tracking-widest text-[#0a5c38] dark:text-[#3fb68e] border border-border">
+              {pairingCode}
             </div>
+          </li>
+        </ol>
+
+        <div className="space-y-4 font-sans">
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              Enter Your Telegram Handle
+            </label>
+            <input
+              type="text"
+              placeholder="@yourhandle"
+              value={telegramHandle}
+              onChange={(e) => setTelegramHandle(e.target.value)}
+              className="rounded-[6px] border border-border bg-background px-3 py-2 text-xs outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] font-sans"
+            />
+          </div>
+
+          <div className="flex justify-end gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => setShowPairingModal(false)}
+              className="rounded-[6px] border border-border bg-card px-4 py-2 text-xs font-semibold hover:bg-muted cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="button"
+              onClick={handleCompleteConnection}
+              className="rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-4 py-2 text-xs font-semibold cursor-pointer"
+            >
+              Verify pairing code
+            </button>
           </div>
         </div>
-      )}
+      </AccessibleModal>
 
       <Footer />
     </div>

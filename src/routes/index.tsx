@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
 import { api, ApiAgency, ApiJob, ApiSystemStatus, ApiLiveFeedItem } from "../lib/api";
+import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -563,17 +564,7 @@ function LatestJobs({
                         </div>
                         <div>
                           <span className="block text-muted-foreground text-[12px]">Verification</span>
-                          <a
-                            href={portalUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline inline-flex items-center gap-1 text-[12px]"
-                          >
-                            OFFICIAL SOURCE
-                            <svg className="size-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                              <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                          </a>
+                          <OfficialSourceLink url={portalUrl} />
                         </div>
                       </div>
                     </div>
@@ -634,14 +625,7 @@ function LatestJobs({
                           <StatusBadge status={job.status} />
                         </td>
                         <td className="p-4 text-right space-x-3">
-                          <a
-                            href={portalUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-primary underline hover:text-accent font-semibold"
-                          >
-                            Source
-                          </a>
+                          <OfficialSourceLink url={portalUrl} label="Source" />
                           <Link
                             to="/jobs/$jobId"
                             params={{ jobId: job.id }}

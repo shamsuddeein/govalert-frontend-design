@@ -5,6 +5,7 @@ import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiAgency } from "../lib/api";
 import { agenciesData } from "../lib/agenciesData";
 import { safeFormatTime } from "../lib/formatDate";
+import { JobsErrorState, JobsEmptyState } from "./index";
 
 export const Route = createFileRoute("/agencies/")({
   component: AgenciesIndexPage,
@@ -244,21 +245,13 @@ function AgenciesIndexPage() {
         )}
 
         {error && (
-          <div className="rounded-[8px] border border-red-200 bg-red-50/50 dark:bg-red-950/30 dark:border-red-900 p-6 text-center max-w-md mx-auto space-y-4 my-10">
-            <p className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>
-            <button
-              onClick={fetchAgencies}
-              className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-[6px] cursor-pointer hover:bg-red-700"
-            >
-              Retry
-            </button>
-          </div>
+          <JobsErrorState message={error} onRetry={fetchAgencies} />
         )}
 
         {!loading && !error && (
           <>
             {/* Results count */}
-            <div className="mb-6 border-b border-border/40 pb-3">
+            <div className="mb-6 border-b border-border/40 pb-3 font-sans">
               <p className="text-[13px] text-muted-foreground">
                 Monitoring <span className="font-semibold text-foreground font-mono">{filteredAgencies.length}</span> registered Federal MDAs
               </p>
@@ -286,7 +279,7 @@ function AgenciesIndexPage() {
                             </span>
                           </div>
                           
-                          <div className="flex items-center gap-1.5 text-[12px] font-medium">
+                          <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans">
                             <span className={`size-2 rounded-full ${
                               isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
                             }`} />
@@ -298,16 +291,16 @@ function AgenciesIndexPage() {
 
                         {/* Agency Info */}
                         <div>
-                          <h3 className="text-[17px] font-semibold text-foreground transition-colors group-hover:text-primary">
+                          <h3 className="text-[17px] font-semibold text-foreground transition-colors group-hover:text-primary font-sans">
                             {agency.name}
                           </h3>
-                          <p className="mt-2 text-[13px] text-muted-foreground line-clamp-2 leading-relaxed">
+                          <p className="mt-2 text-[13px] text-muted-foreground line-clamp-2 leading-relaxed font-sans">
                             {agency.description}
                           </p>
                         </div>
 
                         {/* Metrics details */}
-                        <div className="grid grid-cols-2 gap-x-4 border-t border-border pt-4 text-[12px]">
+                        <div className="grid grid-cols-2 gap-x-4 border-t border-border pt-4 text-[12px] font-sans">
                           <div>
                             <span className="block text-muted-foreground">Active recruitments</span>
                             <span className="font-semibold text-foreground">{agency.jobs_available} active openings</span>
@@ -320,14 +313,14 @@ function AgenciesIndexPage() {
                       </div>
 
                       {/* Footer */}
-                      <div className="mt-6 flex items-center justify-between text-[11px] border-t border-border/40 pt-4">
+                      <div className="mt-6 flex items-center justify-between text-[11px] border-t border-border/40 pt-4 font-sans">
                         <span className="font-mono text-muted-foreground">
                           &thinsp;&thinsp;&#8635; Checked {safeFormatTime(agency.last_checked, "Never")}
                         </span>
                         <Link
                           to="/agencies/$agencyShort"
                           params={{ agencyShort: agency.slug || agency.acronym }}
-                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
+                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-sans"
                         >
                           View profile &rarr;
                         </Link>
@@ -337,19 +330,7 @@ function AgenciesIndexPage() {
                 })}
               </div>
             ) : (
-              <div className="rounded-[8px] border border-dashed border-border py-12 text-center bg-card">
-                <h3 className="text-sm font-bold text-primary">No MDAs found</h3>
-                <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
-                  We couldn't find any departments or agencies matching your search or filters. Try
-                  adjusting your selections.
-                </p>
-                <button
-                  onClick={handleClearFilters}
-                  className="mt-6 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
-                >
-                  Reset filters
-                </button>
-              </div>
+              <JobsEmptyState onClear={handleClearFilters} />
             )}
           </>
         )}
