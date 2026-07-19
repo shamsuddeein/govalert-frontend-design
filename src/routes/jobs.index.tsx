@@ -355,7 +355,7 @@ function JobsPage() {
             {jobs.length > 0 ? (
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {jobs.map((job) => {
-                  const portalUrl = job.officialUrl || "#";
+                  const portalUrl = (job as any).officialUrl || "#";
                   const isClosed = job.status === "closed";
 
                   return (
