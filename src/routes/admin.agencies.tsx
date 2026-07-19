@@ -377,7 +377,6 @@ function AgencyFormModal({
               required
             />
           </div>
-          </div>
 
           <div className="space-y-1">
             <label className="block font-sans text-muted-foreground font-semibold">Acronym *</label>

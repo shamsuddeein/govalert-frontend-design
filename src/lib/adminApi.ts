@@ -154,6 +154,8 @@ export interface AdminSystemHealth {
     health_status: string;
     status: string;
     needs_attention: boolean;
+    down_duration_seconds?: number;
+    failing_over_24h?: boolean;
   }>;
   recent_failed_snapshots: Array<{
     id: number;

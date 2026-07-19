@@ -46,14 +46,47 @@ function timeAgo(dateStr?: string | null): string {
   return `${days}d ago`;
 }
 
-function getDownDurationHours(dateStr?: string | null): string {
-  if (!dateStr) return "> 24 hours";
-  const date = new Date(dateStr);
+function getDownDurationText(portal: any): string {
+  const secs = portal.down_duration_seconds;
+  if (secs !== undefined && secs !== null) {
+    if (secs < 3600) {
+      const mins = Math.max(Math.round(secs / 60), 1);
+      return `${mins} minute${mins === 1 ? "" : "s"}`;
+    }
+    const hours = secs / 3600;
+    if (hours < 24) {
+      return `${hours.toFixed(1)} hours`;
+    }
+    const days = (hours / 24).toFixed(1);
+    return `${days} days`;
+  }
+  if (!portal.last_checked_at) return "> 24 hours";
+  const date = new Date(portal.last_checked_at);
   const now = new Date();
   const diffHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
   if (diffHours < 1) return `${Math.round(diffHours * 60)} minutes`;
   if (diffHours < 24) return `${diffHours.toFixed(1)} hours`;
   return `${(diffHours / 24).toFixed(1)} days`;
+}
+
+function getSeverityBadge(portal: any) {
+  const status = (portal.health_status || portal.status || "UNKNOWN").toUpperCase();
+  const secs = portal.down_duration_seconds ?? 0;
+  const hours = secs / 3600;
+
+  if (status === "CAPTCHA") return { label: "CAPTCHA Detected", class: "bg-amber-500/10 text-amber-600 border-amber-500/30" };
+  if (status === "BLOCKED") return { label: "Firewall Blocked", class: "bg-amber-500/10 text-amber-600 border-amber-500/30" };
+  if (status === "RATE_LIMITED") return { label: "Rate Limited", class: "bg-amber-500/10 text-amber-600 border-amber-500/30" };
+  if (status === "MAINTENANCE") return { label: "Maintenance", class: "bg-blue-500/10 text-blue-600 border-blue-500/30" };
+
+  if (hours >= 24) {
+    return { label: "FAILING > 24H", class: "bg-destructive/10 text-destructive border-destructive/30" };
+  } else if (hours >= 1) {
+    return { label: `Down ${hours.toFixed(1)}h`, class: "bg-amber-500/10 text-amber-600 border-amber-500/30" };
+  } else {
+    const mins = Math.max(Math.round(secs / 60), 1);
+    return { label: `Down ${mins}m`, class: "bg-amber-500/10 text-amber-600 border-amber-500/30" };
+  }
 }
 
 // STEP 5: Strict Health Status Badge helper
@@ -80,7 +113,6 @@ function getHealthBadgeStyle(status?: string) {
       label: norm === "MAINTENANCE" ? "MAINTENANCE" : norm,
     };
   }
-  // UNKNOWN -> Neutral Gray (NOT GREEN, NOT RED!)
   return {
     dotColor: "bg-[color:var(--closed)]",
     badgeClass: "bg-[color:var(--closed)]/10 text-muted-foreground border-[color:var(--closed)]/20",
@@ -260,55 +292,58 @@ function AdminSystemHealthComponent() {
 
         {attentionPortals.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {attentionPortals.map((portal) => (
-              <div
-                key={portal.id}
-                className="bg-card border-2 border-destructive/40 rounded-[8px] p-5 shadow-sm space-y-3 relative overflow-hidden font-sans"
-              >
-                <div className="flex items-center justify-between border-b border-border pb-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-[6px] bg-muted text-primary border border-border">
-                      {portal.agency_acronym}
-                    </span>
-                    <span className="font-bold text-foreground text-sm font-sans">{portal.name}</span>
-                  </div>
-                  <span className="text-[10px] font-sans font-bold bg-destructive/10 text-destructive px-2 py-0.5 rounded-[6px] uppercase border border-destructive/30">
-                    Failing &gt; 24h
-                  </span>
-                </div>
-
-                <div className="grid grid-cols-2 gap-2 text-xs font-sans">
-                  <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
-                    <span className="text-muted-foreground block text-[10px] font-semibold">Down Duration:</span>
-                    <span className="text-destructive font-bold">
-                      {getDownDurationHours(portal.last_checked_at)}
+            {attentionPortals.map((portal) => {
+              const badge = getSeverityBadge(portal);
+              return (
+                <div
+                  key={portal.id}
+                  className="bg-card border-2 border-destructive/40 rounded-[8px] p-5 shadow-sm space-y-3 relative overflow-hidden font-sans"
+                >
+                  <div className="flex items-center justify-between border-b border-border pb-2.5">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-[6px] bg-muted text-primary border border-border">
+                        {portal.agency_acronym}
+                      </span>
+                      <span className="font-bold text-foreground text-sm font-sans">{portal.name}</span>
+                    </div>
+                    <span className={cn("text-[10px] font-sans font-bold px-2 py-0.5 rounded-[6px] uppercase border", badge.class)}>
+                      {badge.label}
                     </span>
                   </div>
-                  <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
-                    <span className="text-muted-foreground block text-[10px] font-semibold">Consecutive Failures:</span>
-                    <span className="text-destructive font-bold">{portal.consecutive_failures} failures</span>
-                  </div>
-                </div>
 
-                <div className="flex items-center justify-between pt-1 font-sans text-xs">
-                  <div className="text-muted-foreground text-[11px]">
-                    Last checked: <span className="font-mono">{timeAgo(portal.last_checked_at)}</span>
+                  <div className="grid grid-cols-2 gap-2 text-xs font-sans">
+                    <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
+                      <span className="text-muted-foreground block text-[10px] font-semibold">Down Duration:</span>
+                      <span className="text-destructive font-bold">
+                        {getDownDurationText(portal)}
+                      </span>
+                    </div>
+                    <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
+                      <span className="text-muted-foreground block text-[10px] font-semibold">Consecutive Failures:</span>
+                      <span className="text-destructive font-bold">{portal.consecutive_failures} failures</span>
+                    </div>
                   </div>
-                  <button
-                    onClick={() => handleTriggerCheck(portal.id, portal.name)}
-                    disabled={triggeringId === portal.id}
-                    className="px-3 py-1.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 disabled:opacity-50 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 text-xs transition-all shadow-sm cursor-pointer"
-                  >
-                    {triggeringId === portal.id ? (
-                      <Loader2 className="h-3.5 w-3.5 animate-spin" />
-                    ) : (
-                      <Play className="h-3.5 w-3.5 fill-current" />
-                    )}
-                    <span>Check now</span>
-                  </button>
+
+                  <div className="flex items-center justify-between pt-1 font-sans text-xs">
+                    <div className="text-muted-foreground text-[11px]">
+                      Last checked: <span className="font-mono">{timeAgo(portal.last_checked_at)}</span>
+                    </div>
+                    <button
+                      onClick={() => handleTriggerCheck(portal.id, portal.name)}
+                      disabled={triggeringId === portal.id}
+                      className="px-3 py-1.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 disabled:opacity-50 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 text-xs transition-all shadow-sm cursor-pointer"
+                    >
+                      {triggeringId === portal.id ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Play className="h-3.5 w-3.5 fill-current" />
+                      )}
+                      <span>Check now</span>
+                    </button>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         ) : (
           /* Calm Green Confirmation State when no portals fail */
@@ -358,7 +393,7 @@ function AdminSystemHealthComponent() {
               />
               <Legend wrapperStyle={{ fontSize: "12px", fontFamily: "IBM Plex Sans, sans-serif" }} />
               <Bar yAxisId="left" dataKey="total_checks" name="Total Checks" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={24} />
-              <Line yAxisId="right" type="monotone" dataKey="success_rate" name="Success Rate (%)" stroke="#3fb68e" strokeWidth={3} dot={{ r: 4, fill: "#3fb68e" }} />
+              <Line yAxisId="right" type="monotone" dataKey="success_rate" name="Success Rate (%)" stroke="#3fb68e" strokeWidth={3} dot={{ r: 4, fill: "#3fb68e" }} connectNulls={false} />
             </ComposedChart>
           </ResponsiveContainer>
         </div>

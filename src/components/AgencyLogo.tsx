@@ -26,6 +26,7 @@ interface Props {
 export function AgencyLogo({ short, url, size = 40, className = "", rounded = "rounded-[6px]" }: Props) {
   const [srcIdx, setSrcIdx] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [failedAll, setFailedAll] = useState(false);
 
   const agency = agenciesData.find((x) => x.short.toUpperCase() === short.toUpperCase());
   
@@ -40,18 +41,18 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
   })();
 
   const sources = [
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
     `https://logo.clearbit.com/${domain}?size=128`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
     `https://icons.duckduckgo.com/ip3/${domain}.ico`,
   ];
-  const src = sources[srcIdx] ?? null;
+  const src = !failedAll && srcIdx < sources.length ? sources[srcIdx] : null;
 
   const boxCls = `relative grid place-items-center overflow-hidden border border-border bg-white dark:bg-[#1a2230] ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-background`;
   const style = { width: size, height: size } as const;
   const altText = agency ? `${agency.name} official logo` : `${short} official logo`;
 
-  if (!src) {
-    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] text-white font-sans text-[12px] font-bold tracking-wide shrink-0 ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
+  if (!src || failedAll) {
+    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] font-sans text-xs font-bold tracking-wider shrink-0 shadow-sm ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
     return (
       <span
         tabIndex={0}
@@ -78,12 +79,22 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
         height={Math.round(size * 0.7)}
         loading="lazy"
         decoding="async"
-        onLoad={() => setLoading(false)}
+        onLoad={(e) => {
+          const img = e.currentTarget;
+          if (img.naturalWidth <= 16 && img.naturalHeight <= 16 && srcIdx < sources.length - 1) {
+            setSrcIdx(srcIdx + 1);
+          } else if (img.naturalWidth <= 16 && img.naturalHeight <= 16) {
+            setFailedAll(true);
+            setLoading(false);
+          } else {
+            setLoading(false);
+          }
+        }}
         onError={() => {
           if (srcIdx < sources.length - 1) {
             setSrcIdx(srcIdx + 1);
           } else {
-            setSrcIdx(sources.length);
+            setFailedAll(true);
             setLoading(false);
           }
         }}
