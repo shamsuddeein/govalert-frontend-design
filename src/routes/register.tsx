@@ -31,14 +31,14 @@ function RegisterPage() {
     }
     setLoading(true);
 
-    const tokens = await api.register(name, email, password);
+    const res = await api.register(name, email, password);
     setLoading(false);
 
-    if (tokens) {
+    if (res.tokens) {
       toast.success("Account created successfully!");
       navigate({ to: "/dashboard" });
     } else {
-      toast.error("Failed to create account. Email may already be in use.");
+      toast.error(res.error || "Failed to create account.");
     }
   };
 

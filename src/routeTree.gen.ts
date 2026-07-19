@@ -22,14 +22,21 @@ import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as AgenciesRouteImport } from './routes/agencies'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerificationIndexRouteImport } from './routes/verification.index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
 import { Route as AgenciesIndexRouteImport } from './routes/agencies.index'
+import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as VerificationJobIdRouteImport } from './routes/verification.$jobId'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
+import { Route as AdminSystemHealthRouteImport } from './routes/admin.system-health'
+import { Route as AdminPortalsRouteImport } from './routes/admin.portals'
+import { Route as AdminLoginRouteImport } from './routes/admin.login'
+import { Route as AdminAlertsRouteImport } from './routes/admin.alerts'
+import { Route as AdminAgenciesRouteImport } from './routes/admin.agencies'
 
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
@@ -96,6 +103,11 @@ const AgenciesRoute = AgenciesRouteImport.update({
   path: '/agencies',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AboutRoute = AboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -121,6 +133,11 @@ const AgenciesIndexRoute = AgenciesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AgenciesRoute,
 } as any)
+const AdminIndexRoute = AdminIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
 const VerificationJobIdRoute = VerificationJobIdRouteImport.update({
   id: '/verification/$jobId',
   path: '/verification/$jobId',
@@ -136,10 +153,36 @@ const AgenciesAgencyShortRoute = AgenciesAgencyShortRouteImport.update({
   path: '/$agencyShort',
   getParentRoute: () => AgenciesRoute,
 } as any)
+const AdminSystemHealthRoute = AdminSystemHealthRouteImport.update({
+  id: '/system-health',
+  path: '/system-health',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminPortalsRoute = AdminPortalsRouteImport.update({
+  id: '/portals',
+  path: '/portals',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLoginRoute = AdminLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAlertsRoute = AdminAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAgenciesRoute = AdminAgenciesRouteImport.update({
+  id: '/agencies',
+  path: '/agencies',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/agencies': typeof AgenciesRouteWithChildren
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
@@ -153,9 +196,15 @@ export interface FileRoutesByFullPath {
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/admin/agencies': typeof AdminAgenciesRoute
+  '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/portals': typeof AdminPortalsRoute
+  '/admin/system-health': typeof AdminSystemHealthRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/agencies/': typeof AgenciesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/verification/': typeof VerificationIndexRoute
@@ -174,9 +223,15 @@ export interface FileRoutesByTo {
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/admin/agencies': typeof AdminAgenciesRoute
+  '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/portals': typeof AdminPortalsRoute
+  '/admin/system-health': typeof AdminSystemHealthRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
+  '/admin': typeof AdminIndexRoute
   '/agencies': typeof AgenciesIndexRoute
   '/jobs': typeof JobsIndexRoute
   '/verification': typeof VerificationIndexRoute
@@ -185,6 +240,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/admin': typeof AdminRouteWithChildren
   '/agencies': typeof AgenciesRouteWithChildren
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
@@ -198,9 +254,15 @@ export interface FileRoutesById {
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/terms': typeof TermsRoute
+  '/admin/agencies': typeof AdminAgenciesRoute
+  '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/login': typeof AdminLoginRoute
+  '/admin/portals': typeof AdminPortalsRoute
+  '/admin/system-health': typeof AdminSystemHealthRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
+  '/admin/': typeof AdminIndexRoute
   '/agencies/': typeof AgenciesIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/verification/': typeof VerificationIndexRoute
@@ -210,6 +272,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/about'
+    | '/admin'
     | '/agencies'
     | '/contact'
     | '/dashboard'
@@ -223,9 +286,15 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/status'
     | '/terms'
+    | '/admin/agencies'
+    | '/admin/alerts'
+    | '/admin/login'
+    | '/admin/portals'
+    | '/admin/system-health'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
+    | '/admin/'
     | '/agencies/'
     | '/jobs/'
     | '/verification/'
@@ -244,9 +313,15 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/status'
     | '/terms'
+    | '/admin/agencies'
+    | '/admin/alerts'
+    | '/admin/login'
+    | '/admin/portals'
+    | '/admin/system-health'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
+    | '/admin'
     | '/agencies'
     | '/jobs'
     | '/verification'
@@ -254,6 +329,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/about'
+    | '/admin'
     | '/agencies'
     | '/contact'
     | '/dashboard'
@@ -267,9 +343,15 @@ export interface FileRouteTypes {
     | '/sign-in'
     | '/status'
     | '/terms'
+    | '/admin/agencies'
+    | '/admin/alerts'
+    | '/admin/login'
+    | '/admin/portals'
+    | '/admin/system-health'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
+    | '/admin/'
     | '/agencies/'
     | '/jobs/'
     | '/verification/'
@@ -278,6 +360,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
+  AdminRoute: typeof AdminRouteWithChildren
   AgenciesRoute: typeof AgenciesRouteWithChildren
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
@@ -388,6 +471,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgenciesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/about': {
       id: '/about'
       path: '/about'
@@ -423,6 +513,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgenciesIndexRouteImport
       parentRoute: typeof AgenciesRoute
     }
+    '/admin/': {
+      id: '/admin/'
+      path: '/'
+      fullPath: '/admin/'
+      preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/verification/$jobId': {
       id: '/verification/$jobId'
       path: '/verification/$jobId'
@@ -444,8 +541,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgenciesAgencyShortRouteImport
       parentRoute: typeof AgenciesRoute
     }
+    '/admin/system-health': {
+      id: '/admin/system-health'
+      path: '/system-health'
+      fullPath: '/admin/system-health'
+      preLoaderRoute: typeof AdminSystemHealthRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/portals': {
+      id: '/admin/portals'
+      path: '/portals'
+      fullPath: '/admin/portals'
+      preLoaderRoute: typeof AdminPortalsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/login': {
+      id: '/admin/login'
+      path: '/login'
+      fullPath: '/admin/login'
+      preLoaderRoute: typeof AdminLoginRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/alerts': {
+      id: '/admin/alerts'
+      path: '/alerts'
+      fullPath: '/admin/alerts'
+      preLoaderRoute: typeof AdminAlertsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/agencies': {
+      id: '/admin/agencies'
+      path: '/agencies'
+      fullPath: '/admin/agencies'
+      preLoaderRoute: typeof AdminAgenciesRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
+
+interface AdminRouteChildren {
+  AdminAgenciesRoute: typeof AdminAgenciesRoute
+  AdminAlertsRoute: typeof AdminAlertsRoute
+  AdminLoginRoute: typeof AdminLoginRoute
+  AdminPortalsRoute: typeof AdminPortalsRoute
+  AdminSystemHealthRoute: typeof AdminSystemHealthRoute
+  AdminIndexRoute: typeof AdminIndexRoute
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminAgenciesRoute: AdminAgenciesRoute,
+  AdminAlertsRoute: AdminAlertsRoute,
+  AdminLoginRoute: AdminLoginRoute,
+  AdminPortalsRoute: AdminPortalsRoute,
+  AdminSystemHealthRoute: AdminSystemHealthRoute,
+  AdminIndexRoute: AdminIndexRoute,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface AgenciesRouteChildren {
   AgenciesAgencyShortRoute: typeof AgenciesAgencyShortRoute
@@ -476,6 +628,7 @@ const JobsRouteWithChildren = JobsRoute._addFileChildren(JobsRouteChildren)
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
+  AdminRoute: AdminRouteWithChildren,
   AgenciesRoute: AgenciesRouteWithChildren,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,

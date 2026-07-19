@@ -276,24 +276,44 @@ export const api = {
   },
 
   // Auth
-  register: async (name: string, email: string, password: string): Promise<ApiAuthTokens | null> => {
-    const res = await request<ApiAuthTokens>(
-      "/register/",
-      { method: "POST", body: JSON.stringify({ name, email, password }) },
-      AUTH_BASE
-    );
-    if (res) setAuthTokens(res);
-    return res;
+  register: async (name: string, email: string, password: string): Promise<{ tokens?: ApiAuthTokens; error?: string }> => {
+    try {
+      const res = await fetch(`${AUTH_BASE}/register/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const firstErr = typeof data === "object" && data !== null
+          ? Object.values(data).flat()[0]
+          : null;
+        return { error: (firstErr as string) || "Failed to create account." };
+      }
+      setAuthTokens(data);
+      return { tokens: data };
+    } catch (err: any) {
+      return { error: "Network error. Please check your connection." };
+    }
   },
 
-  login: async (email: string, password: string): Promise<ApiAuthTokens | null> => {
-    const res = await request<ApiAuthTokens>(
-      "/token/",
-      { method: "POST", body: JSON.stringify({ email, password }) },
-      AUTH_BASE
-    );
-    if (res) setAuthTokens(res);
-    return res;
+  login: async (email: string, password: string): Promise<{ tokens?: ApiAuthTokens; error?: string }> => {
+    try {
+      const res = await fetch(`${AUTH_BASE}/token/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const errorMsg = data?.detail || (typeof data === "object" && data !== null ? Object.values(data).flat()[0] : null);
+        return { error: (errorMsg as string) || "Invalid email or password." };
+      }
+      setAuthTokens(data);
+      return { tokens: data };
+    } catch (err: any) {
+      return { error: "Network error. Please check your connection." };
+    }
   },
 
   refreshToken: async (): Promise<string | null> => {

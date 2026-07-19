@@ -22,14 +22,14 @@ function SignInPage() {
     setLoading(true);
     setAuthError(null);
 
-    const result = await api.login(email, password);
+    const res = await api.login(email, password);
     setLoading(false);
 
-    if (result) {
+    if (res.tokens) {
       toast.success("Successfully signed in!");
       navigate({ to: "/dashboard" });
     } else {
-      setAuthError("Invalid email or password. Please try again.");
+      setAuthError(res.error || "Invalid email or password. Please try again.");
     }
   };
 
