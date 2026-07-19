@@ -46,29 +46,29 @@ function getHealthBadgeStyle(status?: string) {
   const norm = (status || "UNKNOWN").toUpperCase();
   if (norm === "ONLINE") {
     return {
-      dotColor: "bg-emerald-500",
-      badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+      dotColor: "bg-[#0a5c38]",
+      badgeClass: "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30",
       label: "ONLINE",
     };
   }
   if (norm === "OFFLINE") {
     return {
-      dotColor: "bg-red-500",
-      badgeClass: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+      dotColor: "bg-destructive",
+      badgeClass: "bg-destructive/10 text-destructive border-destructive/30",
       label: "OFFLINE",
     };
   }
   if (norm === "MAINTENANCE" || norm === "BLOCKED" || norm === "CAPTCHA" || norm === "RATE_LIMITED") {
     return {
-      dotColor: "bg-amber-500",
-      badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
+      dotColor: "bg-[color:var(--warning)]",
+      badgeClass: "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30",
       label: norm === "MAINTENANCE" ? "MAINTENANCE" : norm,
     };
   }
   // UNKNOWN or unrecognized status -> Neutral Gray (NOT GREEN, NOT RED!)
   return {
-    dotColor: "bg-slate-400",
-    badgeClass: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20",
+    dotColor: "bg-[color:var(--closed)]",
+    badgeClass: "bg-[color:var(--closed)]/10 text-muted-foreground border-[color:var(--closed)]/20",
     label: norm || "UNKNOWN",
   };
 }
@@ -138,7 +138,7 @@ function AdminPortalsComponent() {
 
         <button
           onClick={() => setIsCreateModalOpen(true)}
-          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-md cursor-pointer self-start md:self-auto"
+          className="px-4 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-sans font-semibold text-xs rounded-[6px] transition-all flex items-center gap-2 shadow-sm cursor-pointer self-start md:self-auto"
         >
           <Plus className="h-4 w-4" />
           <span>Add Portal</span>
@@ -146,7 +146,7 @@ function AdminPortalsComponent() {
       </div>
 
       {/* Filter Dropdowns */}
-      <div className="flex flex-col md:flex-row items-center gap-3 bg-card p-3.5 rounded-xl border border-border">
+      <div className="flex flex-col md:flex-row items-center gap-3 bg-card p-3.5 rounded-[8px] border border-border">
         <div className="w-full md:w-72 font-sans">
           <select
             value={selectedAgency}
@@ -187,11 +187,11 @@ function AdminPortalsComponent() {
           <span className="text-xs font-sans">Loading portal configurations...</span>
         </div>
       ) : portals.length === 0 ? (
-        <div className="bg-card border border-border rounded-xl p-12 text-center text-muted-foreground text-xs font-sans">
+        <div className="bg-card border border-border rounded-[8px] p-12 text-center text-muted-foreground text-xs font-sans">
           No portals found matching criteria.
         </div>
       ) : (
-        <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+        <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-muted border-b border-border text-muted-foreground font-sans font-semibold uppercase tracking-wider">
@@ -241,12 +241,12 @@ function AdminPortalsComponent() {
                       {/* STEP 5: Failure Badge */}
                       <td className="p-3.5 font-sans">
                         {isHighFailure ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/30 font-sans">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-destructive/10 text-destructive border border-destructive/30 font-sans">
                             <AlertTriangle className="h-3 w-3 shrink-0" />
                             <span>{portal.consecutive_failures} Failing</span>
                           </span>
                         ) : portal.consecutive_failures > 0 ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-sans">
+                          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-[color:var(--warning)]/10 text-[color:var(--warning)] border border-[color:var(--warning)]/30 font-sans">
                             <span>{portal.consecutive_failures} Failures</span>
                           </span>
                         ) : (
@@ -390,7 +390,7 @@ function PortalDetailFormModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-background/80 backdrop-blur-sm flex items-center justify-center p-4 font-sans">
-      <div className="bg-card border border-border rounded-xl p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
+      <div className="bg-card border border-border rounded-[8px] p-6 max-w-xl w-full shadow-2xl space-y-5 font-sans text-xs">
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="text-base font-bold font-sans text-foreground flex items-center gap-2">
@@ -445,13 +445,13 @@ function PortalDetailFormModal({
                         className={cn(
                           "h-3.5 w-3.5 rounded-full border shadow-sm transition-transform group-hover:scale-125 cursor-pointer",
                           isSuccess
-                            ? "bg-emerald-500 border-emerald-600 dark:border-emerald-400"
-                            : "bg-red-500 border-red-600 dark:border-red-400"
+                            ? "bg-[#0a5c38] border-emerald-600 dark:border-emerald-400"
+                            : "bg-destructive border-red-600 dark:border-red-400"
                         )}
                       />
 
                       {/* Tooltip on Hover */}
-                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-xl whitespace-nowrap text-[10px] pointer-events-none font-sans">
+                      <div className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 hidden group-hover:block z-50 bg-card border border-border text-foreground px-2.5 py-1.5 rounded-[6px] shadow-sm whitespace-nowrap text-[10px] pointer-events-none font-sans">
                         <div className="font-bold text-primary">
                           {isSuccess ? `HTTP ${snap.status_code}` : `HTTP ${snap.status_code || "FAIL"}`}
                         </div>
@@ -598,7 +598,7 @@ function PortalDetailFormModal({
               <button
                 type="submit"
                 disabled={saving}
-                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-md cursor-pointer"
+                className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] font-semibold rounded-[6px] flex items-center gap-1.5 shadow-sm cursor-pointer"
               >
                 {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                 <span>Save Portal</span>

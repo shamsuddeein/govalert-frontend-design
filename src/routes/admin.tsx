@@ -171,7 +171,7 @@ function AdminLayout() {
                       <span>{item.label}</span>
                     </div>
                     {item.badge !== null && item.badge !== undefined && (
-                      <span className="ml-auto font-mono text-[11px] bg-amber-500/15 text-amber-700 dark:text-amber-400 border border-amber-500/30 font-semibold px-2 py-0.5 rounded-[6px]">
+                      <span className="ml-auto font-mono text-[11px] bg-[color:var(--warning)]/15 text-[color:var(--warning)] border border-[color:var(--warning)]/30 font-semibold px-2 py-0.5 rounded-[6px]">
                         {item.badge}
                       </span>
                     )}
@@ -218,7 +218,7 @@ function AdminLayout() {
             <div className="flex items-center gap-4 text-xs font-sans">
               <ThemeToggle />
               <div className="flex items-center gap-2 px-2.5 py-1 rounded-[6px] bg-muted border border-border text-primary font-sans text-[11px] font-semibold">
-                <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="h-2 w-2 rounded-full bg-[#0a5c38] animate-pulse" />
                 API Connected
               </div>
             </div>

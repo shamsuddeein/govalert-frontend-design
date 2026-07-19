@@ -61,29 +61,29 @@ function getHealthBadgeStyle(status?: string) {
   const norm = (status || "UNKNOWN").toUpperCase();
   if (norm === "ONLINE") {
     return {
-      dotColor: "bg-emerald-500",
-      badgeClass: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30",
+      dotColor: "bg-[#0a5c38]",
+      badgeClass: "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30",
       label: "ONLINE",
     };
   }
   if (norm === "OFFLINE") {
     return {
-      dotColor: "bg-red-500",
-      badgeClass: "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30",
+      dotColor: "bg-destructive",
+      badgeClass: "bg-destructive/10 text-destructive border-destructive/30",
       label: "OFFLINE",
     };
   }
   if (norm === "MAINTENANCE" || norm === "BLOCKED" || norm === "CAPTCHA" || norm === "RATE_LIMITED") {
     return {
-      dotColor: "bg-amber-500",
-      badgeClass: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30",
+      dotColor: "bg-[color:var(--warning)]",
+      badgeClass: "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30",
       label: norm === "MAINTENANCE" ? "MAINTENANCE" : norm,
     };
   }
   // UNKNOWN -> Neutral Gray (NOT GREEN, NOT RED!)
   return {
-    dotColor: "bg-slate-400",
-    badgeClass: "bg-slate-500/10 text-slate-700 dark:text-slate-400 border-slate-500/20",
+    dotColor: "bg-[color:var(--closed)]",
+    badgeClass: "bg-[color:var(--closed)]/10 text-muted-foreground border-[color:var(--closed)]/20",
     label: norm || "UNKNOWN",
   };
 }
@@ -167,7 +167,7 @@ function AdminSystemHealthComponent() {
 
         <div className="flex items-center gap-3 self-start md:self-auto font-sans">
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-card border border-border text-xs font-sans text-muted-foreground">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="h-2 w-2 rounded-full bg-[#0a5c38] animate-pulse" />
             <span>Auto-polling (60s)</span>
             <span className="text-border">|</span>
             <span className="text-muted-foreground font-mono">{lastUpdated.toLocaleTimeString()}</span>
@@ -187,46 +187,46 @@ function AdminSystemHealthComponent() {
       {/* 1. Top Stat Row */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 font-sans">
         {/* Online */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Online</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
-          <div className="text-2xl font-bold font-sans text-emerald-700 dark:text-emerald-400">
+          <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
             {sys?.agencies_online} <span className="text-sm font-normal text-muted-foreground">/ {sys?.total_agencies}</span>
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Agencies online & monitored</div>
         </div>
 
         {/* Offline */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Offline</span>
-            <XCircle className="h-4 w-4 text-red-500" />
+            <XCircle className="h-4 w-4 text-destructive" />
           </div>
-          <div className="text-2xl font-bold font-sans text-red-600 dark:text-red-400">
+          <div className="text-2xl font-bold font-sans text-destructive">
             {sys?.agencies_offline || 0}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Portals failing checks</div>
         </div>
 
         {/* Maintenance */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Maintenance</span>
-            <Wrench className="h-4 w-4 text-amber-500" />
+            <Wrench className="h-4 w-4 text-[color:var(--warning)]" />
           </div>
-          <div className="text-2xl font-bold font-sans text-amber-600 dark:text-amber-400">
+          <div className="text-2xl font-bold font-sans text-[color:var(--warning)]">
             {sys?.agencies_maintenance || 0}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Under scheduled work</div>
         </div>
 
         {/* Checks Today */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Checks Today</span>
-            <Server className="h-4 w-4 text-blue-500" />
+            <Server className="h-4 w-4 text-[color:var(--new)]" />
           </div>
           <div className="text-2xl font-bold font-sans text-foreground">
             {sys?.total_checks_today || 0}
@@ -237,12 +237,12 @@ function AdminSystemHealthComponent() {
         </div>
 
         {/* Success Rate */}
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Success Rate</span>
-            <TrendingUp className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <TrendingUp className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
-          <div className="text-2xl font-bold font-sans text-emerald-700 dark:text-emerald-400">
+          <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
             {sys?.success_rate_today ?? 100}%
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">
@@ -254,7 +254,7 @@ function AdminSystemHealthComponent() {
       {/* 2. Needs Attention Section */}
       <div className="space-y-3 font-sans">
         <h2 className="text-xs font-bold font-sans text-muted-foreground uppercase tracking-wider flex items-center gap-2">
-          <AlertOctagon className="h-4 w-4 text-amber-500" />
+          <AlertOctagon className="h-4 w-4 text-[color:var(--warning)]" />
           Infrastructure Operator Alerts
         </h2>
 
@@ -263,7 +263,7 @@ function AdminSystemHealthComponent() {
             {attentionPortals.map((portal) => (
               <div
                 key={portal.id}
-                className="bg-card border-2 border-red-500/40 rounded-xl p-5 shadow-md space-y-3 relative overflow-hidden font-sans"
+                className="bg-card border-2 border-destructive/40 rounded-[8px] p-5 shadow-sm space-y-3 relative overflow-hidden font-sans"
               >
                 <div className="flex items-center justify-between border-b border-border pb-2.5">
                   <div className="flex items-center gap-2">
@@ -272,7 +272,7 @@ function AdminSystemHealthComponent() {
                     </span>
                     <span className="font-bold text-foreground text-sm font-sans">{portal.name}</span>
                   </div>
-                  <span className="text-[10px] font-sans font-bold bg-red-500/10 text-red-700 dark:text-red-400 px-2 py-0.5 rounded-[6px] uppercase border border-red-500/30">
+                  <span className="text-[10px] font-sans font-bold bg-destructive/10 text-destructive px-2 py-0.5 rounded-[6px] uppercase border border-destructive/30">
                     Failing &gt; 24h
                   </span>
                 </div>
@@ -280,13 +280,13 @@ function AdminSystemHealthComponent() {
                 <div className="grid grid-cols-2 gap-2 text-xs font-sans">
                   <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
                     <span className="text-muted-foreground block text-[10px] font-semibold">Down Duration:</span>
-                    <span className="text-red-600 dark:text-red-400 font-bold">
+                    <span className="text-destructive font-bold">
                       {getDownDurationHours(portal.last_checked_at)}
                     </span>
                   </div>
                   <div className="bg-muted/40 p-2.5 rounded-[6px] border border-border">
                     <span className="text-muted-foreground block text-[10px] font-semibold">Consecutive Failures:</span>
-                    <span className="text-red-600 dark:text-red-400 font-bold">{portal.consecutive_failures} failures</span>
+                    <span className="text-destructive font-bold">{portal.consecutive_failures} failures</span>
                   </div>
                 </div>
 
@@ -312,12 +312,12 @@ function AdminSystemHealthComponent() {
           </div>
         ) : (
           /* Calm Green Confirmation State when no portals fail */
-          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-xl p-6 flex items-center gap-4 text-emerald-700 dark:text-emerald-400 shadow-sm font-sans">
-            <div className="h-10 w-10 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+          <div className="bg-[#0a5c38]/10 border border-[#0a5c38]/20 rounded-[8px] p-6 flex items-center gap-4 text-[#0a5c38] dark:text-[#3fb68e] shadow-sm font-sans">
+            <div className="h-10 w-10 rounded-full bg-[#0a5c38]/20 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="h-6 w-6 text-[#0a5c38] dark:text-[#3fb68e]" />
             </div>
             <div>
-              <h3 className="text-sm font-bold font-sans text-emerald-800 dark:text-emerald-300">All portals healthy.</h3>
+              <h3 className="text-sm font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">All portals healthy.</h3>
               <p className="text-xs text-muted-foreground mt-0.5 font-sans">
                 No monitored portals are failing or require administrator intervention at this time.
               </p>
@@ -327,7 +327,7 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 3. 7-Day Reliability & Checks Trend Chart (Recharts) */}
-      <div className="bg-card border border-border rounded-xl p-6 space-y-4 shadow-sm font-sans">
+      <div className="bg-card border border-border rounded-[8px] p-6 space-y-4 shadow-sm font-sans">
         <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border pb-3 gap-2">
           <div>
             <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
@@ -365,10 +365,10 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 4. Recent Failures Table (20 Most Recent Failed Snapshots) */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans space-y-4">
+      <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans space-y-4">
         <div className="p-5 border-b border-border flex items-center justify-between">
           <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
-            <AlertTriangle className="h-4 w-4 text-amber-500" />
+            <AlertTriangle className="h-4 w-4 text-[color:var(--warning)]" />
             Recent Failed Snapshots Log (Last 20 Failures)
           </h3>
           <span className="text-xs font-mono text-muted-foreground">{failedSnaps.length} logged failures</span>
@@ -399,7 +399,7 @@ function AdminSystemHealthComponent() {
                     </td>
                     <td className="p-3.5 font-semibold text-foreground max-w-xs truncate font-sans">{snap.portal_name}</td>
                     <td className="p-3.5 font-sans">
-                      <span className="px-2 py-0.5 rounded-[6px] bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/30 font-mono font-bold">
+                      <span className="px-2 py-0.5 rounded-[6px] bg-destructive/10 text-destructive border border-destructive/30 font-mono font-bold">
                         {snap.status_code || "FAIL"}
                       </span>
                     </td>
@@ -419,7 +419,7 @@ function AdminSystemHealthComponent() {
       </div>
 
       {/* 5. Complete Monitored Portals Roster with Corrected Health Mapping */}
-      <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+      <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
         <div className="p-5 border-b border-border">
           <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
             <Server className="h-4 w-4 text-primary" />
@@ -448,7 +448,7 @@ function AdminSystemHealthComponent() {
                     <td className="p-3.5 font-semibold text-foreground font-sans">{p.name}</td>
                     <td className="p-3.5 font-mono">
                       {p.consecutive_failures > 0 ? (
-                        <span className="text-amber-600 dark:text-amber-400 font-bold">{p.consecutive_failures}</span>
+                        <span className="text-[color:var(--warning)] font-bold">{p.consecutive_failures}</span>
                       ) : (
                         <span className="text-muted-foreground">0</span>
                       )}
@@ -465,7 +465,7 @@ function AdminSystemHealthComponent() {
                     </td>
                     <td className="p-3.5 font-sans">
                       {p.needs_attention ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/30 font-sans">
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider bg-destructive/10 text-destructive border border-destructive/30 font-sans">
                           <AlertTriangle className="h-3 w-3 shrink-0" />
                           <span>Needs Attention</span>
                         </span>

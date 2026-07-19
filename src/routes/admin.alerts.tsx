@@ -87,7 +87,7 @@ function AdminAlertsComponent() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <h1 className="text-2xl font-bold font-sans tracking-tight text-foreground flex items-center gap-2.5">
-            <ShieldAlert className="h-6 w-6 text-amber-500" />
+            <ShieldAlert className="h-6 w-6 text-[color:var(--warning)]" />
             Alert Review Queue
           </h1>
           <p className="text-xs text-muted-foreground mt-1 font-sans">
@@ -98,10 +98,10 @@ function AdminAlertsComponent() {
 
       {/* 1. Stat Cards Header */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Pending Review</span>
-            <Clock className="h-4 w-4 text-amber-500" />
+            <Clock className="h-4 w-4 text-[color:var(--warning)]" />
           </div>
           <div className="text-2xl font-bold font-sans text-foreground">
             {stats ? stats.pending_count : "—"}
@@ -109,34 +109,34 @@ function AdminAlertsComponent() {
           <div className="text-[11px] text-muted-foreground font-sans">Awaiting human decision</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Approved Today</span>
-            <CheckCircle2 className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
-          <div className="text-2xl font-bold font-sans text-emerald-700 dark:text-emerald-400">
+          <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
             {stats ? stats.approved_today : "—"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Verified & dispatched</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Rejected Today</span>
-            <XCircle className="h-4 w-4 text-red-500" />
+            <XCircle className="h-4 w-4 text-destructive" />
           </div>
-          <div className="text-2xl font-bold font-sans text-red-600 dark:text-red-400">
+          <div className="text-2xl font-bold font-sans text-destructive">
             {stats ? stats.rejected_today : "—"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Flagged false / fake</div>
         </div>
 
-        <div className="bg-card border border-border rounded-xl p-4 space-y-1 shadow-sm">
+        <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-sm">
           <div className="flex items-center justify-between text-muted-foreground text-xs font-sans font-semibold">
             <span>Oldest Pending</span>
-            <Sparkles className="h-4 w-4 text-blue-500" />
+            <Sparkles className="h-4 w-4 text-[color:var(--new)]" />
           </div>
-          <div className="text-2xl font-mono font-bold text-blue-600 dark:text-blue-400">
+          <div className="text-2xl font-mono font-bold text-[color:var(--new)]">
             {stats ? formatAgeHours(stats.oldest_pending_age_hours) : "—"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Time in queue</div>
@@ -160,7 +160,7 @@ function AdminAlertsComponent() {
             >
               <span>{tab}</span>
               {tab === "PENDING" && stats && stats.pending_count > 0 && (
-                <span className="bg-amber-500/20 text-amber-700 dark:text-amber-400 border border-amber-500/30 px-2 py-0.5 rounded-[6px] text-[10px] font-mono font-bold">
+                <span className="bg-[color:var(--warning)]/20 text-[color:var(--warning)] border border-[color:var(--warning)]/30 px-2 py-0.5 rounded-[6px] text-[10px] font-mono font-bold">
                   {stats.pending_count}
                 </span>
               )}
@@ -179,8 +179,8 @@ function AdminAlertsComponent() {
         /* 3. Pending Queue Full Cards View */
         alerts.length === 0 ? (
           /* 5. Empty State for Pending Queue */
-          <div className="bg-card border border-border rounded-xl p-12 text-center space-y-3 my-8 shadow-sm">
-            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400">
+          <div className="bg-card border border-border rounded-[8px] p-12 text-center space-y-3 my-8 shadow-sm">
+            <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[#0a5c38]/10 border border-[#0a5c38]/20 text-[#0a5c38] dark:text-[#3fb68e]">
               <CheckCircle2 className="h-6 w-6" />
             </div>
             <h3 className="text-lg font-semibold text-foreground font-sans">Queue is clear</h3>
@@ -283,7 +283,7 @@ function PendingAlertCard({
   return (
     <div
       className={cn(
-        "bg-card border border-border rounded-xl p-6 space-y-5 shadow-sm transition-all duration-300 font-sans",
+        "bg-card border border-border rounded-[8px] p-6 space-y-5 shadow-sm transition-all duration-300 font-sans",
         isFadingOut && "opacity-0 scale-95 pointer-events-none"
       )}
     >
@@ -303,10 +303,10 @@ function PendingAlertCard({
           className={cn(
             "font-sans text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-[6px] border flex items-center gap-1.5",
             aiClass === "REAL"
-              ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/30"
+              ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30"
               : aiClass === "FAKE"
-              ? "bg-red-500/10 text-red-700 dark:text-red-400 border-red-500/30"
-              : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/30"
+              ? "bg-destructive/10 text-destructive border-destructive/30"
+              : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30"
           )}
         >
           <Sparkles className="h-3 w-3" />
@@ -347,10 +347,10 @@ function PendingAlertCard({
             className={cn(
               "font-mono font-bold",
               trustScore >= 70
-                ? "text-emerald-600 dark:text-emerald-400"
+                ? "text-[#0a5c38] dark:text-[#3fb68e]"
                 : trustScore >= 50
-                ? "text-amber-600 dark:text-amber-400"
-                : "text-red-600 dark:text-red-400"
+                ? "text-[color:var(--warning)]"
+                : "text-destructive"
             )}
           >
             {trustScore}/100
@@ -360,7 +360,7 @@ function PendingAlertCard({
           <div
             className={cn(
               "h-full transition-all duration-500 rounded-full",
-              trustScore >= 70 ? "bg-emerald-500" : trustScore >= 50 ? "bg-amber-500" : "bg-red-500"
+              trustScore >= 70 ? "bg-[#0a5c38]" : trustScore >= 50 ? "bg-[color:var(--warning)]" : "bg-destructive"
             )}
             style={{ width: `${Math.min(Math.max(trustScore, 0), 100)}%` }}
           />
@@ -373,14 +373,14 @@ function PendingAlertCard({
         {alert.ai_red_flags && alert.ai_red_flags.length > 0 ? (
           <div className="space-y-1">
             {alert.ai_red_flags.map((flag, idx) => (
-              <div key={idx} className="flex items-center gap-1.5 text-amber-700 dark:text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-[6px]">
+              <div key={idx} className="flex items-center gap-1.5 text-[color:var(--warning)] bg-[color:var(--warning)]/10 border border-[color:var(--warning)]/20 px-2.5 py-1 rounded-[6px]">
                 <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
                 <span>{flag}</span>
               </div>
             ))}
           </div>
         ) : (
-          <div className="text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-1 rounded-[6px] inline-block font-sans text-xs font-semibold">
+          <div className="text-[#0a5c38] dark:text-[#3fb68e] bg-[#0a5c38]/10 border border-[#0a5c38]/20 px-2.5 py-1 rounded-[6px] inline-block font-sans text-xs font-semibold">
             ✓ No red flags detected
           </div>
         )}
@@ -437,7 +437,7 @@ function PendingAlertCard({
             onClick={handleReject}
             disabled={actionInFlight !== null || !notes.trim()}
             title={!notes.trim() ? "Notes field required before rejecting" : "Reject alert"}
-            className="px-4 py-2 border border-red-600/80 text-red-600 dark:text-red-400 hover:bg-red-500/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 border border-red-600/80 text-destructive hover:bg-destructive/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             {actionInFlight === "reject" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -451,7 +451,7 @@ function PendingAlertCard({
           <button
             onClick={handleHold}
             disabled={actionInFlight !== null}
-            className="px-4 py-2 border border-amber-600/80 text-amber-700 dark:text-amber-400 hover:bg-amber-500/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-4 py-2 border border-amber-600/80 text-[color:var(--warning)] hover:bg-[color:var(--warning)]/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
           >
             {actionInFlight === "hold" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -465,7 +465,7 @@ function PendingAlertCard({
           <button
             onClick={handleApprove}
             disabled={actionInFlight !== null}
-            className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-md cursor-pointer"
+            className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
           >
             {actionInFlight === "approve" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
@@ -487,14 +487,14 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
 
   if (alerts.length === 0) {
     return (
-      <div className="bg-card border border-border rounded-xl p-12 text-center text-muted-foreground text-xs font-sans">
+      <div className="bg-card border border-border rounded-[8px] p-12 text-center text-muted-foreground text-xs font-sans">
         No alerts found for status "{status}".
       </div>
     );
   }
 
   return (
-    <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm font-sans">
+    <div className="bg-card border border-border rounded-[8px] overflow-hidden shadow-sm font-sans">
       <div className="overflow-x-auto">
         <table className="w-full text-left text-xs">
           <thead className="bg-muted border-b border-border text-muted-foreground font-sans font-semibold uppercase tracking-wider">
@@ -524,10 +524,10 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
                       className={cn(
                         "px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider inline-block",
                         alert.ai_classification === "REAL"
-                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30"
+                          ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border border-[#0a5c38]/30"
                           : alert.ai_classification === "FAKE"
-                          ? "bg-red-500/10 text-red-700 dark:text-red-400 border border-red-500/30"
-                          : "bg-amber-500/10 text-amber-700 dark:text-amber-400 border border-amber-500/30"
+                          ? "bg-destructive/10 text-destructive border border-destructive/30"
+                          : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border border-[color:var(--warning)]/30"
                       )}
                     >
                       {alert.ai_classification} ({alert.ai_confidence}%)
