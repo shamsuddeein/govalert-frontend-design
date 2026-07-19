@@ -124,17 +124,21 @@ function AdminSystemHealthComponent() {
   const [healthData, setHealthData] = useState<AdminSystemHealth | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [triggeringId, setTriggeringId] = useState<number | null>(null);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
 
   const loadHealth = async (isManual = false) => {
     if (isManual) setRefreshing(true);
+    setError(null);
     try {
       const data = await adminApi.getSystemHealth();
       setHealthData(data);
       setLastUpdated(new Date());
     } catch (err: any) {
-      toast.error(err?.message || "Failed to fetch system health telemetry.");
+      const msg = err?.message || "Failed to load system health telemetry from server.";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -176,10 +180,34 @@ function AdminSystemHealthComponent() {
     );
   }
 
-  const sys = healthData?.system_status;
-  const portals = healthData?.portals_breakdown || [];
-  const failedSnaps = healthData?.recent_failed_snapshots || [];
-  const trend = healthData?.daily_trend_7_days || [];
+  if (error || !healthData) {
+    return (
+      <div className="space-y-6 max-w-xl mx-auto py-16 font-sans">
+        <div className="bg-destructive/10 border-2 border-destructive/30 rounded-[8px] p-6 text-center space-y-4 shadow-sm">
+          <div className="flex items-center justify-center gap-2 text-destructive font-bold text-sm uppercase tracking-wider">
+            <XCircle className="h-5 w-5" />
+            <span>Could not load system health telemetry</span>
+          </div>
+          <p className="text-xs text-muted-foreground font-sans">
+            {error || "An unexpected error occurred while communicating with the backend API."}
+          </p>
+          <button
+            onClick={() => loadHealth(true)}
+            disabled={refreshing}
+            className="px-4 py-2 bg-destructive text-white rounded-[6px] text-xs font-semibold hover:bg-destructive/90 transition-all flex items-center gap-2 mx-auto cursor-pointer"
+          >
+            <RefreshCw className={cn("h-4 w-4", refreshing && "animate-spin")} />
+            <span>Retry Connection</span>
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  const sys = healthData.system_status;
+  const portals = healthData.portals_breakdown || [];
+  const failedSnaps = healthData.recent_failed_snapshots || [];
+  const trend = healthData.daily_trend_7_days || [];
 
   const attentionPortals = portals.filter((p) => p.needs_attention);
 
@@ -225,7 +253,7 @@ function AdminSystemHealthComponent() {
             <CheckCircle2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
           <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
-            {sys?.agencies_online} <span className="text-sm font-normal text-muted-foreground">/ {sys?.total_agencies}</span>
+            {sys.agencies_online ?? "—"} <span className="text-sm font-normal text-muted-foreground">/ {sys.total_agencies ?? "—"}</span>
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Agencies online & monitored</div>
         </div>
@@ -237,7 +265,7 @@ function AdminSystemHealthComponent() {
             <XCircle className="h-4 w-4 text-destructive" />
           </div>
           <div className="text-2xl font-bold font-sans text-destructive">
-            {sys?.agencies_offline || 0}
+            {sys.agencies_offline ?? "—"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Portals failing checks</div>
         </div>
@@ -249,7 +277,7 @@ function AdminSystemHealthComponent() {
             <Wrench className="h-4 w-4 text-[color:var(--warning)]" />
           </div>
           <div className="text-2xl font-bold font-sans text-[color:var(--warning)]">
-            {sys?.agencies_maintenance || 0}
+            {sys.agencies_maintenance ?? "—"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Under scheduled work</div>
         </div>
