@@ -204,14 +204,14 @@ export const api = {
   getAgencies: async (params?: {
     page_size?: number;
     page?: number;
-  }): Promise<{ results: ApiAgency[]; count: number }> => {
+  }): Promise<{ results: ApiAgency[]; count: number } | null> => {
     const q = new URLSearchParams();
     q.set("page_size", String(params?.page_size || 100));
     if (params?.page) q.set("page", String(params.page));
     return request<{ results: ApiAgency[]; count: number }>(`/agencies/?${q.toString()}`);
   },
 
-  getAgency: async (slug: string): Promise<ApiAgency> => {
+  getAgency: async (slug: string): Promise<ApiAgency | null> => {
     return request<ApiAgency>(`/agencies/${slug}/`);
   },
 
@@ -226,7 +226,7 @@ export const api = {
     page?: number;
     agency?: string;
     agency_slug?: string;
-  }): Promise<{ results: ApiJob[]; count: number }> => {
+  }): Promise<{ results: ApiJob[]; count: number } | null> => {
     const q = new URLSearchParams();
     q.set("page_size", String(params?.page_size || 20));
     if (params?.page) q.set("page", String(params.page));
@@ -240,11 +240,11 @@ export const api = {
     return request<{ results: ApiJob[]; count: number }>(`/jobs/?${q.toString()}`);
   },
 
-  getJob: async (ref: string): Promise<ApiJob> => {
+  getJob: async (ref: string): Promise<ApiJob | null> => {
     return request<ApiJob>(`/jobs/${ref}/`);
   },
 
-  getJobVerification: async (ref: string): Promise<ApiJobVerification> => {
+  getJobVerification: async (ref: string): Promise<ApiJobVerification | null> => {
     return request<ApiJobVerification>(`/jobs/${ref}/verification/`);
   },
 
@@ -270,7 +270,7 @@ export const api = {
   },
 
   // System status
-  getSystemStatus: async (): Promise<ApiSystemStatus> => {
+  getSystemStatus: async (): Promise<ApiSystemStatus | null> => {
     return request<ApiSystemStatus>("/status/");
   },
 
