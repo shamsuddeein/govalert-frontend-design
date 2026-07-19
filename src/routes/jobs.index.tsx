@@ -2,7 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useMemo, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
-import { StatusBadge, latestJobs, type Job, type Status } from "./index";
+import { StatusBadge, JobCardSkeleton, JobsEmptyState, JobsErrorState, type Job, type Status } from "./index";
 import { api, ApiAgency, isAuthenticated } from "../lib/api";
 import { Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -92,7 +92,7 @@ function JobsPage() {
         page_size: PAGE_SIZE,
       });
 
-      if (res && res.results && res.results.length > 0) {
+      if (res && res.results) {
         const mapped = res.results.map((j) => ({
           id: j.ref,
           agency: j.agency_name,
@@ -110,12 +110,14 @@ function JobsPage() {
         setJobs(mapped);
         setTotalCount(res.count);
       } else {
-        setJobs(latestJobs);
-        setTotalCount(latestJobs.length);
+        setJobs([]);
+        setTotalCount(0);
       }
     } catch (err: any) {
-      setJobs(latestJobs);
-      setTotalCount(latestJobs.length);
+      console.warn("API Error fetching jobs:", err);
+      setError(err?.message || "Failed to load jobs from live API. Please try again.");
+      setJobs([]);
+      setTotalCount(0);
     } finally {
       setLoading(false);
     }
@@ -312,42 +314,25 @@ function JobsPage() {
           </div>
         </div>
 
-        {/* Loading and Error States */}
+        {/* Loading State */}
         {loading && (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 my-8">
             {Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
-                <div className="flex justify-between items-center">
-                  <div className="h-6 bg-muted rounded w-1/3" />
-                  <div className="h-5 bg-muted rounded w-1/4" />
-                </div>
-                <div className="h-6 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
-                <div className="border-t border-border/40 pt-4 grid grid-cols-2 gap-4">
-                  <div className="h-4 bg-muted rounded w-full" />
-                  <div className="h-4 bg-muted rounded w-full" />
-                </div>
-              </div>
+              <JobCardSkeleton key={idx} />
             ))}
           </div>
         )}
 
+        {/* Error State */}
         {error && (
-          <div className="rounded-[8px] border border-red-200 bg-red-50/50 dark:bg-red-950/30 dark:border-red-900 p-6 text-center max-w-md mx-auto space-y-4 my-10">
-            <p className="text-sm font-medium text-red-600 dark:text-red-400">{error}</p>
-            <button
-              onClick={fetchFilteredJobs}
-              className="px-4 py-2 text-xs font-semibold text-white bg-red-600 rounded-[6px] cursor-pointer hover:bg-red-700"
-            >
-              Retry
-            </button>
-          </div>
+          <JobsErrorState message={error} onRetry={fetchFilteredJobs} />
         )}
 
+        {/* Content State */}
         {!loading && !error && (
           <>
             {/* Info Counter Row */}
-            <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground">
+            <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground font-sans">
               <p>
                 Indexed <span className="font-semibold text-foreground">{jobs.length}</span> verified notices
               </p>
@@ -356,7 +341,7 @@ function JobsPage() {
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value as any)}
-                  className="bg-card border border-border rounded-[6px] px-2 py-1 text-xs font-semibold text-foreground outline-none cursor-pointer"
+                  className="bg-card border border-border rounded-[6px] px-2 py-1 text-xs font-semibold text-foreground outline-none cursor-pointer font-sans"
                 >
                   <option value="recent" className="bg-card text-foreground">Recently Detected &darr;</option>
                   <option value="oldest" className="bg-card text-foreground">Oldest First</option>
@@ -384,7 +369,9 @@ function JobsPage() {
                         <div className="flex items-center justify-between gap-2">
                           <div className="flex items-center gap-2.5 min-w-0">
                             <AgencyLogo short={job.agencyShort} size={32} />
-                            <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
+                            <span className="font-mono text-[11px] text-muted-foreground truncate">
+                              REF: {job.id}
+                            </span>
                           </div>
                           <StatusBadge status={job.status} />
                         </div>
@@ -394,7 +381,7 @@ function JobsPage() {
                             {job.title}
                           </h3>
                           <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
-                            <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort || job.agency || "" }}>
+                            <Link to="/agencies/$agencyShort" params={{ agencyShort: job.agencyShort || job.agency || "NNPC" }}>
                               {job.agency}
                             </Link>
                           </p>
@@ -433,7 +420,7 @@ function JobsPage() {
                       <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
                         <button
                           onClick={(e) => handleToggleBookmark(job.id, e)}
-                          className={`inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors cursor-pointer ${
+                          className={`inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors cursor-pointer font-sans ${
                             savedRefMap[job.id]
                               ? "text-[#0a5c38] dark:text-[#3fb68e]"
                               : "text-muted-foreground hover:text-foreground"
@@ -450,7 +437,7 @@ function JobsPage() {
                         <Link
                           to="/jobs/$jobId"
                           params={{ jobId: job.id }}
-                          className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold"
+                          className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold font-sans"
                         >
                           View details &rarr;
                         </Link>
@@ -460,19 +447,7 @@ function JobsPage() {
                 })}
               </div>
             ) : (
-              <div className="rounded-[8px] border border-dashed border-border py-12 text-center bg-card">
-                <h3 className="text-sm font-bold text-primary">No listings found</h3>
-                <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
-                  We couldn't find any listings matching your search or filters. Try adjusting your
-                  selections or resetting.
-                </p>
-                <button
-                  onClick={handleClearFilters}
-                  className="mt-6 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer"
-                >
-                  Reset filters
-                </button>
-              </div>
+              <JobsEmptyState onClear={handleClearFilters} />
             )}
 
             {/* Pagination Controls */}

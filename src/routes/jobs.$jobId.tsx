@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { StatusBadge, latestJobs, type Status } from "./index";
+import { StatusBadge, type Status } from "./index";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiJob, isAuthenticated } from "../lib/api";
 import { safeFormatDate, safeFormatDateTime, safeFormatTime } from "../lib/formatDate";
@@ -33,34 +33,7 @@ function JobDetailsPage() {
       if (res) {
         setJob(res);
       } else {
-        const found = latestJobs.find((j) => j.id.toLowerCase() === jobId.toLowerCase());
-        if (found) {
-          setJob({
-            ref: found.id,
-            title: found.title,
-            agency_name: found.agency,
-            agency_acronym: found.agencyShort,
-            agency_slug: found.agencyShort.toLowerCase(),
-            deadline: found.deadline,
-            status: (found.status === "new" ? "new_opening" : found.status) as any,
-            positions: found.positions || "Multiple Positions",
-            published_at: found.createdAt,
-            category: found.category,
-            location_state: found.state,
-            official_url: `https://${found.agencyShort.toLowerCase()}.gov.ng/careers`,
-            confidence_score: 98,
-            confidence_factors: [
-              { label: "Official .gov.ng domain confirmed", passed: true },
-              { label: "Content matches previous announcement format", passed: true },
-              { label: "No duplicate detected in 30-day window", passed: true },
-              { label: "Historical recruitment pattern consistent", passed: true },
-            ],
-            portal_status: "online",
-            portal_uptime_percent: 99.8,
-          });
-        } else {
-          setError("Recruitment listing not found.");
-        }
+        setError("Recruitment listing not found or has expired.");
       }
 
       if (isAuthenticated()) {
@@ -71,6 +44,7 @@ function JobDetailsPage() {
       }
     } catch (err: any) {
       console.warn("Error fetching job details:", err);
+      setError(err?.message || "Failed to load job details from live API.");
     } finally {
       setLoading(false);
     }
@@ -112,9 +86,40 @@ function JobDetailsPage() {
     return (
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
-        <main className="flex-1 flex flex-col items-center justify-center py-20 space-y-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
-          <p className="text-sm font-medium text-muted-foreground">Loading job details...</p>
+        <main className="flex-1 mx-auto max-w-[1184px] w-full px-6 py-10 space-y-8">
+          {/* Skeleton Breadcrumb */}
+          <div className="h-4 w-48 bg-muted rounded animate-pulse" />
+          
+          {/* Skeleton Header */}
+          <div className="rounded-[8px] border border-border bg-card p-8 shadow-sm animate-pulse space-y-6">
+            <div className="flex justify-between items-start">
+              <div className="flex items-center gap-4">
+                <div className="size-12 rounded-full bg-muted" />
+                <div className="space-y-2">
+                  <div className="h-6 w-64 bg-muted rounded" />
+                  <div className="h-4 w-32 bg-muted rounded" />
+                </div>
+              </div>
+              <div className="h-6 w-24 bg-muted rounded-[6px]" />
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-border">
+              <div className="h-10 bg-muted rounded" />
+              <div className="h-10 bg-muted rounded" />
+              <div className="h-10 bg-muted rounded" />
+              <div className="h-10 bg-muted rounded" />
+            </div>
+          </div>
+
+          {/* Skeleton Content */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2 space-y-6 animate-pulse">
+              <div className="h-40 bg-muted rounded-[8px]" />
+              <div className="h-32 bg-muted rounded-[8px]" />
+            </div>
+            <div className="space-y-6 animate-pulse">
+              <div className="h-64 bg-muted rounded-[8px]" />
+            </div>
+          </div>
         </main>
         <Footer />
       </div>
@@ -126,29 +131,29 @@ function JobDetailsPage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
         <main className="flex-1 flex flex-col items-center justify-center py-20 px-6 max-w-md mx-auto text-center space-y-6">
-          <div className="rounded-full bg-red-100 dark:bg-red-950/50 p-4 text-red-600 dark:text-red-400">
-            <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          <div className="rounded-full bg-destructive/10 p-4 text-destructive">
+            <svg className="h-8 w-8 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
             </svg>
           </div>
-          <div>
-            <h3 className="text-lg font-bold text-primary">Job Details Unavailable</h3>
-            <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
-              {error || "The recruitment listing you are looking for could not be found."}
+          <div className="space-y-1">
+            <h3 className="text-lg font-bold text-foreground font-sans">Recruitment Alert Unavailable</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed font-sans">
+              {error || "The recruitment listing you are looking for could not be found or has expired."}
             </p>
           </div>
-          <div className="flex gap-4 w-full">
+          <div className="flex gap-3 w-full">
             <button
               onClick={fetchJobDetails}
-              className="flex-1 px-4 py-2 text-sm font-semibold text-white bg-[#0a5c38] dark:bg-[#3fb68e] rounded-[6px] hover:opacity-90 cursor-pointer"
+              className="flex-1 px-4 py-2 text-xs font-semibold text-white bg-[#0a5c38] dark:bg-[#3fb68e] dark:text-[#0c1015] rounded-[6px] hover:opacity-90 transition-opacity cursor-pointer font-sans shadow-sm"
             >
-              Retry
+              Try Again
             </button>
             <Link
               to="/jobs"
-              className="flex-1 inline-flex items-center justify-center border border-border rounded-[6px] px-4 py-2 text-sm font-semibold hover:bg-muted"
+              className="flex-1 inline-flex items-center justify-center border border-border bg-card rounded-[6px] px-4 py-2 text-xs font-semibold text-foreground hover:bg-muted transition-colors font-sans"
             >
-              Back to Feed
+              Back to All Jobs
             </Link>
           </div>
         </main>

@@ -25,86 +25,98 @@ export interface Job {
   positions?: string;
 }
 
-export const latestJobs: Job[] = [
-  {
-    id: "8829-GA",
-    agency: "NNPC Limited",
-    agencyShort: "NNPC",
-    title: "Graduate Trainee Program (Engineering Intake)",
-    deadline: new Date(Date.now() + 12 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    status: "urgent",
-    detected: "2h ago",
-    category: "Engineering & Energy",
-    state: "Rivers",
-    createdAt: new Date(Date.now() - 2 * 3600000).toISOString(),
-    positions: "Multiple Openings",
-  },
-  {
-    id: "4120-GA",
-    agency: "Nigeria Customs Service",
-    agencyShort: "NCS",
-    title: "Superintendent Cadre Recruitment",
-    deadline: new Date(Date.now() + 21 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    status: "verified",
-    detected: "6h ago",
-    category: "Revenue & Finance",
-    state: "Cross River",
-    createdAt: new Date(Date.now() - 6 * 3600000).toISOString(),
-    positions: "Cadre Officers",
-  },
-  {
-    id: "9001-GA",
-    agency: "EFCC Academy",
-    agencyShort: "EFCC",
-    title: "Detective Assistant Cadet Course",
-    deadline: new Date(Date.now() + 15 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    status: "verified",
-    detected: "1d ago",
-    category: "Law Enforcement",
-    state: "Abuja",
-    createdAt: new Date(Date.now() - 86400000).toISOString(),
-    positions: "Cadet Intake",
-  },
-  {
-    id: "7712-GA",
-    agency: "Central Bank of Nigeria",
-    agencyShort: "CBN",
-    title: "Economic Policy Analysts (Level 7)",
-    deadline: "Pending",
-    status: "warning",
-    detected: "3h ago",
-    category: "Revenue & Finance",
-    state: "Lagos",
-    createdAt: new Date(Date.now() - 3 * 3600000).toISOString(),
-    positions: "Analyst Openings",
-  },
-  {
-    id: "6650-GA",
-    agency: "Nigerian Air Force",
-    agencyShort: "NAF",
-    title: "Direct Short Service Commission (DSSC 33)",
-    deadline: "Closed",
-    status: "closed",
-    detected: "2d ago",
-    category: "Military & Paramilitary",
-    state: "Kaduna",
-    createdAt: new Date(Date.now() - 2 * 86400000).toISOString(),
-    positions: "DSSC Officers",
-  },
-  {
-    id: "5581-GA",
-    agency: "Federal Fire Service",
-    agencyShort: "FFS",
-    title: "General Duty Officers Batch B",
-    deadline: new Date(Date.now() + 28 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    status: "verified",
-    detected: "5h ago",
-    category: "Military & Paramilitary",
-    state: "Abuja",
-    createdAt: new Date(Date.now() - 5 * 3600000).toISOString(),
-    positions: "General Duty",
-  },
-];
+// Job Interface
+export interface Job {
+  id: string;
+  agency: string;
+  agencyShort: string;
+  title: string;
+  deadline: string;
+  status: Status;
+  detected: string;
+  category: string;
+  state: string;
+  createdAt: string;
+  positions?: string;
+}
+
+// ─── UI Helper Skeletons & Empty/Error Components ──────────────────────────────
+
+export function JobCardSkeleton() {
+  return (
+    <div className="flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm animate-pulse space-y-4">
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5">
+          <div className="size-8 rounded-full bg-muted" />
+          <div className="h-3 w-20 bg-muted rounded" />
+        </div>
+        <div className="h-5 w-16 bg-muted rounded-[6px]" />
+      </div>
+      <div className="space-y-2">
+        <div className="h-5 w-3/4 bg-muted rounded" />
+        <div className="h-4 w-1/3 bg-muted rounded" />
+      </div>
+      <div className="border-t border-border pt-4 grid grid-cols-2 gap-4">
+        <div className="h-3 w-full bg-muted rounded" />
+        <div className="h-3 w-full bg-muted rounded" />
+        <div className="h-3 w-full bg-muted rounded" />
+        <div className="h-3 w-full bg-muted rounded" />
+      </div>
+      <div className="h-9 w-full bg-muted rounded-[6px]" />
+    </div>
+  );
+}
+
+export function JobsEmptyState({ onClear }: { onClear?: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center p-12 text-center bg-card border border-border rounded-[8px] space-y-4 my-6">
+      <div className="p-3 bg-muted/40 rounded-full text-muted-foreground">
+        <svg className="size-8 stroke-current fill-none" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+        </svg>
+      </div>
+      <div className="max-w-md space-y-1">
+        <h3 className="text-base font-semibold text-foreground font-sans">No Verified Alerts Found</h3>
+        <p className="text-xs text-muted-foreground font-sans">
+          There are currently no active recruitment alerts matching your search criteria or published in the system.
+        </p>
+      </div>
+      {onClear && (
+        <button
+          onClick={onClear}
+          className="mt-2 inline-flex items-center px-4 py-2 bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] text-xs font-semibold rounded-[6px] hover:opacity-90 transition-opacity cursor-pointer font-sans"
+        >
+          Reset Search & Filters
+        </button>
+      )}
+    </div>
+  );
+}
+
+export function JobsErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
+  return (
+    <div className="flex flex-col items-center justify-center p-10 text-center bg-destructive/5 border border-destructive/20 rounded-[8px] space-y-4 my-6 font-sans">
+      <div className="p-3 bg-destructive/10 rounded-full text-destructive">
+        <svg className="size-8 stroke-current fill-none" strokeWidth="1.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+      </div>
+      <div className="max-w-md space-y-1">
+        <h3 className="text-base font-semibold text-foreground font-sans">Unable to Load Recruitment Data</h3>
+        <p className="text-xs text-muted-foreground font-sans">{message}</p>
+      </div>
+      <button
+        onClick={onRetry}
+        className="mt-2 inline-flex items-center gap-2 px-4 py-2 bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] text-xs font-semibold rounded-[6px] hover:opacity-90 transition-opacity cursor-pointer font-sans shadow-sm"
+      >
+        <svg className="size-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+        </svg>
+        <span>Retry Connection</span>
+      </button>
+    </div>
+  );
+}
 
 export function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; cls: string; icon: React.ReactNode }> = {
@@ -405,12 +417,18 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
 
 function LatestJobs({
   jobs,
+  loading,
+  error,
+  onRetry,
   searchQuery,
   setSearchQuery,
   selectedCategory,
   setSelectedCategory,
 }: {
-  jobs: typeof latestJobs;
+  jobs: Job[];
+  loading: boolean;
+  error: string | null;
+  onRetry: () => void;
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   selectedCategory: string | null;
@@ -452,7 +470,7 @@ function LatestJobs({
             {hasFilters && (
               <button
                 onClick={handleClearFilters}
-                className="text-xs font-medium text-muted-foreground underline decoration-1 underline-offset-4 hover:text-primary cursor-pointer"
+                className="text-xs font-medium text-muted-foreground underline decoration-1 underline-offset-4 hover:text-primary cursor-pointer font-sans"
               >
                 Clear filters
               </button>
@@ -462,7 +480,7 @@ function LatestJobs({
             <div className="inline-flex rounded-[6px] border border-border p-0.5 bg-muted/20">
               <button
                 onClick={() => setViewMode("grid")}
-                className={`px-3 py-1 text-xs font-semibold rounded-[4px] cursor-pointer transition-colors ${
+                className={`px-3 py-1 text-xs font-semibold rounded-[4px] cursor-pointer transition-colors font-sans ${
                   viewMode === "grid" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-primary"
                 }`}
               >
@@ -470,7 +488,7 @@ function LatestJobs({
               </button>
               <button
                 onClick={() => setViewMode("table")}
-                className={`px-3 py-1 text-xs font-semibold rounded-[4px] cursor-pointer transition-colors ${
+                className={`px-3 py-1 text-xs font-semibold rounded-[4px] cursor-pointer transition-colors font-sans ${
                   viewMode === "table" ? "bg-card text-primary shadow-sm" : "text-muted-foreground hover:text-primary"
                 }`}
               >
@@ -480,14 +498,22 @@ function LatestJobs({
 
             <Link
               to="/jobs"
-              className="text-xs font-medium text-primary underline decoration-1 underline-offset-4 cursor-pointer"
+              className="text-xs font-medium text-primary underline decoration-1 underline-offset-4 cursor-pointer font-sans"
             >
               View all listings &rarr;
             </Link>
           </div>
         </div>
 
-        {jobs.length > 0 ? (
+        {loading ? (
+          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <JobCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : error ? (
+          <JobsErrorState message={error} onRetry={onRetry} />
+        ) : jobs.length > 0 ? (
           viewMode === "grid" ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
               {jobs.map((job) => {
@@ -569,7 +595,7 @@ function LatestJobs({
             <div className="overflow-x-auto rounded-[8px] border border-border bg-card shadow-sm">
               <table className="w-full text-left border-collapse">
                 <thead>
-                  <tr className="border-b border-border bg-muted/10 text-xs font-semibold text-muted-foreground uppercase">
+                  <tr className="border-b border-border bg-muted/10 text-xs font-semibold text-muted-foreground uppercase font-sans">
                     <th className="p-4">Position</th>
                     <th className="p-4">Agency</th>
                     <th className="p-4">Published</th>
@@ -578,7 +604,7 @@ function LatestJobs({
                     <th className="p-4 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border text-xs">
+                <tbody className="divide-y divide-border text-xs font-sans">
                   {jobs.map((job) => {
                     const agencyDataObj = agenciesData.find((a) => a.short === job.agencyShort);
                     const portalUrl = agencyDataObj ? agencyDataObj.recruitmentPortal : "#";
@@ -632,18 +658,7 @@ function LatestJobs({
             </div>
           )
         ) : (
-          <div className="rounded-[8px] border border-dashed border-border bg-card py-10 text-center">
-            <h3 className="text-sm font-bold text-primary">No openings found</h3>
-            <p className="mt-1 text-sm text-muted-foreground">
-              Try adjusting your search terms or category filter.
-            </p>
-            <button
-              onClick={handleClearFilters}
-              className="mt-3 inline-flex items-center gap-2 rounded-[6px] bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer transition-colors"
-            >
-              Reset filters
-            </button>
-          </div>
+          <JobsEmptyState onClear={hasFilters ? handleClearFilters : undefined} />
         )}
       </div>
     </section>
@@ -1058,7 +1073,7 @@ function Index() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const [jobs, setJobs] = useState<ApiJob[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [agencies, setAgencies] = useState<ApiAgency[]>([]);
   const [status, setStatus] = useState<ApiSystemStatus | null>(null);
   const [liveFeed, setLiveFeed] = useState<ApiLiveFeedItem[]>([]);
@@ -1076,7 +1091,7 @@ function Index() {
         api.getLiveFeed(),
       ]);
 
-      if (jobsRes && jobsRes.results && jobsRes.results.length > 0) {
+      if (jobsRes && jobsRes.results) {
         const mappedJobs = jobsRes.results.map((j) => ({
           id: j.ref,
           agency: j.agency_name,
@@ -1092,16 +1107,16 @@ function Index() {
         }));
         setJobs(mappedJobs);
       } else {
-        setJobs(latestJobs);
+        setJobs([]);
       }
 
       if (agenciesRes && agenciesRes.results) setAgencies(agenciesRes.results);
       if (statusRes) setStatus(statusRes);
       if (liveFeedRes && liveFeedRes.length > 0) setLiveFeed(liveFeedRes);
     } catch (err: any) {
-      // Silently fall back to static data — don't crash the homepage
-      console.warn("API unavailable, using static data:", err);
-      setJobs(latestJobs);
+      console.warn("API unavailable:", err);
+      setError("Unable to connect to live GovAlert API. Please try again.");
+      setJobs([]);
     } finally {
       setLoading(false);
     }
@@ -1140,19 +1155,6 @@ function Index() {
     document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
-        <Nav />
-        <main className="flex-1 flex flex-col items-center justify-center py-20 space-y-4">
-          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-[#0a5c38] dark:border-[#3fb68e]"></div>
-          <p className="text-sm font-medium text-muted-foreground">Loading GovAlert data from live API...</p>
-        </main>
-        <Footer />
-      </div>
-    );
-  }
-
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
@@ -1166,6 +1168,9 @@ function Index() {
         <Stats status={status} />
         <LatestJobs
           jobs={filteredJobs}
+          loading={loading}
+          error={error}
+          onRetry={loadData}
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}
           selectedCategory={selectedCategory}
