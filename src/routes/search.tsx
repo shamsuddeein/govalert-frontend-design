@@ -1,7 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { Nav, Footer } from "../components/layout";
-import { StatusBadge } from "./index";
+import { StatusBadge, JobsEmptyState } from "./index";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiJob } from "../lib/api";
 import {
@@ -321,22 +321,7 @@ function SearchPage() {
             ))}
           </div>
         ) : !loading ? (
-          <div className="rounded border border-dashed border-border py-12 text-center bg-card">
-            <Sliders className="mx-auto size-10 text-muted-foreground" />
-            <h3 className="mt-4 text-sm font-bold text-primary">No results found</h3>
-            <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
-              Try adjusting your keywords or filter parameters. All job entries on RecruitmentAlert are
-              sourced from official government bulletins.
-            </p>
-            {hasActiveFilters && (
-              <button
-                onClick={handleReset}
-                className="mt-4 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
-              >
-                Clear all filters
-              </button>
-            )}
-          </div>
+          <JobsEmptyState searchQuery={debouncedKeyword} onClear={hasActiveFilters ? handleReset : undefined} />
         ) : null}
       </main>
       <Footer />

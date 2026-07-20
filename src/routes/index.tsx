@@ -68,28 +68,142 @@ export function JobCardSkeleton() {
   );
 }
 
-export function JobsEmptyState({ onClear }: { onClear?: () => void }) {
+import { toast } from "sonner";
+
+export function KeywordSubscriptionForm({ queryText }: { queryText: string }) {
+  const [email, setEmail] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [confirmedMessage, setConfirmedMessage] = useState<string | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMsg(null);
+    if (!email.trim()) {
+      setErrorMsg("Please enter a valid email address.");
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const res = await api.subscribeKeyword(email.trim(), queryText.trim() || "all openings");
+      setConfirmedMessage(res.detail || `You'll be notified at ${email} when a match appears.`);
+      toast.success("Keyword subscription active!");
+    } catch (err: any) {
+      setErrorMsg(err.message || "Failed to create subscription. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (confirmedMessage) {
+    return (
+      <div className="w-full max-w-md p-4 bg-[#0a5c38]/10 border border-[#0a5c38]/30 dark:bg-[#3fb68e]/15 dark:border-[#3fb68e]/30 rounded-[8px] text-center space-y-1 font-sans">
+        <div className="flex items-center justify-center gap-2 text-[#0a5c38] dark:text-[#3fb68e] font-bold text-xs sm:text-sm">
+          <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+          </svg>
+          Subscription Active
+        </div>
+        <p className="text-xs text-foreground font-medium leading-relaxed">
+          {confirmedMessage}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center p-12 text-center bg-card border border-border rounded-[8px] space-y-4 my-6">
-      <div className="p-3 bg-muted/40 rounded-full text-muted-foreground">
+    <div className="w-full max-w-md space-y-2.5 font-sans text-left bg-muted/30 border border-border p-4 rounded-[8px]">
+      <p className="text-xs font-semibold text-foreground text-center sm:text-left">
+        Get notified when <span className="text-[#0a5c38] dark:text-[#3fb68e] font-bold">'{queryText || "new postings"}'</span> matches a new recruitment:
+      </p>
+
+      <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-stretch gap-2">
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="enter.your.email@example.com"
+          required
+          className="flex-1 px-3.5 py-2.5 bg-background border border-border rounded-[6px] text-xs text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-[#0a5c38] dark:focus:border-[#3fb68e] font-sans min-w-0"
+        />
+        <button
+          type="submit"
+          disabled={submitting}
+          className="px-5 py-2.5 bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold rounded-[6px] transition-all cursor-pointer disabled:opacity-50 shrink-0 font-sans shadow-sm flex items-center justify-center gap-1.5"
+        >
+          {submitting ? (
+            <span>Subscribing...</span>
+          ) : (
+            <>
+              <span>Notify Me</span>
+              <svg className="size-3.5 fill-none stroke-current shrink-0" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M14.25 5.25l7.5 7.5-7.5 7.5M21 12H3" />
+              </svg>
+            </>
+          )}
+        </button>
+      </form>
+
+      {errorMsg && (
+        <p className="text-[11px] font-semibold text-destructive font-sans text-center sm:text-left">
+          ⚠️ {errorMsg}
+        </p>
+      )}
+    </div>
+  );
+}
+
+export function JobsEmptyState({
+  searchQuery,
+  onClear,
+}: {
+  searchQuery?: string;
+  onClear?: () => void;
+}) {
+  const queryText = searchQuery && searchQuery.trim() ? searchQuery.trim() : "";
+
+  return (
+    <div className="flex flex-col items-center justify-center p-6 sm:p-10 text-center bg-card border border-border rounded-[8px] space-y-5 my-6 font-sans shadow-sm">
+      <div className="p-3.5 bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] rounded-full">
         <svg className="size-8 stroke-current fill-none" strokeWidth="1.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
       </div>
-      <div className="max-w-md space-y-1">
-        <h3 className="text-base font-semibold text-foreground font-sans">No Verified Alerts Found</h3>
-        <p className="text-xs text-muted-foreground font-sans">
-          There are currently no active recruitment alerts matching your search criteria or published in the system.
+
+      <div className="max-w-md space-y-1.5">
+        <h3 className="text-base sm:text-lg font-bold text-foreground font-sans leading-snug">
+          {queryText ? `No matches for '${queryText}' right now.` : "No verified recruitment alerts found."}
+        </h3>
+        <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
+          Get notified the moment a matching recruitment appears — join our Telegram channel or subscribe to email alerts for instant updates.
         </p>
       </div>
-      {onClear && (
-        <button
-          onClick={onClear}
-          className="mt-2 inline-flex items-center px-4 py-2 bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] text-xs font-semibold rounded-[6px] hover:opacity-90 transition-opacity cursor-pointer font-sans"
+
+      {/* Keyword Email Subscription Box */}
+      <KeywordSubscriptionForm queryText={queryText} />
+
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-1 border-t border-border/50 w-full max-w-md">
+        <a
+          href="https://t.me/RecruitmentAlertNG"
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 px-4 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold rounded-[6px] transition-transform active:scale-[0.98] cursor-pointer shadow-sm font-sans"
         >
-          Reset Search & Filters
-        </button>
-      )}
+          <svg className="size-[14px] fill-current shrink-0" viewBox="0 0 24 24">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
+          </svg>
+          Join Telegram Channel &rarr;
+        </a>
+
+        {onClear && (
+          <button
+            onClick={onClear}
+            className="inline-flex items-center px-4 py-2 bg-card border border-border text-foreground hover:bg-muted text-xs font-semibold rounded-[6px] transition-colors cursor-pointer font-sans"
+          >
+            Reset Search & Filters
+          </button>
+        )}
+      </div>
     </div>
   );
 }
@@ -643,7 +757,7 @@ function LatestJobs({
             </div>
           )
         ) : (
-          <JobsEmptyState onClear={hasFilters ? handleClearFilters : undefined} />
+          <JobsEmptyState searchQuery={searchQuery} onClear={hasFilters ? handleClearFilters : undefined} />
         )}
       </div>
     </section>

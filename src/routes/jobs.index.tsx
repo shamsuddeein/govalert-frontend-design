@@ -438,7 +438,7 @@ function JobsPage() {
                 })}
               </div>
             ) : (
-              <JobsEmptyState onClear={handleClearFilters} />
+              <JobsEmptyState searchQuery={search} onClear={handleClearFilters} />
             )}
 
             {/* Pagination Controls */}

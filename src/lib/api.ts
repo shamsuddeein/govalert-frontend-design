@@ -559,6 +559,19 @@ export const api = {
     clearAuthTokens();
   },
 
+  subscribeKeyword: async (email: string, queryText: string): Promise<{ detail: string; email: string; query_text: string }> => {
+    const response = await fetch(`${API_BASE}/keyword-subscriptions/`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email, query_text: queryText }),
+    });
+    const data = await response.json();
+    if (!response.ok) {
+      throw new Error(data.detail || data.email?.[0] || data.query_text?.[0] || "Failed to subscribe.");
+    }
+    return data;
+  },
+
   // Polling utility
   pollEndpoint: <T>(
     fetchFn: () => Promise<T | null>,
