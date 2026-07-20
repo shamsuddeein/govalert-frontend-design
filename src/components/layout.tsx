@@ -29,11 +29,17 @@ export function Logo() {
   );
 }
 
-export function ThemeToggle() {
+interface ThemeToggleProps {
+  storageKey?: string;
+}
+
+export function ThemeToggle({ storageKey }: ThemeToggleProps) {
+  const isAdmin = typeof window !== "undefined" && window.location.pathname.startsWith("/admin");
+  const key = storageKey || (isAdmin ? "admin_theme" : "user_theme");
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") as "light" | "dark" | null;
+    const savedTheme = (localStorage.getItem(key) || localStorage.getItem("theme")) as "light" | "dark" | null;
     const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
       ? "dark"
       : "light";
@@ -44,12 +50,12 @@ export function ThemeToggle() {
     } else {
       document.documentElement.classList.remove("dark");
     }
-  }, []);
+  }, [key]);
 
   const toggleTheme = () => {
     const nextTheme = theme === "light" ? "dark" : "light";
     setTheme(nextTheme);
-    localStorage.setItem("theme", nextTheme);
+    localStorage.setItem(key, nextTheme);
     if (nextTheme === "dark") {
       document.documentElement.classList.add("dark");
     } else {

@@ -59,9 +59,15 @@ function AdminLayout() {
     return () => clearInterval(interval);
   }, [isLoginPage]);
 
-  // Sync user state on navigation
+  // Sync user state & theme preference on navigation
   useEffect(() => {
     setUser(getAdminUser());
+    const savedAdminTheme = localStorage.getItem("admin_theme");
+    if (savedAdminTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else if (savedAdminTheme === "light") {
+      document.documentElement.classList.remove("dark");
+    }
   }, [location.pathname]);
 
   const handleLogout = () => {
