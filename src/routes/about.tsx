@@ -17,7 +17,7 @@ function AboutPage() {
 
           <div className="relative z-10 max-w-3xl space-y-4">
             <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
-              ABOUT GOVALERT
+              ABOUT RECRUITMENTALERT
             </span>
             <h1 className="text-3xl font-bold tracking-tight text-foreground md:text-[36px]">
               Vetting Nigeria's Public Sector Opportunities

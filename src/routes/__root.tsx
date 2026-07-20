@@ -96,15 +96,22 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://www.recruitmentalert.com.ng" },
+      { property: "og:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@RecruitmentAlertNG" },
+      { name: "twitter:title", content: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence" },
+      { name: "twitter:description", content: "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk." },
+      { name: "twitter:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
     ],
     links: [
+      { rel: "canonical", href: "https://www.recruitmentalert.com.ng" },
       {
         rel: "stylesheet",
         href: appCss,
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+      { rel: "apple-touch-icon", href: "/favicon.svg" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
