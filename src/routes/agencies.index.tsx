@@ -271,19 +271,19 @@ function AgenciesIndexPage() {
                     >
                       <div className="space-y-3 sm:space-y-4">
                         {/* Top Row: Acronym + Status Badge */}
-                        <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
+                        <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2 min-w-0">
                           <div className="flex items-center gap-2 min-w-0 flex-1">
-                            <AgencyLogo short={agency.acronym} url={agency.portal_url} size={32} />
-                            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
+                            <AgencyLogo short={agency.acronym} url={agency.portal_url} size={32} className="shrink-0" />
+                            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate min-w-0">
                               {agency.acronym}
                             </span>
                           </div>
                           
-                          <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans shrink-0">
+                          <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans shrink-0 min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}>
                             <span className={`size-2 rounded-full shrink-0 ${
                               isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
                             }`} />
-                            <span className="text-foreground font-semibold">
+                            <span className="text-foreground font-semibold truncate max-w-[100px] xs:max-w-none">
                               {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
                             </span>
                           </div>

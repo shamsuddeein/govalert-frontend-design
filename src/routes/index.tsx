@@ -188,10 +188,11 @@ export function StatusBadge({ status }: { status: Status }) {
   const s = map[status] || map.verified;
   return (
     <span
-      className={`inline-flex items-center gap-[4px] rounded-[6px] px-[10px] py-[4px] text-[11px] font-semibold font-sans uppercase tracking-[0.06em] ${s.cls}`}
+      className={`inline-flex items-center gap-[4px] rounded-[6px] px-[8px] sm:px-[10px] py-[3px] sm:py-[4px] text-[10px] sm:text-[11px] font-semibold font-sans uppercase tracking-[0.06em] shrink-0 truncate max-w-[110px] sm:max-w-none ${s.cls}`}
+      title={s.label}
     >
-      {s.icon}
-      {s.label}
+      <span className="shrink-0">{s.icon}</span>
+      <span className="truncate">{s.label}</span>
     </span>
   );
 }
@@ -818,11 +819,11 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       <h3 className="text-[15px] sm:text-[16px] font-bold text-foreground break-words leading-tight">{a.name}</h3>
                       
                       {/* Status Row */}
-                      <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium">
+                      <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium min-w-0">
                         <span className={`size-2 rounded-full shrink-0 ${
                           isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
                         }`} />
-                        <span className="text-foreground">
+                        <span className="text-foreground truncate max-w-[120px] sm:max-w-none min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}>
                           {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
                         </span>
                       </div>

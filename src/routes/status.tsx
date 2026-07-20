@@ -165,21 +165,25 @@ function StatusPage() {
                 const isMaintenance = a.status === "maintenance";
 
                 return (
-                  <div key={a.acronym} className="p-6 space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div className="space-y-0.5">
-                        <h3 className="text-sm font-semibold text-primary">{a.name}</h3>
-                        <p className="text-xs text-muted-foreground font-mono">{a.portal_url.replace("https://", "").replace("http://", "")}</p>
+                  <div key={a.acronym} className="p-4 sm:p-6 space-y-3 overflow-hidden">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 min-w-0">
+                      <div className="space-y-0.5 min-w-0 flex-1">
+                        <h3 className="text-sm font-semibold text-primary truncate min-w-0">{a.name}</h3>
+                        <p className="text-xs text-muted-foreground font-mono truncate min-w-0">{a.portal_url.replace("https://", "").replace("http://", "")}</p>
                       </div>
-                      <div className="flex items-center gap-4 text-xs font-mono">
+                      <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-mono shrink-0 min-w-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-border/40">
                         <SpeedDots ms={a.response_time_ms} showLabel />
-                        <span className="text-muted-foreground">Checked {timeAgo(a.last_checked)}</span>
+                        <span className="text-muted-foreground text-[11px] sm:text-xs shrink-0">Checked {timeAgo(a.last_checked)}</span>
                         <span
-                          className={`font-semibold ${
+                          className={`inline-flex items-center gap-1 font-semibold truncate max-w-[130px] sm:max-w-none shrink-0 ${
                             isOnline ? "text-[#15803D]" : isMaintenance ? "text-[#B45309]" : "text-[#64748B]"
                           }`}
+                          title={isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}
                         >
-                          {isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}
+                          <span className={`size-1.5 rounded-full shrink-0 ${
+                            isOnline ? "bg-[#15803D]" : isMaintenance ? "bg-[#B45309]" : "bg-[#64748B]"
+                          }`} />
+                          <span className="truncate">{isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}</span>
                         </span>
                       </div>
                     </div>

@@ -369,8 +369,8 @@ function DashboardPage() {
                           className="group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card"
                         >
                           <div className="space-y-4">
-                            <div className="flex items-center justify-between gap-2">
-                              <span className="font-mono text-[11px] text-muted-foreground">REF: {ref}</span>
+                            <div className="flex items-center justify-between gap-2 min-w-0">
+                              <span className="font-mono text-[11px] text-muted-foreground truncate min-w-0">REF: {ref}</span>
                               <StatusBadge status={job.status === "new_opening" ? "new" : job.status} />
                             </div>
 
