@@ -355,7 +355,7 @@ function JobDetailsPage() {
             )}
 
             <a
-              href={`https://t.me/RecruitmentAlertNG_bot?start=watch_${job.ref}`}
+              href={`https://t.me/govalerts_bot?start=watch_${job.ref}`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex h-[44px] items-center gap-2 rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/20 dark:hover:bg-[#3fb68e]/25 px-[20px] text-[14px] font-semibold transition-all cursor-pointer shadow-sm font-sans"
@@ -394,7 +394,7 @@ function JobDetailsPage() {
               </p>
             </div>
             <a
-              href={`https://t.me/RecruitmentAlertNG_bot?start=watch_${job.ref}`}
+              href={`https://t.me/govalerts_bot?start=watch_${job.ref}`}
               target="_blank"
               rel="noreferrer"
               className="inline-flex h-[42px] items-center gap-2 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-5 text-xs font-semibold shrink-0 cursor-pointer shadow-sm transition-transform active:scale-[0.98] font-sans"
