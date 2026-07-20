@@ -69,9 +69,10 @@ function AgencyProfilePage() {
             response_time_ms: 120,
             jobs_available: found.activeCount,
             vetted_score: found.trustScore,
-            uptime_percent: 99.8,
+            uptime_percent: 100,
             total_recruitments_detected: found.historyCount,
-            last_10_checks: [true, true, true, true, true, true, true, true, true, true],
+            last_10_checks: [true, true, true],
+            total_checks: 3,
           });
         } else {
           // Dynamic fallback for any seeded or custom agency
@@ -88,9 +89,10 @@ function AgencyProfilePage() {
             response_time_ms: 180,
             jobs_available: 0,
             vetted_score: 95,
-            uptime_percent: 99.5,
+            uptime_percent: 100,
             total_recruitments_detected: 3,
-            last_10_checks: [true, true, true, true, true, true, true, true, true, true],
+            last_10_checks: [true, true],
+            total_checks: 2,
           });
         }
       }
@@ -162,6 +164,21 @@ function AgencyProfilePage() {
   const isOnline = agency.status === "online";
   const portalUrlDisplay = agency.portal_url ? agency.portal_url.replace(/^https?:\/\//, "") : "";
 
+  const totalChecksCount = agency.total_checks ?? (agency.last_10_checks ? agency.last_10_checks.length : 0);
+  const checkCount = agency.last_10_checks ? agency.last_10_checks.length : 0;
+
+  const uptimeFormatted = agency.uptime_percent != null
+    ? (totalChecksCount > 0 && totalChecksCount < 20
+        ? `${agency.uptime_percent}% (${totalChecksCount} check${totalChecksCount === 1 ? '' : 's'})`
+        : `${agency.uptime_percent}%`)
+    : "No checks recorded";
+
+  const checksHeaderTitle = checkCount === 0
+    ? "Recent checks"
+    : checkCount < 10
+      ? `Last ${checkCount} check${checkCount === 1 ? '' : 's'}`
+      : "Last 10 checks";
+
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
@@ -203,7 +220,7 @@ function AgencyProfilePage() {
           </div>
           <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
-            <span className="font-medium text-foreground truncate">{agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}</span>
+            <span className="font-medium text-foreground truncate">{uptimeFormatted}</span>
           </div>
           <div className="flex gap-2 items-center min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Response:</span>
@@ -313,27 +330,29 @@ function AgencyProfilePage() {
           <h2 className="text-[17px] font-semibold text-foreground">Portal Health</h2>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <div className="text-[14px] text-muted-foreground">Response speed (30 days)</div>
+              <div className="text-[14px] text-muted-foreground">Response speed</div>
               <div className="mt-1"><SpeedDots ms={agency.response_time_ms} showLabel /></div>
             </div>
             <div>
               <div className="text-[14px] text-muted-foreground">Uptime</div>
               <div className="mt-1 font-mono-ui text-[14px] font-medium text-foreground">
-                {agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}
+                {uptimeFormatted}
               </div>
             </div>
-            {agency.last_10_checks && agency.last_10_checks.length > 0 && (
-              <div>
-                <div className="text-[14px] text-muted-foreground">Last 10 checks</div>
-                <div className="mt-1 flex items-center gap-1 font-mono-ui text-[#0a5c38] dark:text-[#3fb68e]">
-                  {agency.last_10_checks.map((chk, i) => (
-                    <span key={i} className={chk ? "text-[#0a5c38] dark:text-[#3fb68e]" : "text-destructive"}>
+            <div>
+              <div className="text-[14px] text-muted-foreground">{checksHeaderTitle}</div>
+              {checkCount > 0 ? (
+                <div className="mt-1 flex items-center gap-1.5 font-mono-ui text-[#0a5c38] dark:text-[#3fb68e]">
+                  {agency.last_10_checks!.map((chk, i) => (
+                    <span key={i} className={chk ? "text-[#0a5c38] dark:text-[#3fb68e]" : "text-destructive"} title={chk ? "Check passed (200 OK)" : "Check failed / unreachable"}>
                       {chk ? "●" : "○"}
                     </span>
                   ))}
                 </div>
-              </div>
-            )}
+              ) : (
+                <div className="mt-1 text-xs text-muted-foreground">No checks recorded yet</div>
+              )}
+            </div>
             <div>
               <div className="text-[14px] text-[#5a6370] dark:text-[#8b9aad]">Last offline</div>
               <div className="mt-1 font-mono-ui text-[13px] text-foreground">
@@ -353,6 +372,15 @@ function AgencyProfilePage() {
                 )}
               </div>
             </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-border/50 text-[12px] text-muted-foreground font-mono-ui flex items-center gap-1.5">
+            <span>ℹ️</span>
+            <span>
+              {totalChecksCount < 20
+                ? `Real-time monitoring active — based on initial sample of ${totalChecksCount} check${totalChecksCount === 1 ? '' : 's'}. History builds automatically.`
+                : `Real-time monitoring active — metrics computed across ${totalChecksCount} checks.`}
+            </span>
           </div>
         </section>
 

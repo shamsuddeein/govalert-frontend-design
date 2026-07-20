@@ -27,6 +27,7 @@ export interface ApiAgency {
   last_update?: string | null;
   recruitment_history?: Array<{ date: string; event_description: string }>;
   last_10_checks?: boolean[];
+  total_checks?: number;
   last_offline_at?: string | null;
   last_offline_duration_minutes?: number | null;
   avg_confidence_score?: number;

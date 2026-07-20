@@ -16,7 +16,7 @@ export function speedLabel(tier: SpeedTier): string {
     case "fast": return "Fast";
     case "ok": return "OK";
     case "slow": return "Slow";
-    default: return "No data";
+    default: return "No checks recorded";
   }
 }
 
@@ -28,17 +28,24 @@ interface SpeedDotsProps {
 
 export function SpeedDots({ ms, showLabel = false, className = "" }: SpeedDotsProps) {
   const tier = speedTier(ms);
+
+  if (tier === "unknown") {
+    return (
+      <span className={`inline-flex items-center text-[13px] text-muted-foreground font-sans ${className}`}>
+        No checks recorded
+      </span>
+    );
+  }
+
   const filled = tier === "fast" ? 3 : tier === "ok" ? 2 : tier === "slow" ? 1 : 0;
   const color =
     tier === "slow"
       ? "text-[color:var(--status-urgent,#b45309)]"
-      : tier === "unknown"
-        ? "text-muted-foreground"
-        : "text-[#0a5c38] dark:text-[#3fb68e]";
+      : "text-[#0a5c38] dark:text-[#3fb68e]";
 
   return (
     <span
-      className={`inline-flex items-center gap-1 font-mono text-[12px] ${color} ${className}`}
+      className={`inline-flex items-center gap-1.5 font-mono text-[12px] ${color} ${className}`}
       aria-label={`Response speed: ${speedLabel(tier)}`}
       title={`Response speed: ${speedLabel(tier)}`}
     >
@@ -49,7 +56,7 @@ export function SpeedDots({ ms, showLabel = false, className = "" }: SpeedDotsPr
           </span>
         ))}
       </span>
-      {showLabel && <span className="text-foreground">{speedLabel(tier)}</span>}
+      {showLabel && <span className="text-foreground font-sans text-[13px]">{speedLabel(tier)}</span>}
     </span>
   );
 }
