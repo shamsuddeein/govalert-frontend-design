@@ -267,20 +267,20 @@ function AgenciesIndexPage() {
                   return (
                     <div
                       key={agency.acronym}
-                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card"
+                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card"
                     >
-                      <div className="space-y-4">
+                      <div className="space-y-3 sm:space-y-4">
                         {/* Top Row: Acronym + Status Badge */}
-                        <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <AgencyLogo short={agency.acronym} url={agency.portal_url} size={36} />
-                            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+                        <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
+                          <div className="flex items-center gap-2 min-w-0 flex-1">
+                            <AgencyLogo short={agency.acronym} url={agency.portal_url} size={32} />
+                            <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
                               {agency.acronym}
                             </span>
                           </div>
                           
-                          <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans">
-                            <span className={`size-2 rounded-full ${
+                          <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans shrink-0">
+                            <span className={`size-2 rounded-full shrink-0 ${
                               isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
                             }`} />
                             <span className="text-foreground font-semibold">
@@ -291,36 +291,36 @@ function AgenciesIndexPage() {
 
                         {/* Agency Info */}
                         <div>
-                          <h3 className="text-[17px] font-semibold text-foreground transition-colors group-hover:text-primary font-sans">
+                          <h3 className="text-[15px] sm:text-[17px] font-semibold text-foreground transition-colors group-hover:text-primary font-sans leading-snug">
                             {agency.name}
                           </h3>
-                          <p className="mt-2 text-[13px] text-muted-foreground line-clamp-2 leading-relaxed font-sans">
+                          <p className="mt-1.5 text-[12px] sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed font-sans">
                             {agency.description}
                           </p>
                         </div>
 
                         {/* Metrics details */}
-                        <div className="grid grid-cols-2 gap-x-4 border-t border-border pt-4 text-[12px] font-sans">
+                        <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-3 gap-y-2 border-t border-border pt-3 text-[12px] font-sans">
                           <div>
-                            <span className="block text-muted-foreground">Active recruitments</span>
+                            <span className="block text-muted-foreground text-[11px]">Active recruitments</span>
                             <span className="font-semibold text-foreground">{agency.jobs_available} active openings</span>
                           </div>
                           <div>
-                            <span className="block text-muted-foreground">Vetted Score</span>
+                            <span className="block text-muted-foreground text-[11px]">Vetted Score</span>
                             <span className="font-semibold text-foreground">{agency.vetted_score}% confidence</span>
                           </div>
                         </div>
                       </div>
 
                       {/* Footer */}
-                      <div className="mt-6 flex items-center justify-between text-[11px] border-t border-border/40 pt-4 font-sans">
-                        <span className="font-mono text-muted-foreground">
+                      <div className="mt-4 sm:mt-6 flex items-center justify-between text-[11px] border-t border-border/40 pt-3 font-sans gap-2 flex-wrap xs:flex-nowrap">
+                        <span className="font-mono text-muted-foreground truncate">
                           &thinsp;&thinsp;&#8635; Checked {safeFormatTime(agency.last_checked, "Never")}
                         </span>
                         <Link
                           to="/agencies/$agencyShort"
                           params={{ agencyShort: agency.slug || agency.acronym }}
-                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-sans"
+                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-sans shrink-0"
                         >
                           View profile &rarr;
                         </Link>

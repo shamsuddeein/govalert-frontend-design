@@ -799,25 +799,27 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
               return (
                 <div
                   key={a.acronym}
-                  className="rounded-[8px] border border-border bg-card p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card"
+                  className="rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
                 >
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                      <div className="flex items-center gap-2.5 min-w-0">
-                        <AgencyLogo short={a.acronym} size={36} />
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
+                      <div className="flex items-center gap-2 min-w-0 flex-1">
+                        <AgencyLogo short={a.acronym} size={32} />
                         <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
                           {a.acronym}
                         </span>
                       </div>
-                      <VettedArc score={vettedScore} />
+                      <div className="shrink-0">
+                        <VettedArc score={vettedScore} />
+                      </div>
                     </div>
                     
                     <div>
-                      <h3 className="text-[16px] font-bold text-foreground truncate">{a.name}</h3>
+                      <h3 className="text-[15px] sm:text-[16px] font-bold text-foreground break-words leading-tight">{a.name}</h3>
                       
                       {/* Status Row */}
-                      <div className="flex items-center gap-1.5 mt-1.5 text-[13px] font-medium">
-                        <span className={`size-2 rounded-full ${
+                      <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium">
+                        <span className={`size-2 rounded-full shrink-0 ${
                           isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
                         }`} />
                         <span className="text-foreground">
@@ -826,24 +828,24 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-x-4 gap-y-2.5 text-xs border-t border-border/40 pt-3">
+                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-3 gap-y-2 text-xs border-t border-border/40 pt-3">
                       <div>
-                        <span className="block text-muted-foreground">Jobs available</span>
+                        <span className="block text-muted-foreground text-[11px]">Jobs available</span>
                         <span className="font-semibold text-foreground">
                           {activeCount} {activeCount === 1 ? "opening" : "openings"}
                         </span>
                       </div>
                       <div>
-                        <span className="block text-muted-foreground">Last checked</span>
-                        <span className="font-mono text-foreground font-semibold">&thinsp;&#8635; {lastCheckedText}</span>
+                        <span className="block text-muted-foreground text-[11px]">Last checked</span>
+                        <span className="font-mono text-foreground font-semibold text-[11px]">&thinsp;&#8635; {lastCheckedText}</span>
                       </div>
                       <div>
-                        <span className="block text-muted-foreground">Response time</span>
-                        <div className="font-sans text-[12px]">{dots}</div>
+                        <span className="block text-muted-foreground text-[11px]">Response time</span>
+                        <div className="font-sans text-[11px]">{dots}</div>
                       </div>
                       <div>
-                        <span className="block text-muted-foreground">Verification</span>
-                        <div className="mt-1 h-1.5 w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
+                        <span className="block text-muted-foreground text-[11px]">Verification</span>
+                        <div className="mt-1 h-1.5 w-[70px] sm:w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
                           <div
                             className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]"
                             style={{ width: `${vettedScore}%` }}
@@ -853,13 +855,13 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                     </div>
                   </div>
 
-                  <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs">
+                  <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs gap-2 flex-wrap xs:flex-nowrap">
                     {a.portal_url ? (
                       <a
                         href={a.portal_url}
                         target="_blank"
                         rel="noreferrer"
-                        className="text-primary underline hover:text-accent font-semibold"
+                        className="text-primary underline hover:text-accent font-semibold truncate"
                       >
                         Official website
                       </a>
@@ -869,7 +871,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                     <Link
                       to="/agencies/$agencyShort"
                       params={{ agencyShort: a.slug || a.acronym }}
-                      className="text-muted-foreground hover:text-primary font-semibold"
+                      className="text-muted-foreground hover:text-primary font-semibold shrink-0"
                     >
                       View profile &rarr;
                     </Link>
@@ -995,21 +997,21 @@ function VerificationMethodology() {
         </div>
 
         {/* Mobile Vertical Stepper */}
-        <div className="md:hidden space-y-8 relative pl-6">
+        <div className="md:hidden space-y-6 relative pl-1">
           {/* Vertical dashed line */}
-          <div className="absolute left-[17px] top-4 bottom-4 w-[2px] border-l-2 border-dashed border-[#e2ddd6] dark:border-[#242c38] -z-10" />
+          <div className="absolute left-[15px] top-4 bottom-4 w-[2px] border-l-2 border-dashed border-[#e2ddd6] dark:border-[#242c38]" />
 
           {steps.map((s) => (
-            <div key={s.n} className="flex gap-4">
-              <div className="absolute left-0 size-9 rounded-full border-2 border-[#0a5c38] dark:border-[#3fb68e] bg-card flex items-center justify-center font-sans text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e]">
+            <div key={s.n} className="flex items-start gap-3 relative">
+              <div className="size-8 rounded-full border-2 border-[#0a5c38] dark:border-[#3fb68e] bg-card flex items-center justify-center font-sans text-xs font-bold text-[#0a5c38] dark:text-[#3fb68e] shrink-0 z-10">
                 {s.n}
               </div>
-              <div className="pl-6 space-y-1">
-                <span className="block font-sans text-[11px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
+              <div className="space-y-0.5 min-w-0 flex-1 pt-0.5">
+                <span className="block font-sans text-[10px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
                   {s.label}
                 </span>
-                <h3 className="text-[15px] font-bold text-foreground">{s.title}</h3>
-                <p className="text-[13px] text-muted-foreground leading-relaxed">{s.body}</p>
+                <h3 className="text-[14px] font-bold text-foreground leading-snug">{s.title}</h3>
+                <p className="text-[12px] text-muted-foreground leading-normal">{s.body}</p>
               </div>
             </div>
           ))}
