@@ -41,12 +41,12 @@ function SignInPage() {
           {/* Logo - Plain text, no shield, no pin */}
           <div className="flex items-center gap-2 mb-6 focus:outline-none select-none">
             <span className="text-xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
-              GovAlert
+              RecruitmentAlert
             </span>
           </div>
 
           <div className="text-center w-full mb-8">
-            <h1 className="text-[22px] font-semibold text-foreground">Sign in to GovAlert</h1>
+            <h1 className="text-[22px] font-semibold text-foreground">Sign in to RecruitmentAlert</h1>
             <p className="mt-1 text-[14px] text-muted-foreground">
               Save jobs and receive personalised alerts.
             </p>

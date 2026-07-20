@@ -189,7 +189,7 @@ function AdminLayout() {
                   {user?.username || "Admin User"}
                 </span>
                 <span className="block text-[11px] text-muted-foreground truncate font-sans">
-                  {user?.email || "staff@govalert.ng"}
+                  {user?.email || "staff@recruitmentalert.com.ng"}
                 </span>
               </div>
               <button

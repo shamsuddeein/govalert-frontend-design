@@ -729,12 +729,12 @@ function DashboardPage() {
         isOpen={showPairingModal}
         onClose={() => setShowPairingModal(false)}
         title="Pair with Telegram Bot"
-        description="Connect your account to GovAlert Telegram Bot in three simple steps:"
+        description="Connect your account to RecruitmentAlert Telegram Bot in three simple steps:"
         maxWidth="max-w-md"
       >
         <ol className="space-y-3.5 text-xs text-muted-foreground mb-6 pl-4 list-decimal font-sans">
           <li>
-            Open Telegram and search for <strong className="text-primary font-bold">@GovAlertBot</strong>.
+            Open Telegram and search for <strong className="text-primary font-bold">@RecruitmentAlertBot</strong>.
           </li>
           <li>
             Start the bot by tapping <strong className="text-foreground">/start</strong>.

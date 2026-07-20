@@ -22,7 +22,7 @@ export function Logo() {
         <path d="M8 16.5l3 3 6-7" />
       </svg>
       <span className="text-lg tracking-tight text-foreground font-sans">
-        <span className="font-bold">Gov</span>
+        <span className="font-bold">Recruitment</span>
         <span className="font-normal">Alert</span>
       </span>
     </Link>
@@ -193,10 +193,10 @@ export function Nav() {
               </>
             )}
             <a
-              href="https://t.me/GovAlert"
+              href="https://t.me/RecruitmentAlertNG"
               target="_blank"
               rel="noreferrer"
-              className="hidden md:inline-flex h-[40px] items-center gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-[16px] text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer"
+              className="inline-flex items-center gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-[16px] py-2 text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer"
             >
               <svg className="size-[14px] fill-current" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
@@ -256,7 +256,7 @@ export function Nav() {
 
             {/* Section 3: Get Alerts CTA */}
             <a
-              href="https://t.me/GovAlert"
+              href="https://t.me/RecruitmentAlert"
               target="_blank"
               rel="noreferrer"
               className="flex h-[44px] w-full items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] text-white dark:bg-[#3fb68e] dark:text-[#0c1015] text-[14px] font-semibold"
@@ -300,7 +300,7 @@ export function Footer() {
     {
       heading: "Platform",
       links: [
-        { label: "Official Telegram", to: "https://t.me/GovAlert", external: true },
+        { label: "Official Telegram", to: "https://t.me/RecruitmentAlertNG", external: true },
         { label: "Contact Us", to: "/contact" },
       ],
     },
@@ -363,7 +363,7 @@ export function Footer() {
 
         <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 md:flex-row md:items-center">
           <p className="font-sans text-[11px] text-muted-foreground max-w-xl">
-            © {new Date().getFullYear()} GovAlert. Independent monitoring. Not affiliated with the Federal Government.
+            © {new Date().getFullYear()} RecruitmentAlert. Independent monitoring. Not affiliated with the Federal Government.
           </p>
           <div className="flex items-center gap-2">
             <span className="relative flex h-2 w-2">

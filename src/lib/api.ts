@@ -1,4 +1,4 @@
-// GovAlert API Client Module
+// RecruitmentAlert API Client Module
 
 const DEFAULT_BACKEND_URL = "https://govalert-production.up.railway.app";
 const BASE_HOST = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL) || DEFAULT_BACKEND_URL;
@@ -125,16 +125,16 @@ export interface ApiUserProfile {
 // ─── Auth helpers ──────────────────────────────────────────────────────────────
 
 export const getAuthToken = (): string | null =>
-  localStorage.getItem("govalert_access_token");
+  localStorage.getItem("recruitmentalert_access_token") || localStorage.getItem("govalert_access_token");
 
 export const setAuthTokens = (tokens: ApiAuthTokens) => {
-  localStorage.setItem("govalert_access_token", tokens.access);
-  localStorage.setItem("govalert_refresh_token", tokens.refresh);
+  localStorage.setItem("recruitmentalert_access_token", tokens.access);
+  localStorage.setItem("recruitmentalert_refresh_token", tokens.refresh);
 };
 
 export const clearAuthTokens = () => {
-  localStorage.removeItem("govalert_access_token");
-  localStorage.removeItem("govalert_refresh_token");
+  localStorage.removeItem("recruitmentalert_access_token");
+  localStorage.removeItem("recruitmentalert_refresh_token");
 };
 
 export const isAuthenticated = (): boolean => Boolean(getAuthToken());
@@ -516,7 +516,7 @@ export const api = {
   },
 
   refreshToken: async (): Promise<string | null> => {
-    const refresh = localStorage.getItem("govalert_refresh_token");
+    const refresh = localStorage.getItem("recruitmentalert_refresh_token");
     if (!refresh) return null;
     const res = await request<{ access: string }>(
       "/token/refresh/",
@@ -524,7 +524,7 @@ export const api = {
       AUTH_BASE
     );
     if (res?.access) {
-      localStorage.setItem("govalert_access_token", res.access);
+      localStorage.setItem("recruitmentalert_access_token", res.access);
       return res.access;
     }
     return null;
@@ -552,7 +552,7 @@ export const api = {
   },
 
   logout: async () => {
-    const refresh = localStorage.getItem("govalert_refresh_token");
+    const refresh = localStorage.getItem("recruitmentalert_refresh_token");
     if (refresh) {
       await request("/logout/", { method: "POST", body: JSON.stringify({ refresh }) }, AUTH_BASE);
     }

@@ -20,7 +20,7 @@ function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            How GovAlert collects, uses, and safeguards user data.
+            How RecruitmentAlert collects, uses, and safeguards user data.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ function PrivacyPage() {
             <h3 className="text-sm font-semibold text-foreground">5. Contact Information</h3>
             <p>
               For questions regarding our privacy operations or data erasure requests, please
-              contact us at <strong className="text-primary">privacy@govalert.ng</strong>.
+              contact us at <strong className="text-primary">privacy@recruitmentalert.com.ng</strong>.
             </p>
           </section>
         </article>

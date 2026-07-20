@@ -7,7 +7,7 @@ export const Route = createFileRoute("/faq")({
   component: FaqPage,
   head: () => ({
     meta: [
-      { title: "Verification FAQ | GovAlert" }
+      { title: "Verification FAQ | RecruitmentAlert" }
     ]
   }),
 });
@@ -19,16 +19,16 @@ interface FaqItem {
 
 const faqList: FaqItem[] = [
   {
-    q: "What is GovAlert?",
-    a: "GovAlert is an independent verification platform that monitors Nigerian federal recruitment portals. Our crawlers check endpoints every 15 minutes, and our analysts cross-verify listings to protect job seekers from widespread recruitment scams.",
+    q: "What is RecruitmentAlert?",
+    a: "RecruitmentAlert is an independent verification platform that monitors Nigerian federal recruitment portals. Our crawlers check endpoints every 15 minutes, and our analysts cross-verify listings to protect job seekers from widespread recruitment scams.",
   },
   {
     q: "How do you verify a portal is authentic?",
     a: "We use a multi-phase audit process: (1) Domain analysis, checking that the portal operates on a registered, secure .gov.ng or verified corporate domain extension; (2) SSL examination, confirming the presence of genuine corporate EV certificates; (3) Cross-referencing announcement details against the national gazette, federal budget allocations, or verified MDA media releases.",
   },
   {
-    q: "Is GovAlert affiliated with the Federal Government?",
-    a: "No. GovAlert is completely independent. We are not government employees, and we do not influence, represent, or sell employment slots. We function solely as a public utility to assure safety and security in recruitment.",
+    q: "Is RecruitmentAlert affiliated with the Federal Government?",
+    a: "No. RecruitmentAlert is completely independent. We are not government employees, and we do not influence, represent, or sell employment slots. We function solely as a public utility to assure safety and security in recruitment.",
   },
   {
     q: "Do I pay to apply for listed jobs?",

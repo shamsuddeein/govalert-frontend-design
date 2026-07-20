@@ -23,7 +23,7 @@ function AboutPage() {
               Vetting Nigeria's Public Sector Opportunities
             </h1>
             <p className="text-[15px] text-muted-foreground leading-relaxed max-w-2xl">
-              GovAlert is an independent verification platform monitoring public sector recruitment across federal ministries, departments, and agencies. We neutralize recruitment scams targeting job seekers.
+              RecruitmentAlert is an independent verification platform monitoring public sector recruitment across federal ministries, departments, and agencies. We neutralize recruitment scams targeting job seekers.
             </p>
           </div>
         </div>
@@ -106,7 +106,7 @@ function AboutPage() {
               <h4 className="font-bold text-sm">Anti-Scam Commitment</h4>
             </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
-              GovAlert is entirely independent. We have zero affiliations with the Federal Government, nor do we run, process, or sell employment spots. We provide pure public intelligence.
+              RecruitmentAlert is entirely independent. We have zero affiliations with the Federal Government, nor do we run, process, or sell employment spots. We provide pure public intelligence.
             </p>
           </div>
           <Link

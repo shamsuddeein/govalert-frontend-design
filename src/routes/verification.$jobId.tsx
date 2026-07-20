@@ -10,7 +10,7 @@ export const Route = createFileRoute("/verification/$jobId")({
   head: ({ params }) => {
     return {
       meta: [
-        { title: `Verification Report: ${params.jobId} | GovAlert` }
+        { title: `Verification Report: ${params.jobId} | RecruitmentAlert` }
       ],
     };
   }
@@ -38,7 +38,7 @@ function VerificationReportPage() {
         setError("Verification report not found or unavailable.");
       }
     } catch (err: any) {
-      setError("Failed to fetch verification report from GovAlert API.");
+      setError("Failed to fetch verification report from RecruitmentAlert API.");
     } finally {
       setLoading(false);
     }
@@ -113,7 +113,7 @@ function VerificationReportPage() {
         <div className="mb-4">
           {report.ai_classification === "REAL" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/10 text-[#0a5c38] dark:text-[#3fb68e] text-[12px] font-bold uppercase tracking-wide">
-              <CheckCircle2 className="size-4" /> AI: REAL — Verified by GovAlert Intelligence
+              <CheckCircle2 className="size-4" /> AI: REAL — Verified by RecruitmentAlert Intelligence
             </span>
           ) : report.ai_classification === "FAKE" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400 text-[12px] font-bold uppercase tracking-wide">
@@ -186,7 +186,7 @@ function VerificationReportPage() {
                   { time: "09:15", desc: "Duplicate check passed (no match in 30-day window)" },
                   { time: "09:16", desc: "Historical comparison: matches previous format" },
                   { time: "09:17", desc: "Confidence score calculated" },
-                  { time: "09:17", desc: "Published to GovAlert feed and Telegram channel" }
+                  { time: "09:17", desc: "Published to RecruitmentAlert feed and Telegram channel" }
                 ]
             ).map((log, idx, arr) => {
               const isLast = idx === arr.length - 1;

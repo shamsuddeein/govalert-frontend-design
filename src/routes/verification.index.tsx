@@ -14,16 +14,16 @@ interface FaqItem {
 
 const faqList: FaqItem[] = [
   {
-    q: "What is GovAlert Verification?",
-    a: "GovAlert is an independent verification platform that monitors Nigerian federal recruitment portals. Our crawlers check endpoints every 15 minutes, and our automated audit pipeline cross-verifies listings to protect job seekers from widespread recruitment scams.",
+    q: "What is RecruitmentAlert Verification?",
+    a: "RecruitmentAlert is an independent verification platform that monitors Nigerian federal recruitment portals. Our crawlers check endpoints every 15 minutes, and our automated audit pipeline cross-verifies listings to protect job seekers from widespread recruitment scams.",
   },
   {
     q: "How do you verify a portal is authentic?",
     a: "We use a multi-phase audit process: (1) Domain analysis, checking that the portal operates on a registered, secure .gov.ng domain; (2) SSL examination, confirming valid corporate certificates; (3) Cross-referencing announcement details against national gazette and verified MDA releases.",
   },
   {
-    q: "Is GovAlert affiliated with the Federal Government?",
-    a: "No. GovAlert is completely independent. We are not government employees, and we do not sell employment slots. We function solely as a public utility to assure safety and security in recruitment.",
+    q: "Is RecruitmentAlert affiliated with the Federal Government?",
+    a: "No. RecruitmentAlert is completely independent. We are not government employees, and we do not sell employment slots. We function solely as a public utility to assure safety and security in recruitment.",
   },
   {
     q: "Do I pay to apply for listed jobs?",
@@ -65,7 +65,7 @@ function VerificationPage() {
             Verification Methodology & FAQ
           </h1>
           <p className="mt-3 text-[15px] text-muted-foreground leading-relaxed max-w-[580px] mx-auto">
-            How GovAlert continuously monitors Nigerian MDA portals, calculates confidence scores, and eliminates recruitment scams.
+            How RecruitmentAlert continuously monitors Nigerian MDA portals, calculates confidence scores, and eliminates recruitment scams.
           </p>
         </div>
 

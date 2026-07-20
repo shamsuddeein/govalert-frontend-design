@@ -173,7 +173,7 @@ function ContactPage() {
               <div className="space-y-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <Mail className="size-4 text-primary" />
-                  <span>ops@govalert.ng</span>
+                  <span>ops@recruitmentalert.com.ng</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <MapPin className="size-4 text-primary" />

@@ -270,7 +270,7 @@ function SearchPage() {
           ) : (
             <p className="text-xs text-muted-foreground">
               Found <span className="font-semibold text-foreground">{totalCount}</span>{" "}
-              matching recruitment{totalCount !== 1 ? "s" : ""} in GovAlert database
+              matching recruitment{totalCount !== 1 ? "s" : ""} in RecruitmentAlert database
             </p>
           )}
         </div>
@@ -325,7 +325,7 @@ function SearchPage() {
             <Sliders className="mx-auto size-10 text-muted-foreground" />
             <h3 className="mt-4 text-sm font-bold text-primary">No results found</h3>
             <p className="mt-2 text-xs text-muted-foreground max-w-sm mx-auto">
-              Try adjusting your keywords or filter parameters. All job entries on GovAlert are
+              Try adjusting your keywords or filter parameters. All job entries on RecruitmentAlert are
               sourced from official government bulletins.
             </p>
             {hasActiveFilters && (

@@ -20,7 +20,7 @@ function TermsPage() {
             Terms of Service
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
-            Operational guidelines and legal terms governing GovAlert.
+            Operational guidelines and legal terms governing RecruitmentAlert.
           </p>
         </div>
 
@@ -28,7 +28,7 @@ function TermsPage() {
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-foreground">1. Independence Disclaimer</h3>
             <p>
-              GovAlert is a private, independent portal monitoring service. We are **not affiliated,
+              RecruitmentAlert is a private, independent portal monitoring service. We are **not affiliated,
               associated, authorized, endorsed by, or in any way officially connected** with the
               Federal Republic of Nigeria, the Federal Civil Service Commission, or any government
               ministry, department, or agency. All official bulletins and links are posted for
@@ -40,7 +40,7 @@ function TermsPage() {
             <h3 className="text-sm font-semibold text-foreground">2. Vetting Accuracy</h3>
             <p>
               While our team checks portal servers, DNS paths, and SSL status to audit links,
-              GovAlert does not guarantee the availability, security, or accuracy of third-party
+              RecruitmentAlert does not guarantee the availability, security, or accuracy of third-party
               government application sites. Candidates use the links provided entirely at their own
               risk.
             </p>
@@ -49,9 +49,9 @@ function TermsPage() {
           <section className="space-y-2">
             <h3 className="text-sm font-semibold text-foreground">3. Zero Placement Services</h3>
             <p>
-              GovAlert is **not a recruiter or job agency**. We do not accept resumes, manage
+              RecruitmentAlert is **not a recruiter or job agency**. We do not accept resumes, manage
               applications, or participate in hiring decisions. We do not charge fees for employment
-              placements. Any person demanding payment on behalf of GovAlert is committing fraud and
+              placements. Any person demanding payment on behalf of RecruitmentAlert is committing fraud and
               should be reported to law enforcement.
             </p>
           </section>

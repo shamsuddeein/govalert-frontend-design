@@ -50,7 +50,7 @@ function RegisterPage() {
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <span className="text-2xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
-                GovAlert
+                RecruitmentAlert
               </span>
             </div>
             <h1 className="text-xl font-bold tracking-tight text-primary">Create an account</h1>

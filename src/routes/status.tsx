@@ -26,7 +26,7 @@ function StatusPage() {
       if (statusRes) setStatus(statusRes);
       if (agenciesRes && agenciesRes.results) setAgencies(agenciesRes.results);
     } catch (err: any) {
-      setError("Failed to fetch system health data from GovAlert API.");
+      setError("Failed to fetch system health data from RecruitmentAlert API.");
     } finally {
       setLoading(false);
     }
@@ -206,7 +206,7 @@ function StatusPage() {
           <div className="space-y-1">
             <h4 className="text-sm font-semibold text-primary font-sans">About this status dashboard</h4>
             <p className="text-xs text-muted-foreground leading-relaxed font-sans">
-              This page displays automated health checks conducted by GovAlert monitoring nodes. Latencies are computed from our monitoring endpoint located in Lagos, Nigeria. A portal marked "Offline" indicates connection timeouts or DNS resolution issues detected during three consecutive scanning cycles.
+              This page displays automated health checks conducted by RecruitmentAlert monitoring nodes. Latencies are computed from our monitoring endpoint located in Lagos, Nigeria. A portal marked "Offline" indicates connection timeouts or DNS resolution issues detected during three consecutive scanning cycles.
             </p>
           </div>
         </div>

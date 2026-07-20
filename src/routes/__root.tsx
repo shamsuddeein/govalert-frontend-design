@@ -79,16 +79,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "GovAlert | Verified Nigerian Government Recruitment Intelligence" },
+      { title: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence" },
       {
         name: "description",
         content:
-          "GovAlert monitors official Nigerian government portals in real time and delivers verified recruitment intelligence — no rumors, no phishing.",
+          "RecruitmentAlert monitors official Nigerian government portals in real time and delivers verified recruitment intelligence — no rumors, no phishing.",
       },
-      { name: "author", content: "GovAlert" },
+      { name: "author", content: "RecruitmentAlert" },
       {
         property: "og:title",
-        content: "GovAlert | Verified Nigerian Government Recruitment Intelligence",
+        content: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence",
       },
       {
         property: "og:description",
@@ -97,7 +97,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@GovAlertNG" },
+      { name: "twitter:site", content: "@RecruitmentAlertNG" },
     ],
     links: [
       {

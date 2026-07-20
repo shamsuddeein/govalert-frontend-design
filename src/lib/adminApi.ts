@@ -1,5 +1,5 @@
 /**
- * GovAlert Admin API Client Module
+ * RecruitmentAlert Admin API Client Module
  * Communicates with /api/v1/admin/* endpoints.
  * 
  * Tradeoff Note: Storing JWT tokens in localStorage is used here as a client-side fallback
@@ -179,27 +179,31 @@ export interface AdminSystemHealth {
 // ─── Token Management Helpers ──────────────────────────────────────────────────
 
 export const getAdminAccessToken = (): string | null =>
-  typeof window !== "undefined" ? localStorage.getItem("govalert_admin_access_token") : null;
+  typeof window !== "undefined"
+    ? localStorage.getItem("recruitmentalert_admin_access_token") || localStorage.getItem("govalert_admin_access_token")
+    : null;
 
 export const getAdminRefreshToken = (): string | null =>
-  typeof window !== "undefined" ? localStorage.getItem("govalert_admin_refresh_token") : null;
+  typeof window !== "undefined"
+    ? localStorage.getItem("recruitmentalert_admin_refresh_token") || localStorage.getItem("govalert_admin_refresh_token")
+    : null;
 
 export const setAdminTokens = (access: string, refresh: string) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem("govalert_admin_access_token", access);
-    localStorage.setItem("govalert_admin_refresh_token", refresh);
+    localStorage.setItem("recruitmentalert_admin_access_token", access);
+    localStorage.setItem("recruitmentalert_admin_refresh_token", refresh);
   }
 };
 
 export const setAdminUser = (user: AdminUser) => {
   if (typeof window !== "undefined") {
-    localStorage.setItem("govalert_admin_user", JSON.stringify(user));
+    localStorage.setItem("recruitmentalert_admin_user", JSON.stringify(user));
   }
 };
 
 export const getAdminUser = (): AdminUser | null => {
   if (typeof window === "undefined") return null;
-  const raw = localStorage.getItem("govalert_admin_user");
+  const raw = localStorage.getItem("recruitmentalert_admin_user") || localStorage.getItem("govalert_admin_user");
   if (!raw) return null;
   try {
     return JSON.parse(raw);
@@ -210,9 +214,9 @@ export const getAdminUser = (): AdminUser | null => {
 
 export const clearAdminTokens = () => {
   if (typeof window !== "undefined") {
-    localStorage.removeItem("govalert_admin_access_token");
-    localStorage.removeItem("govalert_admin_refresh_token");
-    localStorage.removeItem("govalert_admin_user");
+    localStorage.removeItem("recruitmentalert_admin_access_token");
+    localStorage.removeItem("recruitmentalert_admin_refresh_token");
+    localStorage.removeItem("recruitmentalert_admin_user");
   }
 };
 
@@ -313,7 +317,7 @@ export const adminApi = {
       if (!res.ok) return null;
       const data = await res.json();
       if (data?.access) {
-        localStorage.setItem("govalert_admin_access_token", data.access);
+        localStorage.setItem("recruitmentalert_admin_access_token", data.access);
         return data.access;
       }
       return null;

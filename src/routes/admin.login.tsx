@@ -81,7 +81,7 @@ function AdminLoginComponent() {
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  placeholder="admin@govalert.ng or username"
+                  placeholder="admin@recruitmentalert.com.ng or username"
                   className="w-full pl-9 pr-4 py-2.5 bg-background border border-border rounded-[6px] text-sm text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary font-sans transition-colors"
                   disabled={loading}
                   autoFocus
