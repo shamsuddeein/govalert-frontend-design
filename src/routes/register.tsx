@@ -45,8 +45,8 @@ function RegisterPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
       <Nav />
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
-        <div className="w-full max-w-md rounded border border-border bg-card p-8 shadow-sm relative">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
+        <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
               <span className="text-2xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">

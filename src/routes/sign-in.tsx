@@ -36,7 +36,7 @@ function SignInPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
       <Nav />
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
         <div className="w-full max-w-[400px] flex flex-col items-center">
           {/* Logo - Plain text, no shield, no pin */}
           <div className="flex items-center gap-2 mb-6 focus:outline-none select-none">
