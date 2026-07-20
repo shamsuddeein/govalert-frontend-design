@@ -362,7 +362,7 @@ function JobsPage() {
                   return (
                     <div
                       key={job.id}
-                      className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card ${
+                      className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card ${
                         isClosed ? "opacity-65 bg-muted/5" : ""
                       }`}
                     >
@@ -378,7 +378,7 @@ function JobsPage() {
                         </div>
 
                         <div>
-                          <h3 className="text-[18px] font-semibold leading-snug text-foreground">
+                          <h3 className="text-[16px] sm:text-[18px] font-semibold leading-snug text-foreground">
                             {job.title}
                           </h3>
                           <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
@@ -388,7 +388,7 @@ function JobsPage() {
                           </p>
                         </div>
 
-                        <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                        <div className="border-t border-border pt-4 grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
                           <div>
                             <span className="block text-muted-foreground text-[12px]">Deadline</span>
                             <span className="font-medium text-foreground">{job.deadline}</span>

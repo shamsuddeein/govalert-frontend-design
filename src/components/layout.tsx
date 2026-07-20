@@ -320,26 +320,26 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t-[3px] border-[#0a5c38] dark:border-[#3fb68e] bg-[#f0ede8] dark:bg-[#0a0e13] py-16">
-      <div className="mx-auto max-w-[1184px] px-6">
-        <div className="grid gap-12 md:grid-cols-[1.4fr_2fr] pb-12">
-          <div className="space-y-4">
+    <footer className="border-t-[3px] border-[#0a5c38] dark:border-[#3fb68e] bg-[#f0ede8] dark:bg-[#0a0e13] py-10 sm:py-16">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
+        <div className="grid gap-8 sm:gap-12 md:grid-cols-[1.4fr_2fr] pb-8 sm:pb-12">
+          <div className="space-y-3 sm:space-y-4">
             <Logo />
-            <p className="text-[14px] text-muted-foreground max-w-sm">
+            <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed">
               Verified recruitment intelligence.
             </p>
-            <p className="text-[12px] text-muted-foreground max-w-sm">
+            <p className="text-[11px] sm:text-[12px] text-muted-foreground max-w-sm leading-relaxed">
               Independent monitoring. Not affiliated with the Federal Government.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-8 md:grid-cols-3">
+          <div className="grid grid-cols-1 xs:grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3">
             {cols.map((c) => (
               <div key={c.heading}>
                 <h5 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
                   {c.heading}
                 </h5>
-                <ul className="mt-4 space-y-2.5 text-[14px] text-foreground">
+                <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] text-foreground">
                   {c.links.map((l) => (
                     <li key={l.label}>
                       {l.external ? (
@@ -347,15 +347,15 @@ export function Footer() {
                           href={l.to}
                           target="_blank"
                           rel="noreferrer"
-                          className="transition-colors hover:text-primary inline-flex items-center gap-1"
+                          className="transition-colors hover:text-primary inline-flex items-center gap-1 py-1"
                         >
                           {l.label}
-                          <svg className="size-3 text-muted-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <svg className="size-3 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                           </svg>
                         </a>
                       ) : (
-                        <Link to={l.to} className="transition-colors hover:text-primary">
+                        <Link to={l.to} className="transition-colors hover:text-primary inline-block py-1">
                           {l.label}
                         </Link>
                       )}
@@ -367,11 +367,11 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-8 md:flex-row md:items-center">
-          <p className="font-sans text-[11px] text-muted-foreground max-w-xl">
+        <div className="mt-8 sm:mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:pt-8 md:flex-row md:items-center">
+          <p className="font-sans text-[11px] text-muted-foreground max-w-xl leading-relaxed">
             © {new Date().getFullYear()} RecruitmentAlert. Independent monitoring. Not affiliated with the Federal Government.
           </p>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 shrink-0">
             <span className="relative flex h-2 w-2">
               <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>

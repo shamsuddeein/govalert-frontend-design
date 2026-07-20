@@ -250,16 +250,16 @@ function DashboardPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
-      <main className="mx-auto max-w-[1184px] px-6 py-12">
+      <main className="mx-auto max-w-[1184px] px-4 sm:px-6 py-8 sm:py-12">
         {/* Banner/Header */}
-        <div className="mb-10 flex flex-col gap-6 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-8">
+        <div className="mb-8 sm:mb-10 flex flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-6 sm:pb-8">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight text-primary">Applicant Dashboard</h1>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-primary">Applicant Dashboard</h1>
+            <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
               Manage saved applications, set alert preferences, and verify contact profiles.
             </p>
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 shrink-0">
             <span className="relative flex size-2">
               <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
               <span className="relative inline-flex size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
@@ -269,9 +269,9 @@ function DashboardPage() {
         </div>
 
         {/* Outer Shell Grid (240px wide sidebar) */}
-        <div className="grid gap-8 lg:grid-cols-[240px_1fr]">
+        <div className="grid gap-6 sm:gap-8 lg:grid-cols-[240px_1fr]">
           {/* Navigation Sidebar */}
-          <aside className="flex flex-row gap-2 overflow-x-auto pb-4 lg:flex-col lg:overflow-visible lg:pb-0 border-b border-border/40 lg:border-b-0 lg:border-r lg:border-border/40 lg:pr-6">
+          <aside className="flex flex-row gap-2 overflow-x-auto pb-4 lg:flex-col lg:overflow-visible lg:pb-0 border-b border-border/40 lg:border-b-0 lg:border-r lg:border-border/40 lg:pr-6 no-scrollbar max-w-full">
             <button
               onClick={() => setActiveTab("saved")}
               className={`flex items-center justify-between rounded-[8px] px-4 py-3 text-xs font-semibold shrink-0 cursor-pointer border transition-colors ${

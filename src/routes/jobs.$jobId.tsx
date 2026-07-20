@@ -169,9 +169,9 @@ function JobDetailsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
-      <main className="mx-auto max-w-[720px] px-6 py-12">
+      <main className="mx-auto max-w-[720px] px-4 sm:px-6 py-8 sm:py-12">
         {/* Breadcrumb */}
-        <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground">
+        <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground truncate">
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → REF: {job.ref}
         </div>
 
@@ -181,26 +181,26 @@ function JobDetailsPage() {
         </div>
 
         {/* Heading & Agency */}
-        <h1 className="text-[28px] font-bold leading-tight tracking-tight text-foreground">
+        <h1 className="text-[22px] sm:text-[28px] font-bold leading-tight tracking-tight text-foreground">
           {job.title}
         </h1>
-        <div className="mt-2 flex items-center justify-between">
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2">
           <Link
             to="/agencies/$agencyShort"
             params={{ agencyShort: job.agency_acronym || job.agency_slug || "" }}
-            className="text-[16px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
+            className="text-[15px] sm:text-[16px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
           >
             {job.agency_name}
           </Link>
           
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold">
+          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold shrink-0">
             <span className="text-muted-foreground">Confidence:</span>
             <span className="font-mono text-[#0a5c38] dark:text-[#3fb68e] font-bold">{job.confidence_score ?? 98}%</span>
           </div>
         </div>
 
         {/* Top Metadata Row */}
-        <div className="mt-8 grid grid-cols-2 gap-y-6 gap-x-8 text-[13px] sm:grid-cols-3">
+        <div className="mt-6 sm:mt-8 grid grid-cols-1 xs:grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-4 text-[13px] sm:grid-cols-3">
           <div>
             <div className="font-mono-ui text-[11px] uppercase text-muted-foreground">Deadline</div>
             <div className="mt-1 font-medium">{job.deadline || "Pending"}</div>

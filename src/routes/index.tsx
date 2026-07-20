@@ -226,12 +226,12 @@ function Hero({
   };
 
   return (
-    <section className="py-12 bg-background">
-      <div className="mx-auto max-w-[1184px] px-6">
-        <div className="grid gap-12 lg:grid-cols-[1fr_380px] lg:items-center">
+    <section className="py-8 sm:py-12 bg-background">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1fr_380px] lg:items-center">
           
           {/* Left Side Info */}
-          <div className="space-y-6 text-left">
+          <div className="space-y-4 sm:space-y-6 text-left">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
               <span className="relative flex h-2 w-2">
                 <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
@@ -240,7 +240,7 @@ function Hero({
               <span>FEDERAL RECRUITMENT MONITOR &middot; LIVE</span>
             </div>
 
-            <h1 className="text-[36px] md:text-[44px] font-semibold tracking-tight text-foreground leading-[1.15] max-w-[560px]">
+            <h1 className="text-[28px] sm:text-[36px] md:text-[44px] font-semibold tracking-tight text-foreground leading-[1.15] max-w-[560px]">
               Nigeria's verified<br />
               recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e]">intelligence.</span>
             </h1>
@@ -305,13 +305,13 @@ function Hero({
               </form>
             </div>
 
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground pt-1">
-              <span>Quick tags:</span>
+            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground pt-1 overflow-x-auto pb-1 no-scrollbar max-w-full">
+              <span className="shrink-0">Quick tags:</span>
               {["NNPC", "Customs", "EFCC", "NAF", "CBN", "FIRS"].map((tag) => (
                 <button
                   key={tag}
                   onClick={() => onTagClick(tag)}
-                  className={`rounded-[6px] border px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer ${
+                  className={`rounded-[6px] border px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
                     searchQuery.toLowerCase() === tag.toLowerCase()
                       ? "border-[#0a5c38] bg-muted text-[#0a5c38] dark:border-[#3fb68e] dark:text-[#3fb68e]"
                       : "border-border bg-card text-muted-foreground hover:border-[#0a5c38] hover:text-[#0a5c38] dark:hover:border-[#3fb68e] dark:hover:text-[#3fb68e]"
@@ -390,22 +390,22 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
 
   return (
     <div className="border-y border-border bg-card py-2.5">
-      <div className="mx-auto max-w-[1184px] px-6 flex flex-wrap items-center justify-between gap-4 text-xs font-sans text-muted-foreground font-medium">
-        <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-muted-foreground font-medium">
+        <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5">
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#0a5c38]" />
+            <span className="size-2 rounded-full bg-[#0a5c38] shrink-0" />
             <span>{onlineCount} Online</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#b45309]" />
+            <span className="size-2 rounded-full bg-[#b45309] shrink-0" />
             <span>{maintenanceCount} Maintenance</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#b91c1c]" />
+            <span className="size-2 rounded-full bg-[#b91c1c] shrink-0" />
             <span>{offlineCount} Down</span>
           </div>
         </div>
-        <div className="font-mono text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-4">
+        <div className="font-mono text-[10px] sm:text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-3 sm:gap-x-4">
           <span>{status?.active_campaigns ?? 0} campaigns</span>
           <span>&middot;</span>
           <span>{status?.monitoring_interval_minutes ?? 15}m cycle</span>
@@ -526,21 +526,21 @@ function LatestJobs({
                 return (
                   <div
                     key={job.id}
-                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm interactive-card ${
+                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card ${
                       isClosed ? "opacity-65 bg-muted/5" : ""
                     }`}
                   >
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2.5 min-w-0">
-                          <AgencyLogo short={job.agencyShort} size={32} />
-                          <span className="font-mono text-[11px] text-muted-foreground truncate">REF: {job.id}</span>
+                      <div className="flex items-center justify-between gap-2 min-w-0">
+                        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                          <AgencyLogo short={job.agencyShort} size={32} className="shrink-0" />
+                          <span className="font-mono text-[11px] text-muted-foreground truncate min-w-0">REF: {job.id}</span>
                         </div>
                         <StatusBadge status={job.status} />
                       </div>
 
                       <div>
-                        <h3 className="text-[18px] font-semibold leading-snug text-foreground">
+                        <h3 className="text-[16px] sm:text-[18px] font-semibold leading-snug text-foreground">
                           {job.title}
                         </h3>
                         <p className="mt-1 text-[13px] font-medium text-[#0a5c38] dark:text-[#3fb68e] hover:underline">
@@ -550,7 +550,7 @@ function LatestJobs({
                         </p>
                       </div>
 
-                      <div className="border-t border-border pt-4 grid grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
+                      <div className="border-t border-border pt-4 grid grid-cols-1 xs:grid-cols-2 gap-x-4 gap-y-2 text-[13px]">
                         <div>
                           <span className="block text-muted-foreground text-[12px]">Deadline</span>
                           <span className="font-medium text-foreground">{job.deadline}</span>

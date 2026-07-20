@@ -184,38 +184,38 @@ function AgencyProfilePage() {
           </span>
         </div>
 
-        <h1 className="mt-4 text-[28px] font-bold leading-tight tracking-tight text-foreground">
+        <h1 className="mt-4 text-[22px] sm:text-[28px] font-bold leading-tight tracking-tight text-foreground">
           {agency.name}
         </h1>
-        <p className="mt-2 text-[15px] leading-relaxed text-muted-foreground max-w-[600px]">
+        <p className="mt-2 text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground max-w-[600px]">
           {agency.description}
         </p>
 
         {/* Status Row */}
-        <div className="mt-8 grid grid-cols-2 gap-y-4 gap-x-8 text-[14px] md:grid-cols-3">
-          <div className="flex gap-2">
+        <div className="mt-6 sm:mt-8 grid grid-cols-1 xs:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-4 text-[13px] sm:text-[14px] md:grid-cols-3">
+          <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Portal:</span>
-            <span className="font-medium text-foreground">{isOnline ? "Online" : agency.status === "maintenance" ? "Maintenance" : "Offline"}</span>
+            <span className="font-medium text-foreground truncate">{isOnline ? "Online" : agency.status === "maintenance" ? "Maintenance" : "Offline"}</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Monitoring:</span>
-            <span className="font-medium text-foreground">Every {agency.monitoring_interval_minutes ?? 15} minutes</span>
+            <span className="font-medium text-foreground truncate">Every {agency.monitoring_interval_minutes ?? 15} minutes</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
-            <span className="font-medium text-foreground">{agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}</span>
+            <span className="font-medium text-foreground truncate">{agency.uptime_percent ? `${agency.uptime_percent}%` : "99.8%"}</span>
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Response:</span>
             <SpeedDots ms={agency.response_time_ms} showLabel />
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Detected:</span>
-            <span className="font-medium text-foreground">{agency.total_recruitments_detected ?? 0} recruitments</span>
+            <span className="font-medium text-foreground truncate">{agency.total_recruitments_detected ?? 0} recruitments</span>
           </div>
-          <div className="flex gap-2">
+          <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Last update:</span>
-            <span className="font-medium text-foreground">
+            <span className="font-medium text-foreground truncate">
               {agency.last_update ? safeFormatDate(agency.last_update, "None") : "None"}
             </span>
           </div>
@@ -242,11 +242,11 @@ function AgencyProfilePage() {
                   key={job.id}
                   to="/jobs/$jobId"
                   params={{ jobId: job.id }}
-                  className="interactive-card flex flex-col justify-between rounded-[8px] border border-border bg-card p-[24px] cursor-pointer md:flex-row md:items-center"
+                  className="interactive-card flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-[24px] cursor-pointer md:flex-row md:items-center"
                 >
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between mb-4 md:mb-2 md:justify-start md:gap-4">
-                      <div className="font-mono-ui text-[11px] text-muted-foreground uppercase">REF: {job.id}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between mb-4 md:mb-2 md:justify-start md:gap-4 min-w-0">
+                      <div className="font-mono-ui text-[11px] text-muted-foreground uppercase truncate">REF: {job.id}</div>
                       <StatusBadge status={job.status} />
                     </div>
                     <h3 className="text-[17px] font-semibold text-foreground leading-snug">
