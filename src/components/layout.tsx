@@ -199,7 +199,7 @@ export function Nav() {
               </>
             )}
             <a
-              href="https://t.me/RecruitmentAlertNG"
+              href="https://t.me/govalerts_bot"
               target="_blank"
               rel="noreferrer"
               className="hidden xs:inline-flex items-center gap-1.5 sm:gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer shrink-0"
@@ -262,7 +262,7 @@ export function Nav() {
 
             {/* Section 3: Get Alerts CTA */}
             <a
-              href="https://t.me/RecruitmentAlert"
+              href="https://t.me/govalerts_bot"
               target="_blank"
               rel="noreferrer"
               className="flex h-[44px] w-full items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] text-white dark:bg-[#3fb68e] dark:text-[#0c1015] text-[14px] font-semibold"
@@ -306,7 +306,7 @@ export function Footer() {
     {
       heading: "Platform",
       links: [
-        { label: "Official Telegram", to: "https://t.me/RecruitmentAlertNG", external: true },
+        { label: "Official Telegram Bot", to: "https://t.me/govalerts_bot", external: true },
         { label: "Contact Us", to: "/contact" },
       ],
     },

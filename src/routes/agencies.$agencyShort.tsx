@@ -286,7 +286,7 @@ function AgencyProfilePage() {
               <div className="mt-2 text-[14px] text-muted-foreground">Last checked: <span className="font-mono-ui">{safeFormatDateTime(agency.last_checked, "Recently")}</span></div>
               <p className="mt-4 text-[14px] text-muted-foreground">This portal is being monitored. We will alert you when a recruitment appears.</p>
               <a
-                href="https://t.me/RecruitmentAlert"
+                href="https://t.me/govalerts_bot"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-6 inline-flex h-[44px] items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[20px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10 cursor-pointer"
