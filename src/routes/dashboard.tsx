@@ -10,55 +10,6 @@ export const Route = createFileRoute("/dashboard")({
   component: DashboardPage,
 });
 
-// Mock Initial Saved Jobs
-const initialSavedJobs = [
-  {
-    id: "8829-GA",
-    title: "Graduate Trainee Program (Engineering Intake)",
-    agency: "NNPC Limited",
-    agencyShort: "NNPC",
-    status: "urgent" as Status,
-    deadline: new Date(Date.now() + 12 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    detected: "2h ago",
-    positions: "Multiple Openings",
-  },
-  {
-    id: "4120-GA",
-    title: "Superintendent Cadre Recruitment",
-    agency: "Nigeria Customs Service",
-    agencyShort: "NCS",
-    status: "verified" as Status,
-    deadline: new Date(Date.now() + 21 * 86400000).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
-    detected: "6h ago",
-    positions: "Cadre Officers",
-  },
-];
-
-// Mock Notifications
-const initialNotifications = [
-  {
-    id: 1,
-    title: "New Recruitment Detected",
-    body: "Nigeria Customs Service opened applications for superintendent cadre.",
-    time: "2 hours ago",
-    unread: true,
-  },
-  {
-    id: 2,
-    title: "Vetting Complete",
-    body: "NNPC Graduate Trainee portal has been marked 100% verified.",
-    time: "1 day ago",
-    unread: false,
-  },
-  {
-    id: 3,
-    title: "Alert: Portal Issues Reported",
-    body: "Intermittent outages detected on CBN recruitment site.",
-    time: "3 days ago",
-    unread: false,
-  },
-];
-
 function DashboardPage() {
   const navigate = useNavigate();
 
@@ -67,7 +18,7 @@ function DashboardPage() {
   );
   const [savedJobs, setSavedJobs] = useState<any[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [notifications, setNotifications] = useState<Array<{ id: number; title: string; body: string; time: string; unread: boolean }>>([]);
 
   // Telegram State
   const [telegramConnected, setTelegramConnected] = useState(false);

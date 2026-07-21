@@ -195,7 +195,7 @@ function JobDetailsPage() {
           
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold shrink-0">
             <span className="text-muted-foreground">Confidence:</span>
-            <span className="font-mono text-[#0a5c38] dark:text-[#3fb68e] font-bold">{job.confidence_score ?? 98}%</span>
+            <span className="font-mono text-foreground font-bold">{job.confidence_score != null ? `${job.confidence_score}%` : "Not available"}</span>
           </div>
         </div>
 
@@ -233,18 +233,18 @@ function JobDetailsPage() {
         <section>
           <h2 className="text-[17px] font-semibold text-foreground">Verification</h2>
           
-          <div className="mt-6">
+          {job.confidence_score != null ? <div className="mt-6">
             <div className="flex items-center justify-between text-[15px] font-medium max-w-[280px]">
               <span>Verification Score:</span>
-              <span className="font-mono font-bold text-[#0a5c38] dark:text-[#3fb68e]">{job.confidence_score ?? 98}%</span>
+              <span className="font-mono font-bold text-[#0a5c38] dark:text-[#3fb68e]">{job.confidence_score}%</span>
             </div>
             <div className="mt-2 h-2 w-full max-w-[280px] overflow-hidden rounded bg-muted dark:bg-[#242c38]">
               <div 
                 className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]" 
-                style={{ width: `${job.confidence_score ?? 98}%` }}
+                style={{ width: `${job.confidence_score}%` }}
               />
             </div>
-          </div>
+          </div> : <p className="mt-4 text-sm text-muted-foreground">Verification score unavailable.</p>}
 
           <div className="mt-6">
             <div className="text-[13px] font-semibold uppercase tracking-wider text-muted-foreground font-mono">
@@ -271,14 +271,12 @@ function JobDetailsPage() {
           <div className="mt-6 flex flex-col gap-1">
             <div className="flex gap-2 text-[12px] min-w-0">
               <span className="text-muted-foreground shrink-0 font-mono">Source URL:</span>
-              <a href={job.source_url} target="_blank" rel="noreferrer" className="font-mono-ui text-[#0a5c38] dark:text-[#3fb68e] hover:underline break-all truncate">
-                {job.source_url}
-              </a>
+              {job.source_url ? <a href={job.source_url} target="_blank" rel="noreferrer" className="font-mono-ui text-[#0a5c38] dark:text-[#3fb68e] hover:underline break-all truncate">{job.source_url}</a> : <span className="font-mono-ui text-muted-foreground">Not available</span>}
             </div>
             <div className="flex gap-2 text-[11px] text-muted-foreground">
               <span className="font-mono">Last monitored:</span>
               <span className="font-mono-ui">
-                {safeFormatDateTime(job.last_monitored, "Recently")}
+                {safeFormatDateTime(job.last_monitored, "Not available")}
               </span>
             </div>
           </div>
@@ -289,7 +287,7 @@ function JobDetailsPage() {
         {/* AUDIT LOG SECTION */}
         <section>
           <h2 className="text-[17px] font-semibold text-foreground">Detection Timeline</h2>
-          <div className="mt-6 space-y-3">
+          {job.detection_timeline && job.detection_timeline.length > 0 ? <div className="mt-6 space-y-3">
             {job.detection_timeline?.map((log, idx) => {
               const isLast = idx === (job.detection_timeline?.length ?? 0) - 1;
               return (
@@ -304,7 +302,7 @@ function JobDetailsPage() {
                 </div>
               );
             })}
-          </div>
+          </div> : <p className="mt-4 text-sm text-muted-foreground">No detection timeline is available.</p>}
         </section>
 
         <Divider />
@@ -415,10 +413,10 @@ function JobDetailsPage() {
                 {job.agency_acronym}
               </span>
               <span className={`flex items-center gap-1.5 text-[13px] font-medium ${
-                job.portal_status === "online" ? "text-[#0a5c38] dark:text-[#3fb68e]" : job.portal_status === "maintenance" ? "text-[#b45309]" : "text-[#b91c1c]"
+                job.portal_status === "online" ? "text-[#0a5c38] dark:text-[#3fb68e]" : job.portal_status === "maintenance" ? "text-[#b45309]" : job.portal_status === "offline" ? "text-[#b91c1c]" : "text-muted-foreground"
               }`}>
                 <span className="h-2 w-2 rounded-full bg-current" />
-                {job.portal_status === "online" ? "Online" : job.portal_status === "maintenance" ? "Maintenance" : "Offline"}
+                {job.portal_status === "online" ? "Online" : job.portal_status === "maintenance" ? "Maintenance" : job.portal_status === "offline" ? "Offline" : "Unknown"}
               </span>
             </div>
             
@@ -426,23 +424,23 @@ function JobDetailsPage() {
               <div className="flex gap-2">
                 <span className="text-muted-foreground w-28">Last checked:</span>
                 <span className="font-mono">
-                  ↺ {safeFormatTime(job.portal_last_checked, "Recently")}
+                  ↺ {safeFormatTime(job.portal_last_checked, "Not available")}
                 </span>
               </div>
               <div className="flex gap-2">
                 <span className="text-muted-foreground w-28">Response time:</span>
-                <span className="flex items-center gap-1 text-[#0a5c38] dark:text-[#3fb68e]">
-                  {Array.from({ length: job.portal_response_dots ?? 2 }).map((_, i) => (
+                {job.portal_response_dots != null ? <span className="flex items-center gap-1 text-[#0a5c38] dark:text-[#3fb68e]">
+                  {Array.from({ length: job.portal_response_dots }).map((_, i) => (
                     <span key={i}>●</span>
                   ))}
                   <span className="text-foreground ml-1">
                     {job.portal_response_dots === 3 ? "Fast" : job.portal_response_dots === 2 ? "Acceptable" : "Slow"}
                   </span>
-                </span>
+                </span> : <span className="text-muted-foreground">Not available</span>}
               </div>
               <div className="flex gap-2">
                 <span className="text-muted-foreground w-28">Portal uptime:</span>
-                <span className="font-mono">{job.portal_uptime_percent ? `${job.portal_uptime_percent}%` : "99.8%"}</span>
+                <span className="font-mono">{job.portal_uptime_percent != null ? `${job.portal_uptime_percent}%` : "Not available"}</span>
               </div>
             </div>
             

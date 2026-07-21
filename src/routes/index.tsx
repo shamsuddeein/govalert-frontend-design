@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-export type Status = "verified" | "urgent" | "new" | "updating" | "closed" | "no-change" | "warning";
+export type Status = "verified" | "urgent" | "new" | "updating" | "closed" | "no-change" | "warning" | "unknown";
 
 export interface Job {
   id: string;
@@ -24,21 +24,7 @@ export interface Job {
   state: string;
   createdAt: string;
   positions?: string;
-}
-
-// Job Interface
-export interface Job {
-  id: string;
-  agency: string;
-  agencyShort: string;
-  title: string;
-  deadline: string;
-  status: Status;
-  detected: string;
-  category: string;
-  state: string;
-  createdAt: string;
-  positions?: string;
+  officialUrl?: string;
 }
 
 // ─── UI Helper Skeletons & Empty/Error Components ──────────────────────────────
@@ -298,8 +284,17 @@ export function StatusBadge({ status }: { status: Status }) {
         </svg>
       ),
     },
+    unknown: {
+      label: "Unknown",
+      cls: "bg-muted text-muted-foreground border border-border",
+      icon: (
+        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      ),
+    },
   };
-  const s = map[status] || map.verified;
+  const s = map[status] || map.unknown;
   return (
     <span
       className={`inline-flex items-center gap-[4px] rounded-[6px] px-[8px] sm:px-[10px] py-[3px] sm:py-[4px] text-[10px] sm:text-[11px] font-semibold font-sans uppercase tracking-[0.06em] shrink-0 truncate max-w-[110px] sm:max-w-none ${s.cls}`}
@@ -451,29 +446,17 @@ function Hero({
           <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-full lg:max-w-[380px] justify-self-end bg-card border border-border rounded-[8px] p-5 text-left`}>
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[11px] text-[#0a5c38] dark:text-[#3fb68e] tracking-wider font-bold">
-                  LIVE FEED
-                </span>
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
+                <span className="font-mono text-[11px] text-foreground tracking-wider font-bold">
+                  RECENT ACTIVITY
                 </span>
               </div>
-              <span className="font-mono text-[11px] text-muted-foreground">Updated 1m ago</span>
+              <span className="font-mono text-[11px] text-muted-foreground">{liveFeed?.[0]?.time_ago || "Not available"}</span>
             </div>
 
             <div className="border-t border-border/60 my-3" />
 
             <div className="space-y-4">
-              {(liveFeed && liveFeed.length > 0
-                ? liveFeed.slice(0, 4)
-                : [
-                    { agency_name: "NNPC Limited", event_type: "verified" as const, time_ago: "2m ago", agency_acronym: "NNPC" },
-                    { agency_name: "Nigeria Customs Service", event_type: "verified" as const, time_ago: "6m ago", agency_acronym: "NCS" },
-                    { agency_name: "Central Bank of Nigeria", event_type: "updating" as const, time_ago: "3h ago", agency_acronym: "CBN" },
-                    { agency_name: "Nigeria Police Force", event_type: "urgent" as const, time_ago: "4d ago", agency_acronym: "NPF" },
-                  ]
-              ).map((item, idx) => (
+              {liveFeed && liveFeed.length > 0 ? liveFeed.slice(0, 4).map((item, idx) => (
                 <div key={idx} className="flex items-center justify-between border-b border-border/40 pb-3 last:border-0 last:pb-0">
                   <div className="space-y-1">
                     <p className="font-sans text-[13px] font-semibold text-foreground">{item.agency_name} ({item.agency_acronym})</p>
@@ -481,13 +464,11 @@ function Hero({
                   </div>
                   <span className="font-mono text-[11px] text-muted-foreground self-start pt-1">{item.time_ago}</span>
                 </div>
-              ))}
+              )) : <p className="text-sm text-muted-foreground">Recent activity is unavailable.</p>}
             </div>
 
             <div className="border-t border-border/60 mt-4 pt-3 flex items-center justify-between">
-              <span className="font-mono text-[10px] text-muted-foreground">
-                41 portals monitored &middot; 15m cycle
-              </span>
+              <span className="font-mono text-[10px] text-muted-foreground">Activity is shown when monitoring data is available.</span>
             </div>
           </div>
 
@@ -907,9 +888,9 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
 
               const lastCheckedText = a.last_checked
                 ? new Date(a.last_checked).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                : "Recently";
+                : "Not available";
 
-              const vettedScore = a.vetted_score ?? 90;
+              const vettedScore = a.vetted_score;
 
               return (
                 <div
@@ -925,7 +906,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                         </span>
                       </div>
                       <div className="shrink-0">
-                        <VettedArc score={vettedScore} />
+                        {vettedScore != null ? <VettedArc score={vettedScore} /> : <span className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider">Unavailable</span>}
                       </div>
                     </div>
                     
@@ -935,10 +916,10 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       {/* Status Row */}
                       <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium min-w-0">
                         <span className={`size-2 rounded-full shrink-0 ${
-                          isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
+                          isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : a.status === "offline" ? "bg-[#b91c1c]" : "bg-muted-foreground"
                         }`} />
-                        <span className="text-foreground truncate max-w-[120px] sm:max-w-none min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}>
-                          {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
+                        <span className="text-foreground truncate max-w-[120px] sm:max-w-none min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}>
+                          {isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}
                         </span>
                       </div>
                     </div>
@@ -960,12 +941,12 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       </div>
                       <div>
                         <span className="block text-muted-foreground text-[11px]">Verification</span>
-                        <div className="mt-1 h-1.5 w-[70px] sm:w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
+                        {vettedScore != null ? <div className="mt-1 h-1.5 w-[70px] sm:w-[80px] bg-muted dark:bg-[#242c38] rounded-full overflow-hidden">
                           <div
                             className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]"
                             style={{ width: `${vettedScore}%` }}
                           />
-                        </div>
+                        </div> : <span className="text-muted-foreground">Not available</span>}
                       </div>
                     </div>
                   </div>

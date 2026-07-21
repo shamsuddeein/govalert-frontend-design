@@ -4,7 +4,6 @@ import { Nav, Footer } from "../components/layout";
 import { StatusBadge, JobsEmptyState, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
 import { SpeedDots } from "../lib/speedIndicator";
-import { agenciesData } from "../lib/agenciesData";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 import { ExternalLink } from "lucide-react";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
@@ -28,7 +27,12 @@ function AgencyProfilePage() {
   const fetchAgencyData = async () => {
     setLoading(true);
     setError(null);
-    const targetKey = (!agencyShort || agencyShort === "undefined") ? "NNPC" : agencyShort;
+    const targetKey = agencyShort;
+    if (!targetKey || targetKey === "undefined") {
+      setError("This agency profile is unavailable.");
+      setLoading(false);
+      return;
+    }
     try {
       const agencyData = await api.getAgency(targetKey);
       if (agencyData) {
@@ -52,52 +56,11 @@ function AgencyProfilePage() {
           setActiveJobs([]);
         }
       } else {
-        const found = agenciesData.find(
-          (a) => a.short.toLowerCase() === targetKey.toLowerCase()
-        );
-        if (found) {
-          setAgency({
-            id: 1,
-            name: found.name,
-            acronym: found.short,
-            slug: found.short.toLowerCase(),
-            description: found.description,
-            category: found.category,
-            portal_url: found.recruitmentPortal,
-            status: found.portalStatus === "closed" ? "offline" : found.portalStatus === "warning" ? "maintenance" : "online",
-            last_checked: found.lastChecked,
-            response_time_ms: 120,
-            jobs_available: found.activeCount,
-            vetted_score: found.trustScore,
-            uptime_percent: 100,
-            total_recruitments_detected: found.historyCount,
-            last_10_checks: [true, true, true],
-            total_checks: 3,
-          });
-        } else {
-          // Dynamic fallback for any seeded or custom agency
-          setAgency({
-            id: 99,
-            name: `${targetKey.toUpperCase()} — Federal Agency`,
-            acronym: targetKey.toUpperCase(),
-            slug: targetKey.toLowerCase(),
-            description: `Official registry profile for ${targetKey.toUpperCase()}. Continuous portal uptime and recruitment verification monitored by RecruitmentAlert.`,
-            category: "Federal Ministry",
-            portal_url: `https://${targetKey.toLowerCase()}.gov.ng`,
-            status: "online",
-            last_checked: "5 mins ago",
-            response_time_ms: 180,
-            jobs_available: 0,
-            vetted_score: 95,
-            uptime_percent: 100,
-            total_recruitments_detected: 3,
-            last_10_checks: [true, true],
-            total_checks: 2,
-          });
-        }
+        setError("This agency profile could not be retrieved from the monitoring service.");
       }
     } catch (err: any) {
       console.warn("Error fetching agency profile:", err);
+      setError("This agency profile could not be retrieved from the monitoring service.");
     } finally {
       setLoading(false);
     }
@@ -162,6 +125,7 @@ function AgencyProfilePage() {
   }
 
   const isOnline = agency.status === "online";
+  const portalStatusLabel = agency.status === "online" ? "Online" : agency.status === "maintenance" ? "Maintenance" : agency.status === "offline" ? "Offline" : "Unknown";
   const portalUrlDisplay = agency.portal_url ? agency.portal_url.replace(/^https?:\/\//, "") : "";
 
   const totalChecksCount = agency.total_checks ?? (agency.last_10_checks ? agency.last_10_checks.length : 0);
@@ -194,10 +158,10 @@ function AgencyProfilePage() {
             {agency.acronym}
           </span>
           <span className={`flex items-center gap-1.5 text-[14px] font-medium ${
-            isOnline ? "text-[#0a5c38] dark:text-[#3fb68e]" : agency.status === "maintenance" ? "text-[#b45309]" : "text-[#b91c1c]"
+            isOnline ? "text-[#0a5c38] dark:text-[#3fb68e]" : agency.status === "maintenance" ? "text-[#b45309]" : agency.status === "offline" ? "text-[#b91c1c]" : "text-muted-foreground"
           }`}>
-            <span className="h-2 w-2 rounded-full bg-current animate-pulse" />
-            {isOnline ? "Online" : agency.status === "maintenance" ? "Maintenance" : "Offline"}
+            <span className="h-2 w-2 rounded-full bg-current" />
+            {portalStatusLabel}
           </span>
         </div>
 
@@ -212,11 +176,11 @@ function AgencyProfilePage() {
         <div className="mt-6 sm:mt-8 grid grid-cols-1 xs:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-4 text-[13px] sm:text-[14px] md:grid-cols-3">
           <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Portal:</span>
-            <span className="font-medium text-foreground truncate">{isOnline ? "Online" : agency.status === "maintenance" ? "Maintenance" : "Offline"}</span>
+            <span className="font-medium text-foreground truncate">{portalStatusLabel}</span>
           </div>
           <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Monitoring:</span>
-            <span className="font-medium text-foreground truncate">Every {agency.monitoring_interval_minutes ?? 15} minutes</span>
+            <span className="font-medium text-foreground truncate">{agency.monitoring_interval_minutes ? `Every ${agency.monitoring_interval_minutes} minutes` : "Not available"}</span>
           </div>
           <div className="flex gap-2 min-w-0">
             <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
@@ -283,8 +247,8 @@ function AgencyProfilePage() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
               </svg>
               <h3 className="text-[17px] font-semibold text-foreground">No active recruitment detected</h3>
-              <div className="mt-2 text-[14px] text-muted-foreground">Last checked: <span className="font-mono-ui">{safeFormatDateTime(agency.last_checked, "Recently")}</span></div>
-              <p className="mt-4 text-[14px] text-muted-foreground">This portal is being monitored. We will alert you when a recruitment appears.</p>
+              <div className="mt-2 text-[14px] text-muted-foreground">Last checked: <span className="font-mono-ui">{safeFormatDateTime(agency.last_checked, "Not available")}</span></div>
+              <p className="mt-4 text-[14px] text-muted-foreground">No active recruitment is currently available from this source.</p>
               <a
                 href="https://t.me/govalerts_bot"
                 target="_blank"
@@ -368,7 +332,7 @@ function AgencyProfilePage() {
                     )}
                   </>
                 ) : (
-                  "Never offline"
+                  "Not available"
                 )}
               </div>
             </div>
@@ -377,7 +341,9 @@ function AgencyProfilePage() {
           <div className="mt-4 pt-3 border-t border-border/50 text-[12px] text-muted-foreground font-mono-ui flex items-center gap-1.5">
             <span>ℹ️</span>
             <span>
-              {totalChecksCount < 20
+              {totalChecksCount === 0
+                ? "Monitoring history is not available."
+                : totalChecksCount < 20
                 ? `Real-time monitoring active — based on initial sample of ${totalChecksCount} check${totalChecksCount === 1 ? '' : 's'}. History builds automatically.`
                 : `Real-time monitoring active — metrics computed across ${totalChecksCount} checks.`}
             </span>
@@ -392,7 +358,7 @@ function AgencyProfilePage() {
           <div className="mt-6 grid grid-cols-1 gap-y-4 sm:grid-cols-2 text-[14px]">
             <div className="flex gap-2">
               <span className="text-muted-foreground w-48 shrink-0">Average confidence score:</span>
-              <span className="font-semibold text-foreground">{agency.avg_confidence_score ?? 95}%</span>
+              <span className="font-semibold text-foreground">{agency.avg_confidence_score != null ? `${agency.avg_confidence_score}%` : "Not available"}</span>
             </div>
             <div className="flex gap-2">
               <span className="text-muted-foreground w-48 shrink-0">Total announcements verified:</span>

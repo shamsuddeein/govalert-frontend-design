@@ -3,7 +3,6 @@ import { useState, useMemo, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiAgency } from "../lib/api";
-import { agenciesData } from "../lib/agenciesData";
 import { safeFormatTime } from "../lib/formatDate";
 import { JobsErrorState, JobsEmptyState } from "./index";
 
@@ -63,27 +62,14 @@ function AgenciesIndexPage() {
     setError(null);
     try {
       const res = await api.getAgencies();
-      if (res && res.results && res.results.length > 0) {
+      if (res) {
         setAgencies(res.results);
       } else {
-        const fallback: ApiAgency[] = agenciesData.map((a, idx) => ({
-          id: idx + 1,
-          name: a.name,
-          acronym: a.short,
-          slug: a.short.toLowerCase(),
-          description: a.description,
-          category: a.category,
-          portal_url: a.recruitmentPortal,
-          status: a.portalStatus === "closed" ? "offline" : a.portalStatus === "warning" ? "maintenance" : "online",
-          last_checked: a.lastChecked,
-          response_time_ms: 120,
-          jobs_available: a.activeCount,
-          vetted_score: a.trustScore,
-        }));
-        setAgencies(fallback);
+        setError("The agency directory is currently unavailable.");
       }
     } catch (err: any) {
       console.warn("Error fetching agencies:", err);
+      setError("The agency directory is currently unavailable.");
     } finally {
       setLoading(false);
     }
