@@ -371,7 +371,7 @@ function Hero({
                 Browse Jobs
               </button>
               <a
-                href="https://t.me/govalerts_bot"
+                href="https://t.me/govalerts_bot?start=general"
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex h-[44px] items-center gap-2 rounded-[8px] border border-border bg-card text-[#0a5c38] dark:text-[#3fb68e] hover:bg-muted px-6 text-sm font-semibold transition-transform active:scale-[0.98] cursor-pointer"
@@ -1157,7 +1157,7 @@ function TelegramCTA() {
         </p>
         <div className="pt-2">
           <a
-            href="https://t.me/govalerts_bot"
+            href="https://t.me/govalerts_bot?start=general"
             target="_blank"
             rel="noreferrer"
             className="inline-flex h-[44px] items-center justify-center rounded-[8px] bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/95 transition-colors cursor-pointer"
