@@ -13,6 +13,8 @@ import {
   Sparkles,
   Pencil,
   Trash2,
+  Send,
+  Radio,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -57,6 +59,7 @@ function AdminAlertsComponent() {
   const [loading, setLoading] = useState<boolean>(true);
   const [editingAlert, setEditingAlert] = useState<AdminAlert | null>(null);
   const [deletingAlert, setDeletingAlert] = useState<AdminAlert | null>(null);
+  const [showBroadcastModal, setShowBroadcastModal] = useState<boolean>(false);
 
   // Load stats & queue alerts
   const loadStats = async () => {
@@ -92,7 +95,7 @@ function AdminAlertsComponent() {
 
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans antialiased">
-      {/* Page Title */}
+      {/* Page Title & Broadcast Action */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border pb-5">
         <div>
           <h1 className="text-2xl font-bold font-sans tracking-tight text-foreground flex items-center gap-2.5">
@@ -103,6 +106,14 @@ function AdminAlertsComponent() {
             Review, edit, publish, or delete recruitment notice posts across all statuses.
           </p>
         </div>
+
+        <button
+          onClick={() => setShowBroadcastModal(true)}
+          className="px-4 py-2.5 bg-primary text-primary-foreground font-semibold rounded-[8px] text-xs flex items-center gap-2 shadow-sm hover:bg-primary/90 transition-all cursor-pointer self-start md:self-auto"
+        >
+          <Radio className="h-4 w-4 animate-pulse text-amber-300" />
+          <span>Broadcast to All Subscribers</span>
+        </button>
       </div>
 
       {/* 1. Stat Cards Header */}
@@ -235,6 +246,11 @@ function AdminAlertsComponent() {
           onClose={() => setDeletingAlert(null)}
           onDeleted={() => handleRefresh()}
         />
+      )}
+
+      {/* Broadcast Announcement Modal */}
+      {showBroadcastModal && (
+        <BroadcastModal onClose={() => setShowBroadcastModal(false)} />
       )}
     </div>
   );
@@ -872,6 +888,99 @@ function DeleteAlertConfirmModal({
             {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete Permanently"}
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Broadcast Announcement Modal ────────────────────────────────────────────────
+
+function BroadcastModal({ onClose }: { onClose: () => void }) {
+  const [subject, setSubject] = useState("📢 RecruitmentAlert Announcement");
+  const [text, setText] = useState("");
+  const [sending, setSending] = useState(false);
+
+  const handleSend = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!text.trim()) {
+      toast.error("Please enter a message text before sending.");
+      return;
+    }
+    setSending(true);
+    try {
+      const res = await adminApi.sendBroadcast(text.trim(), subject.trim());
+      toast.success(
+        `Broadcast delivered! ${res.total_delivered} total subscribers notified (${res.telegram_recipients_count} Telegram, ${res.email_recipients_count} Email).`
+      );
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to send broadcast.");
+    } finally {
+      setSending(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-card border border-primary/30 rounded-[12px] p-6 max-w-lg w-full space-y-4 shadow-xl text-foreground font-sans">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h2 className="text-base font-bold flex items-center gap-2 text-primary">
+            <Radio className="h-5 w-5 text-amber-500 animate-pulse" />
+            Send Broadcast Announcement
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground text-sm font-bold cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        <p className="text-xs text-muted-foreground font-sans">
+          This message will be immediately dispatched to **all active Telegram Bot subscribers**, **registered Web users**, and **Keyword search subscribers**.
+        </p>
+
+        <form onSubmit={handleSend} className="space-y-4 text-xs font-sans">
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Email Subject Line (Optional)</label>
+            <input
+              type="text"
+              value={subject}
+              onChange={(e) => setSubject(e.target.value)}
+              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Broadcast Message Content</label>
+            <textarea
+              rows={5}
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder="Write your recruitment alert announcement or update here..."
+              className="w-full bg-background border border-border rounded-[6px] p-3 text-foreground font-sans text-xs focus:outline-none focus:border-primary leading-relaxed"
+              required
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-border rounded-[6px] hover:bg-muted text-muted-foreground text-xs font-semibold cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={sending || !text.trim()}
+              className="px-5 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-[6px] text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              {sending ? <Loader2 className="h-4 w-4 animate-spin" /> : <><Send className="h-3.5 w-3.5" /> Send Broadcast Now</>}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

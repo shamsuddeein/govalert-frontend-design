@@ -444,6 +444,22 @@ export const adminApi = {
     }) as Promise<{ detail: string; id: number }>;
   },
 
+  sendBroadcast: async (
+    text: string,
+    subject?: string
+  ): Promise<{ status: string; telegram_recipients_count: number; email_recipients_count: number; total_delivered: number }> => {
+    return adminRequest<{
+      status: string;
+      telegram_recipients_count: number;
+      email_recipients_count: number;
+      total_delivered: number;
+    }>("/broadcast/", {
+      method: "POST",
+      body: JSON.stringify({ text, subject }),
+    });
+  },
+
+
 
   // Agencies
   getAgencies: async (params?: { category?: string; search?: string }): Promise<AdminAgency[]> => {
