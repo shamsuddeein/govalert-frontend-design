@@ -349,4 +349,26 @@ export const agenciesData: Agency[] = [
       },
     ],
   },
+  {
+    short: "INEC",
+    name: "Independent National Electoral Commission",
+    category: "Elections & Civil Service",
+    portalStatus: "online",
+    lastChecked: "Just now",
+    description:
+      "The Independent National Electoral Commission (INEC) is the electoral management body responsible for organizing elections in Nigeria.",
+    activeCount: 1,
+    historyCount: 5,
+    officialWebsite: "https://inecnigeria.org",
+    recruitmentPortal: "https://recruitment.inecnigeria.org",
+    trustScore: 98,
+    history: [
+      {
+        year: "2024",
+        title: "Ad-hoc Staff & Election Registration",
+        cadres: ["Registration Officers", "Collation Officers", "Supervisory Officers"],
+        status: "completed",
+      },
+    ],
+  },
 ];
