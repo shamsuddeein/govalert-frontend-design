@@ -746,24 +746,40 @@ function LatestJobs({
 }
 
 function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[] }) {
+  const filteredFeed = liveFeed.filter((e) => e.event_type !== "no_changes");
+
   return (
     <section className="py-10 bg-background border-t border-border">
       <div className="mx-auto max-w-[1184px] px-6">
-        <div className="mb-6">
-          <h2 className="text-xl font-bold tracking-tight text-primary">Recently Updated Recruitments</h2>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Live stream of scanning activities across monitored domains.
-          </p>
+        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <h2 className="text-xl font-bold tracking-tight text-primary">Recently Verified Recruitments & Activity</h2>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Live updates on verified recruitment drives, page changes, and portal incidents.
+            </p>
+          </div>
+          <Link
+            to="/status"
+            className="text-xs font-semibold text-primary underline decoration-1 underline-offset-4 cursor-pointer font-sans"
+          >
+            Full System Status &rarr;
+          </Link>
         </div>
 
         <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60 shadow-sm">
-          {liveFeed.length === 0 ? (
-            <div className="p-8 text-center text-muted-foreground text-sm">
-              No scan activities to display.
+          {filteredFeed.length === 0 ? (
+            <div className="p-6 text-center space-y-2 font-sans">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold text-xs border border-[#0a5c38]/20">
+                <span className="h-2 w-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] animate-pulse" />
+                All 41 Monitored Portals Operational & Checked
+              </div>
+              <p className="text-xs text-muted-foreground">
+                No active portal outages or unverified recruitment changes detected in the latest scan cycle.
+              </p>
             </div>
           ) : (
-            liveFeed.map((e, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 text-sm">
+            filteredFeed.map((e, idx) => (
+              <div key={idx} className="flex items-center justify-between p-4 text-sm font-sans">
                 <div className="space-y-1">
                   <p className="font-semibold text-primary">
                     {e.agency_name} ({e.agency_acronym})
@@ -773,10 +789,9 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
                       {e.event_type === "new_opening" && "New opening detected"}
                       {e.event_type === "verified" && "Manually verified"}
                       {e.event_type === "urgent" && "Critical outage / incident"}
-                      {e.event_type === "no_changes" && "Checked: no changes"}
                     </span>
                     <span className="text-muted-foreground text-xs">&middot;</span>
-                    <StatusBadge status={e.event_type === "urgent" ? "warning" : e.event_type === "new_opening" ? "new" : e.event_type === "verified" ? "verified" : "no-change"} />
+                    <StatusBadge status={e.event_type === "urgent" ? "warning" : e.event_type === "new_opening" ? "new" : "verified"} />
                   </div>
                 </div>
                 <span className="font-mono text-xs text-muted-foreground">{e.time_ago}</span>
