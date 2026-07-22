@@ -11,6 +11,8 @@ import {
   ChevronDown,
   ChevronUp,
   Sparkles,
+  Pencil,
+  Trash2,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -24,7 +26,7 @@ export const Route = createFileRoute("/admin/alerts")({
   component: AdminAlertsComponent,
 });
 
-type TabStatus = "PENDING" | "APPROVED" | "REJECTED" | "HELD";
+type TabStatus = "PENDING" | "APPROVED" | "REJECTED" | "HELD" | "SUPERSEDED";
 
 function formatAgeHours(hours: number): string {
   if (!hours || hours <= 0) return "0m";
@@ -53,6 +55,8 @@ function AdminAlertsComponent() {
   const [stats, setStats] = useState<AdminAlertStats | null>(null);
   const [alerts, setAlerts] = useState<AdminAlert[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [editingAlert, setEditingAlert] = useState<AdminAlert | null>(null);
+  const [deletingAlert, setDeletingAlert] = useState<AdminAlert | null>(null);
 
   // Load stats & queue alerts
   const loadStats = async () => {
@@ -81,6 +85,11 @@ function AdminAlertsComponent() {
     loadAlerts(activeTab);
   }, [activeTab]);
 
+  const handleRefresh = () => {
+    loadStats();
+    loadAlerts(activeTab);
+  };
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto font-sans antialiased">
       {/* Page Title */}
@@ -88,10 +97,10 @@ function AdminAlertsComponent() {
         <div>
           <h1 className="text-2xl font-bold font-sans tracking-tight text-foreground flex items-center gap-2.5">
             <ShieldAlert className="h-6 w-6 text-[color:var(--warning)]" />
-            Alert Review Queue
+            Alert Review & Post Management
           </h1>
           <p className="text-xs text-muted-foreground mt-1 font-sans">
-            Review incoming recruitment events before public dispatch. Approved items are exposed to Telegram and the Public API.
+            Review, edit, publish, or delete recruitment notice posts across all statuses.
           </p>
         </div>
       </div>
@@ -145,7 +154,7 @@ function AdminAlertsComponent() {
 
       {/* 2. Filter Tabs */}
       <div className="flex items-center gap-2 border-b border-border pb-2 overflow-x-auto">
-        {(["PENDING", "APPROVED", "REJECTED", "HELD"] as TabStatus[]).map((tab) => {
+        {(["PENDING", "APPROVED", "REJECTED", "HELD", "SUPERSEDED"] as TabStatus[]).map((tab) => {
           const isActive = activeTab === tab;
           return (
             <button
@@ -178,7 +187,6 @@ function AdminAlertsComponent() {
       ) : activeTab === "PENDING" ? (
         /* 3. Pending Queue Full Cards View */
         alerts.length === 0 ? (
-          /* 5. Empty State for Pending Queue */
           <div className="bg-card border border-border rounded-[8px] p-12 text-center space-y-3 my-8 shadow-sm">
             <div className="inline-flex items-center justify-center h-12 w-12 rounded-full bg-[#0a5c38]/10 border border-[#0a5c38]/20 text-[#0a5c38] dark:text-[#3fb68e]">
               <CheckCircle2 className="h-6 w-6" />
@@ -194,17 +202,39 @@ function AdminAlertsComponent() {
               <PendingAlertCard
                 key={alert.id}
                 alert={alert}
-                onActionSuccess={(action, alertId) => {
-                  setAlerts((prev) => prev.filter((a) => a.id !== alertId));
-                  loadStats();
-                }}
+                onActionSuccess={() => handleRefresh()}
+                onEdit={(a) => setEditingAlert(a)}
+                onDelete={(a) => setDeletingAlert(a)}
               />
             ))}
           </div>
         )
       ) : (
-        /* 4. Compact Table View for Approved/Rejected/Held */
-        <CompactAlertsTable alerts={alerts} status={activeTab} />
+        /* 4. Compact Table View for Approved/Rejected/Held/Superseded */
+        <CompactAlertsTable
+          alerts={alerts}
+          status={activeTab}
+          onEdit={(a) => setEditingAlert(a)}
+          onDelete={(a) => setDeletingAlert(a)}
+        />
+      )}
+
+      {/* Edit Modal */}
+      {editingAlert && (
+        <EditAlertModal
+          alert={editingAlert}
+          onClose={() => setEditingAlert(null)}
+          onSaved={() => handleRefresh()}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deletingAlert && (
+        <DeleteAlertConfirmModal
+          alert={deletingAlert}
+          onClose={() => setDeletingAlert(null)}
+          onDeleted={() => handleRefresh()}
+        />
       )}
     </div>
   );
@@ -215,9 +245,13 @@ function AdminAlertsComponent() {
 function PendingAlertCard({
   alert,
   onActionSuccess,
+  onEdit,
+  onDelete,
 }: {
   alert: AdminAlert;
   onActionSuccess: (action: "approve" | "reject" | "hold", id: number) => void;
+  onEdit: (alert: AdminAlert) => void;
+  onDelete: (alert: AdminAlert) => void;
 }) {
   const [notes, setNotes] = useState(alert.admin_notes || "");
   const [showMoreExcerpt, setShowMoreExcerpt] = useState(false);
@@ -259,7 +293,7 @@ function PendingAlertCard({
 
   const handleReject = async () => {
     if (!notes.trim()) {
-      toast.error("Explanation notes are required when rejecting an alert.");
+      toast.error("Please add a note in the Admin Audit Notes field explaining why this alert is being rejected.");
       return;
     }
     setActionInFlight("reject");
@@ -275,214 +309,220 @@ function PendingAlertCard({
     }
   };
 
-  const excerptText = alert.content_excerpt || "";
-  const shouldTruncate = excerptText.length > 300;
-  const displayedExcerpt =
-    shouldTruncate && !showMoreExcerpt ? `${excerptText.slice(0, 300)}...` : excerptText;
-
   return (
     <div
       className={cn(
-        "bg-card border border-border rounded-[8px] p-6 space-y-5 shadow-sm transition-all duration-300 font-sans",
-        isFadingOut && "opacity-0 scale-95 pointer-events-none"
+        "bg-card border border-border rounded-[10px] p-6 space-y-6 shadow-sm transition-all duration-300 font-sans",
+        isFadingOut ? "opacity-0 scale-95" : "opacity-100 scale-100"
       )}
     >
-      {/* Top Header: Chips */}
-      <div className="flex flex-wrap items-center justify-between gap-3 border-b border-border pb-3">
-        <div className="flex items-center gap-2">
-          <span className="font-mono text-xs font-bold px-2.5 py-1 rounded-[6px] bg-muted text-foreground border border-border">
-            {alert.agency_acronym || (alert.agency ? alert.agency.acronym : "AGENCY")}
-          </span>
-          <span className="text-xs text-muted-foreground font-sans">
-            {alert.agency_name || (alert.agency ? alert.agency.name : "")}
-          </span>
-        </div>
+      {/* Card Header */}
+      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 border-b border-border pb-4">
+        <div className="space-y-1.5 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-mono text-xs font-bold text-muted-foreground bg-muted px-2 py-0.5 rounded-[4px]">
+              #{alert.id}
+            </span>
+            <span className="font-mono text-xs font-bold text-primary bg-primary/10 border border-primary/20 px-2 py-0.5 rounded-[4px]">
+              {alert.agency_acronym || alert.agency?.acronym || "GOV"}
+            </span>
+            <span className="text-xs text-muted-foreground font-sans">
+              Detected {timeAgo(alert.created_at)}
+            </span>
+          </div>
 
-        {/* Standardized AI Badge */}
-        <div
-          className={cn(
-            "font-sans text-[11px] font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-[6px] border flex items-center gap-1.5",
-            aiClass === "REAL"
-              ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30"
-              : aiClass === "FAKE"
-              ? "bg-destructive/10 text-destructive border-destructive/30"
-              : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30"
-          )}
-        >
-          <Sparkles className="h-3 w-3" />
-          <span>
-            AI: {aiClass} ({confidence}%)
-          </span>
-        </div>
-      </div>
+          <h2 className="text-lg font-bold text-foreground font-sans tracking-tight">
+            {alert.title}
+          </h2>
 
-      {/* Main Alert Info */}
-      <div className="space-y-2">
-        <h2 className="text-lg font-bold text-foreground font-sans tracking-tight">{alert.title}</h2>
-        {alert.positions && (
-          <p className="text-xs text-foreground font-sans bg-muted/60 px-3 py-1.5 rounded-[6px] border border-border inline-block">
-            Roles: {alert.positions}
-          </p>
-        )}
-        {alert.source_url && (
-          <div className="pt-1">
+          <div className="flex items-center gap-2 text-xs font-mono text-muted-foreground">
+            <span>Portal: {alert.portal_name || alert.portal?.name || alert.agency_name || "Official Portal"}</span>
+            <span>•</span>
             <a
               href={alert.source_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs text-primary hover:underline font-mono"
+              className="text-primary hover:underline flex items-center gap-1 inline-flex"
             >
-              <span>Source: {alert.source_url}</span>
+              <span>{alert.source_url}</span>
               <ExternalLink className="h-3 w-3" />
             </a>
           </div>
-        )}
-      </div>
-
-      {/* Trust Score Progress Bar */}
-      <div className="space-y-1.5 bg-muted/30 p-3.5 rounded-[6px] border border-border">
-        <div className="flex justify-between items-center text-xs font-sans">
-          <span className="text-muted-foreground font-semibold">Trust Score:</span>
-          <span
-            className={cn(
-              "font-mono font-bold",
-              trustScore >= 70
-                ? "text-[#0a5c38] dark:text-[#3fb68e]"
-                : trustScore >= 50
-                ? "text-[color:var(--warning)]"
-                : "text-destructive"
-            )}
-          >
-            {trustScore}/100
-          </span>
         </div>
-        <div className="w-full bg-border h-2 rounded-full overflow-hidden">
+
+        {/* AI & Trust Badges */}
+        <div className="flex flex-row md:flex-col items-end justify-between md:justify-start gap-2">
+          {/* AI Classification Badge */}
           <div
             className={cn(
-              "h-full transition-all duration-500 rounded-full",
-              trustScore >= 70 ? "bg-[#0a5c38]" : trustScore >= 50 ? "bg-[color:var(--warning)]" : "bg-destructive"
+              "px-3 py-1 rounded-[6px] text-xs font-semibold font-sans uppercase tracking-wider flex items-center gap-1.5 border",
+              aiClass === "REAL"
+                ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30"
+                : aiClass === "FAKE"
+                ? "bg-destructive/10 text-destructive border-destructive/30"
+                : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30"
             )}
-            style={{ width: `${Math.min(Math.max(trustScore, 0), 100)}%` }}
-          />
+          >
+            <span>{aiClass}</span>
+            <span className="font-mono text-[11px]">({confidence}%)</span>
+          </div>
+
+          {/* Trust Score Indicator */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-muted-foreground font-sans font-medium">Trust Score:</span>
+            <span
+              className={cn(
+                "font-mono text-sm font-bold px-2 py-0.5 rounded-[4px]",
+                trustScore >= 70
+                  ? "text-[#0a5c38] dark:text-[#3fb68e] bg-[#0a5c38]/10"
+                  : trustScore >= 50
+                  ? "text-[color:var(--warning)] bg-[color:var(--warning)]/10"
+                  : "text-destructive bg-destructive/10"
+              )}
+            >
+              {trustScore}/100
+            </span>
+          </div>
         </div>
       </div>
 
-      {/* Red Flags Section */}
-      <div className="space-y-1.5 text-xs font-sans">
-        <span className="font-semibold text-muted-foreground">Red Flags:</span>
-        {alert.ai_red_flags && alert.ai_red_flags.length > 0 ? (
-          <div className="space-y-1">
-            {alert.ai_red_flags.map((flag, idx) => (
-              <div key={idx} className="flex items-center gap-1.5 text-[color:var(--warning)] bg-[color:var(--warning)]/10 border border-[color:var(--warning)]/20 px-2.5 py-1 rounded-[6px]">
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
-                <span>{flag}</span>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-[#0a5c38] dark:text-[#3fb68e] bg-[#0a5c38]/10 border border-[#0a5c38]/20 px-2.5 py-1 rounded-[6px] inline-block font-sans text-xs font-semibold">
-            ✓ No red flags detected
-          </div>
-        )}
+      {/* Extracted Details Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-muted/30 border border-border rounded-[8px] p-4 font-sans text-xs">
+        <div>
+          <span className="font-semibold text-muted-foreground block mb-1">Extracted Positions:</span>
+          <p className="text-foreground font-medium font-sans">{alert.positions || "Not specified"}</p>
+        </div>
+        <div>
+          <span className="font-semibold text-muted-foreground block mb-1">Application Deadline:</span>
+          <p className="text-foreground font-mono font-medium">{alert.deadline || "Not specified"}</p>
+        </div>
+        <div className="md:col-span-2 border-t border-border/60 pt-3 mt-1">
+          <span className="font-semibold text-muted-foreground block mb-1">Requirements Extracted:</span>
+          <p className="text-foreground whitespace-pre-wrap font-sans">{alert.requirements || "Check portal website for details"}</p>
+        </div>
       </div>
 
-      {/* Content Excerpt */}
-      {excerptText && (
-        <div className="space-y-1.5 bg-muted/40 p-3.5 rounded-[6px] border border-border">
-          <span className="block text-xs font-semibold text-muted-foreground font-sans">Content Excerpt:</span>
-          <p className="text-xs text-foreground leading-relaxed font-sans italic whitespace-pre-wrap">
-            "{displayedExcerpt}"
-          </p>
-          {shouldTruncate && (
-            <button
-              onClick={() => setShowMoreExcerpt(!showMoreExcerpt)}
-              className="text-xs text-primary hover:underline font-sans font-semibold flex items-center gap-1 pt-1 cursor-pointer"
-            >
-              <span>{showMoreExcerpt ? "Show less" : "Show more"}</span>
-              {showMoreExcerpt ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
-            </button>
+      {/* Content Excerpt Accordion */}
+      {alert.content_excerpt && (
+        <div className="border border-border/70 rounded-[6px] overflow-hidden bg-background font-sans text-xs">
+          <button
+            onClick={() => setShowMoreExcerpt(!showMoreExcerpt)}
+            className="w-full px-4 py-2.5 flex items-center justify-between text-left font-sans font-semibold text-muted-foreground hover:bg-muted/40 transition-colors cursor-pointer"
+          >
+            <span className="flex items-center gap-2">
+              <span>Raw Scraped Content Excerpt</span>
+              <span className="font-mono text-[11px] text-muted-foreground">({alert.content_excerpt.length} chars)</span>
+            </span>
+            {showMoreExcerpt ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+          </button>
+
+          {showMoreExcerpt && (
+            <div className="px-4 py-3 border-t border-border bg-muted/20 font-mono text-[11px] leading-relaxed text-muted-foreground whitespace-pre-wrap max-h-60 overflow-y-auto">
+              {alert.content_excerpt}
+            </div>
           )}
         </div>
       )}
 
-      {/* Metadata */}
-      <div className="flex flex-wrap items-center justify-between text-xs text-muted-foreground font-sans pt-1">
-        <div>Detected: <span className="font-mono text-muted-foreground">{timeAgo(alert.created_at)}</span></div>
-        <div>
-          Portal: {alert.portal_name || (alert.portal ? alert.portal.name : "Portal")}{" "}
-          <span className="font-mono text-muted-foreground">({alert.portal_url || (alert.portal ? alert.portal.url : "")})</span>
-        </div>
-      </div>
-
-      {/* Notes & Actions */}
-      <div className="space-y-3 pt-2 border-t border-border">
-        <div className="space-y-1 font-sans">
-          <label className="block text-xs font-semibold text-muted-foreground">
-            Admin Notes (Optional for Hold/Approve; Required for Reject):
+      {/* Admin Review Notes & Action Toolbar */}
+      <div className="space-y-4 pt-2">
+        <div className="space-y-1.5">
+          <label className="text-xs font-semibold text-muted-foreground font-sans block">
+            Admin Audit Notes (Optional for Approve/Hold, Mandatory for Reject):
           </label>
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            placeholder="Add explanation notes or review rationale..."
+            placeholder="Add internal notes or reasoning for audit log..."
             rows={2}
-            className="w-full px-3 py-2 bg-background border border-border rounded-[6px] text-xs text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary transition-colors font-sans"
-            disabled={actionInFlight !== null}
+            className="w-full bg-background border border-border rounded-[6px] p-3 text-xs font-sans text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:border-primary"
           />
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-wrap items-center justify-end gap-3 pt-1 font-sans">
-          {/* Reject */}
-          <button
-            onClick={handleReject}
-            disabled={actionInFlight !== null || !notes.trim()}
-            title={!notes.trim() ? "Notes field required before rejecting" : "Reject alert"}
-            className="px-4 py-2 border border-red-600/80 text-destructive hover:bg-destructive/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            {actionInFlight === "reject" ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <XCircle className="h-3.5 w-3.5" />
-            )}
-            <span>Reject</span>
-          </button>
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-1 font-sans">
+          {/* Edit & Delete Controls */}
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => onEdit(alert)}
+              className="px-3 py-1.5 border border-border text-foreground hover:bg-muted text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Pencil className="h-3.5 w-3.5 text-primary" />
+              <span>Edit Post</span>
+            </button>
+            <button
+              onClick={() => onDelete(alert)}
+              className="px-3 py-1.5 border border-destructive/30 text-destructive hover:bg-destructive/10 text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              <Trash2 className="h-3.5 w-3.5" />
+              <span>Delete</span>
+            </button>
+          </div>
 
-          {/* Hold */}
-          <button
-            onClick={handleHold}
-            disabled={actionInFlight !== null}
-            className="px-4 py-2 border border-amber-600/80 text-[color:var(--warning)] hover:bg-[color:var(--warning)]/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
-          >
-            {actionInFlight === "hold" ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Clock className="h-3.5 w-3.5" />
-            )}
-            <span>Hold</span>
-          </button>
+          {/* Workflow Actions */}
+          <div className="flex items-center gap-2">
+            {/* Reject */}
+            <button
+              onClick={handleReject}
+              disabled={actionInFlight !== null || !notes.trim()}
+              title={!notes.trim() ? "Notes field required before rejecting" : "Reject alert"}
+              className="px-4 py-2 border border-red-600/80 text-destructive hover:bg-destructive/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              {actionInFlight === "reject" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <XCircle className="h-3.5 w-3.5" />
+              )}
+              <span>Reject</span>
+            </button>
 
-          {/* Approve */}
-          <button
-            onClick={handleApprove}
-            disabled={actionInFlight !== null}
-            className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
-          >
-            {actionInFlight === "approve" ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <CheckCircle2 className="h-3.5 w-3.5" />
-            )}
-            <span>Approve ✓</span>
-          </button>
+            {/* Hold */}
+            <button
+              onClick={handleHold}
+              disabled={actionInFlight !== null}
+              className="px-4 py-2 border border-amber-600/80 text-[color:var(--warning)] hover:bg-[color:var(--warning)]/10 disabled:opacity-40 disabled:cursor-not-allowed text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 cursor-pointer"
+            >
+              {actionInFlight === "hold" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <Clock className="h-3.5 w-3.5" />
+              )}
+              <span>Hold</span>
+            </button>
+
+            {/* Approve */}
+            <button
+              onClick={handleApprove}
+              disabled={actionInFlight !== null}
+              className="px-5 py-2 bg-[#0a5c38] hover:bg-[#0f7a4a] dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 text-white dark:text-[#0c1015] text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-1.5 shadow-sm cursor-pointer"
+            >
+              {actionInFlight === "approve" ? (
+                <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              ) : (
+                <CheckCircle2 className="h-3.5 w-3.5" />
+              )}
+              <span>Approve ✓</span>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 }
 
-// ─── Compact Table View for Approved/Rejected/Held ─────────────────────────────
+// ─── Compact Table View for Approved/Rejected/Held/Superseded ─────────────────────
 
-function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: TabStatus }) {
+function CompactAlertsTable({
+  alerts,
+  status,
+  onEdit,
+  onDelete,
+}: {
+  alerts: AdminAlert[];
+  status: TabStatus;
+  onEdit: (alert: AdminAlert) => void;
+  onDelete: (alert: AdminAlert) => void;
+}) {
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   if (alerts.length === 0) {
@@ -506,7 +546,7 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
               <th className="p-3.5">Trust</th>
               <th className="p-3.5">Verified By</th>
               <th className="p-3.5">Verified At</th>
-              <th className="p-3.5 text-right">Details</th>
+              <th className="p-3.5 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border text-foreground">
@@ -539,12 +579,28 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
                     {alert.verified_at ? timeAgo(alert.verified_at) : "—"}
                   </td>
                   <td className="p-3.5 text-right">
-                    <button
-                      onClick={() => setExpandedId(isExpanded ? null : alert.id)}
-                      className="p-1 text-muted-foreground hover:text-foreground rounded bg-background border border-border cursor-pointer"
-                    >
-                      {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-                    </button>
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => onEdit(alert)}
+                        title="Edit Alert Post"
+                        className="p-1.5 text-muted-foreground hover:text-primary rounded bg-background border border-border cursor-pointer transition-colors"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => onDelete(alert)}
+                        title="Delete Alert Post"
+                        className="p-1.5 text-muted-foreground hover:text-destructive rounded bg-background border border-border cursor-pointer transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                      <button
+                        onClick={() => setExpandedId(isExpanded ? null : alert.id)}
+                        className="p-1.5 text-muted-foreground hover:text-foreground rounded bg-background border border-border cursor-pointer transition-colors"
+                      >
+                        {isExpanded ? <ChevronUp className="h-3.5 w-3.5" /> : <ChevronDown className="h-3.5 w-3.5" />}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               );
@@ -579,6 +635,244 @@ function CompactAlertsTable({ alerts, status }: { alerts: AdminAlert[]; status: 
           })()}
         </div>
       )}
+    </div>
+  );
+}
+
+// ─── Edit Alert Post Modal ───────────────────────────────────────────────────────
+
+function EditAlertModal({
+  alert,
+  onClose,
+  onSaved,
+}: {
+  alert: AdminAlert;
+  onClose: () => void;
+  onSaved: () => void;
+}) {
+  const [formData, setFormData] = useState({
+    title: alert.title || "",
+    positions: alert.positions || "",
+    deadline: alert.deadline || "",
+    requirements: alert.requirements || "",
+    source_url: alert.source_url || "",
+    status: alert.status || "PENDING",
+    trust_score: alert.trust_score ?? 70,
+    admin_notes: alert.admin_notes || "",
+  });
+  const [saving, setSaving] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      await adminApi.updateAlert(alert.id, formData);
+      toast.success(`Alert #${alert.id} updated successfully.`);
+      onSaved();
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to update alert.");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-card border border-border rounded-[12px] p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-xl text-foreground font-sans">
+        <div className="flex items-center justify-between border-b border-border pb-3">
+          <h2 className="text-lg font-bold flex items-center gap-2">
+            <Pencil className="h-5 w-5 text-primary" />
+            Edit Alert Post #{alert.id}
+          </h2>
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-muted-foreground hover:text-foreground text-sm font-bold cursor-pointer"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4 text-xs font-sans">
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Title / Headline</label>
+            <input
+              type="text"
+              value={formData.title}
+              onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-sm focus:outline-none focus:border-primary"
+              required
+            />
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="font-semibold text-muted-foreground block">Positions / Roles</label>
+              <input
+                type="text"
+                value={formData.positions}
+                onChange={(e) => setFormData({ ...formData, positions: e.target.value })}
+                className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
+              />
+            </div>
+            <div className="space-y-1">
+              <label className="font-semibold text-muted-foreground block">Deadline</label>
+              <input
+                type="text"
+                value={formData.deadline}
+                onChange={(e) => setFormData({ ...formData, deadline: e.target.value })}
+                className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="font-semibold text-muted-foreground block">Status</label>
+              <select
+                value={formData.status}
+                onChange={(e) => setFormData({ ...formData, status: e.target.value as any })}
+                className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary cursor-pointer"
+              >
+                <option value="PENDING">PENDING</option>
+                <option value="APPROVED">APPROVED</option>
+                <option value="REJECTED">REJECTED</option>
+                <option value="HELD">HELD</option>
+                <option value="SUPERSEDED">SUPERSEDED</option>
+              </select>
+            </div>
+            <div className="space-y-1">
+              <label className="font-semibold text-muted-foreground block">Trust Score (0 - 100)</label>
+              <input
+                type="number"
+                min="0"
+                max="100"
+                value={formData.trust_score}
+                onChange={(e) => setFormData({ ...formData, trust_score: parseInt(e.target.value) || 0 })}
+                className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-mono text-xs focus:outline-none focus:border-primary"
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Official Source URL</label>
+            <input
+              type="url"
+              value={formData.source_url}
+              onChange={(e) => setFormData({ ...formData, source_url: e.target.value })}
+              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-mono text-xs focus:outline-none focus:border-primary"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Requirements Extracted</label>
+            <textarea
+              rows={3}
+              value={formData.requirements}
+              onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="font-semibold text-muted-foreground block">Admin Audit Notes</label>
+            <textarea
+              rows={3}
+              value={formData.admin_notes}
+              onChange={(e) => setFormData({ ...formData, admin_notes: e.target.value })}
+              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary font-mono"
+              placeholder="Notes detailing edits or verification rationale..."
+            />
+          </div>
+
+          <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">
+            <button
+              type="button"
+              onClick={onClose}
+              className="px-4 py-2 border border-border rounded-[6px] hover:bg-muted text-muted-foreground text-xs font-semibold cursor-pointer"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={saving}
+              className="px-5 py-2 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold rounded-[6px] text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+            >
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : "Save Changes"}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ─── Delete Alert Post Confirm Modal ─────────────────────────────────────────────
+
+function DeleteAlertConfirmModal({
+  alert,
+  onClose,
+  onDeleted,
+}: {
+  alert: AdminAlert;
+  onClose: () => void;
+  onDeleted: () => void;
+}) {
+  const [deleting, setDeleting] = useState(false);
+
+  const handleDelete = async () => {
+    setDeleting(true);
+    try {
+      await adminApi.deleteAlert(alert.id);
+      toast.success(`Alert #${alert.id} permanently deleted.`);
+      onDeleted();
+      onClose();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to delete alert.");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="bg-card border border-destructive/30 rounded-[12px] p-6 max-w-md w-full space-y-4 shadow-xl text-foreground font-sans">
+        <div className="flex items-center gap-3 text-destructive">
+          <div className="p-2 bg-destructive/10 rounded-full border border-destructive/20">
+            <Trash2 className="h-6 w-6" />
+          </div>
+          <div>
+            <h2 className="text-base font-bold">Delete Alert Post #{alert.id}?</h2>
+            <p className="text-xs text-muted-foreground">This action cannot be undone.</p>
+          </div>
+        </div>
+
+        <div className="bg-muted/50 p-3 rounded-[6px] border border-border text-xs space-y-1">
+          <div className="font-semibold text-foreground">{alert.title}</div>
+          <div className="text-muted-foreground font-mono">
+            Agency: {alert.agency_acronym || alert.agency?.acronym || "N/A"}
+          </div>
+        </div>
+
+        <div className="flex items-center justify-end gap-3 pt-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-border rounded-[6px] hover:bg-muted text-muted-foreground text-xs font-semibold cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="px-5 py-2 bg-destructive hover:bg-destructive/90 text-destructive-foreground font-semibold rounded-[6px] text-xs flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+          >
+            {deleting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Delete Permanently"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

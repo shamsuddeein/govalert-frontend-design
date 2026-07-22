@@ -69,7 +69,8 @@ export interface AdminAlert {
   ai_classification: "REAL" | "FAKE" | "UNCERTAIN";
   ai_confidence: number;
   ai_red_flags: string[];
-  status: "PENDING" | "APPROVED" | "REJECTED" | "HELD";
+  status: "PENDING" | "APPROVED" | "REJECTED" | "HELD" | "SUPERSEDED";
+
   is_verified: boolean;
   verified_by: string | null;
   verified_at: string | null;
@@ -414,12 +415,35 @@ export const adminApi = {
     }) as Promise<{ detail: string; alert: AdminAlert }>;
   },
 
-  updateAlert: async (id: number, data: { admin_notes?: string; trust_score?: number }): Promise<AdminAlert> => {
+  getSingleAlert: async (id: number): Promise<AdminAlert> => {
+    return adminRequest<AdminAlert>(`/alerts/${id}/`) as Promise<AdminAlert>;
+  },
+
+  updateAlert: async (
+    id: number,
+    data: {
+      title?: string;
+      positions?: string;
+      deadline?: string;
+      requirements?: string;
+      source_url?: string;
+      status?: string;
+      trust_score?: number;
+      admin_notes?: string;
+    }
+  ): Promise<AdminAlert> => {
     return adminRequest<AdminAlert>(`/alerts/${id}/`, {
       method: "PATCH",
       body: JSON.stringify(data),
     }) as Promise<AdminAlert>;
   },
+
+  deleteAlert: async (id: number): Promise<{ detail: string; id: number }> => {
+    return adminRequest<{ detail: string; id: number }>(`/alerts/${id}/`, {
+      method: "DELETE",
+    }) as Promise<{ detail: string; id: number }>;
+  },
+
 
   // Agencies
   getAgencies: async (params?: { category?: string; search?: string }): Promise<AdminAgency[]> => {
