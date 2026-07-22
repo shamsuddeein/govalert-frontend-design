@@ -614,8 +614,8 @@ function LatestJobs({
           viewMode === "grid" ? (
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 items-start">
               {jobs.map((job) => {
-                const agencyDataObj = agenciesData.find((a) => a.short === job.agencyShort);
-                const portalUrl = agencyDataObj ? agencyDataObj.recruitmentPortal : "#";
+                const agencyDataObj = agenciesData.find((a) => a.short === job.agencyShort || a.name === job.agency);
+                const portalUrl = job.officialUrl || (agencyDataObj ? agencyDataObj.recruitmentPortal : undefined);
                 const isClosed = job.status === "closed";
 
                 return (
@@ -1201,6 +1201,7 @@ function Index() {
           state: j.location_state,
           createdAt: j.published_at,
           positions: j.positions || "Multiple Positions",
+          officialUrl: j.official_url || j.source_url || undefined,
         }));
         setJobs(mappedJobs);
       } else {
