@@ -23,6 +23,32 @@ export interface AdminUser {
   is_superuser: boolean;
 }
 
+export interface AdminUserRecord {
+  id: string;
+  raw_id: number;
+  user_type: "WEB" | "TELEGRAM" | "KEYWORD_SUBSCRIBER";
+  email: string | null;
+  display_name: string;
+  username?: string;
+  telegram_id?: number | null;
+  query_text?: string;
+  is_active: boolean;
+  state?: string;
+  email_alerts_enabled?: boolean;
+  date_joined: string | null;
+  last_login: string | null;
+}
+
+export interface AdminUserStats {
+  total_web_users: number;
+  active_web_users: number;
+  new_web_users_today: number;
+  total_telegram_subscribers: number;
+  active_telegram_subscribers: number;
+  total_keyword_subscribers: number;
+  active_keyword_subscriptions: number;
+}
+
 export interface AdminAlert {
   id: number;
   title: string;
@@ -471,6 +497,49 @@ export const adminApi = {
   getPortalHistory: async (id: number): Promise<AdminSnapshot[]> => {
     const res = await adminRequest<AdminSnapshot[]>(`/portals/${id}/history/`);
     return res || [];
+  },
+
+  triggerCheckAllPortals: async (): Promise<{ detail: string; total_active_portals: number; triggered_count: number }> => {
+    return adminRequest<{ detail: string; total_active_portals: number; triggered_count: number }>(
+      "/portals/trigger-check-all/",
+      { method: "POST" }
+    ) as Promise<{ detail: string; total_active_portals: number; triggered_count: number }>;
+  },
+
+  // User Management
+  getUsers: async (params?: {
+    search?: string;
+    user_type?: string;
+    status?: string;
+    page?: number;
+  }): Promise<{ results: AdminUserRecord[]; count: number }> => {
+    const q = new URLSearchParams();
+    if (params?.search) q.set("search", params.search);
+    if (params?.user_type) q.set("user_type", params.user_type);
+    if (params?.status) q.set("status", params.status);
+    if (params?.page) q.set("page", String(params.page));
+    const res = await adminRequest<{ results: AdminUserRecord[]; count: number }>(`/users/?${q.toString()}`);
+    return res || { results: [], count: 0 };
+  },
+
+  getUserStats: async (): Promise<AdminUserStats> => {
+    const res = await adminRequest<AdminUserStats>("/users/stats/");
+    return res || {
+      total_web_users: 0,
+      active_web_users: 0,
+      new_web_users_today: 0,
+      total_telegram_subscribers: 0,
+      active_telegram_subscribers: 0,
+      total_keyword_subscribers: 0,
+      active_keyword_subscriptions: 0,
+    };
+  },
+
+  toggleUserActive: async (user_type: string, id: number): Promise<{ status: string; is_active: boolean }> => {
+    return adminRequest<{ status: string; is_active: boolean }>(
+      `/users/${user_type.toLowerCase()}/${id}/toggle-active/`,
+      { method: "PATCH" }
+    ) as Promise<{ status: string; is_active: boolean }>;
   },
 
   // System Health

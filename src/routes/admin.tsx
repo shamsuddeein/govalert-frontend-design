@@ -5,6 +5,7 @@ import {
   Building2,
   Globe,
   Activity,
+  Users,
   LogOut,
   Menu,
   X,
@@ -100,6 +101,11 @@ function AdminLayout() {
       label: "System Health",
       to: "/admin/system-health",
       icon: Activity,
+    },
+    {
+      label: "Users",
+      to: "/admin/users",
+      icon: Users,
     },
   ];
 

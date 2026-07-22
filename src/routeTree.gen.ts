@@ -32,6 +32,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as VerificationJobIdRouteImport } from './routes/verification.$jobId'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
+import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSystemHealthRouteImport } from './routes/admin.system-health'
 import { Route as AdminPortalsRouteImport } from './routes/admin.portals'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
@@ -153,6 +154,11 @@ const AgenciesAgencyShortRoute = AgenciesAgencyShortRouteImport.update({
   path: '/$agencyShort',
   getParentRoute: () => AgenciesRoute,
 } as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminSystemHealthRoute = AdminSystemHealthRouteImport.update({
   id: '/system-health',
   path: '/system-health',
@@ -201,6 +207,7 @@ export interface FileRoutesByFullPath {
   '/admin/login': typeof AdminLoginRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
+  '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/admin/login': typeof AdminLoginRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
+  '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -259,6 +267,7 @@ export interface FileRoutesById {
   '/admin/login': typeof AdminLoginRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
+  '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
@@ -291,6 +300,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/portals'
     | '/admin/system-health'
+    | '/admin/users'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -318,6 +328,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/portals'
     | '/admin/system-health'
+    | '/admin/users'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -348,6 +359,7 @@ export interface FileRouteTypes {
     | '/admin/login'
     | '/admin/portals'
     | '/admin/system-health'
+    | '/admin/users'
     | '/agencies/$agencyShort'
     | '/jobs/$jobId'
     | '/verification/$jobId'
@@ -541,6 +553,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AgenciesAgencyShortRouteImport
       parentRoute: typeof AgenciesRoute
     }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/system-health': {
       id: '/admin/system-health'
       path: '/system-health'
@@ -585,6 +604,7 @@ interface AdminRouteChildren {
   AdminLoginRoute: typeof AdminLoginRoute
   AdminPortalsRoute: typeof AdminPortalsRoute
   AdminSystemHealthRoute: typeof AdminSystemHealthRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -594,6 +614,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminLoginRoute: AdminLoginRoute,
   AdminPortalsRoute: AdminPortalsRoute,
   AdminSystemHealthRoute: AdminSystemHealthRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

@@ -126,7 +126,21 @@ function AdminSystemHealthComponent() {
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [triggeringId, setTriggeringId] = useState<number | null>(null);
+  const [triggeringAll, setTriggeringAll] = useState(false);
   const [lastUpdated, setLastUpdated] = useState<Date>(new Date());
+
+  const handleTriggerCheckAll = async () => {
+    setTriggeringAll(true);
+    try {
+      const res = await adminApi.triggerCheckAllPortals();
+      toast.success(res.detail || "Mass recheck triggered for all active portals!");
+      loadHealth();
+    } catch (err: any) {
+      toast.error(err?.message || "Failed to trigger mass portal recheck.");
+    } finally {
+      setTriggeringAll(false);
+    }
+  };
 
   const loadHealth = async (isManual = false) => {
     if (isManual) setRefreshing(true);
@@ -240,6 +254,20 @@ function AdminSystemHealthComponent() {
           >
             <RefreshCw className={cn("h-3.5 w-3.5", refreshing && "animate-spin text-primary")} />
             <span>Refresh Now</span>
+          </button>
+
+          <button
+            onClick={handleTriggerCheckAll}
+            disabled={triggeringAll}
+            className="px-3.5 py-1.5 bg-[#0a5c38] hover:bg-[#08482c] dark:bg-[#3fb68e] dark:hover:bg-[#349e7b] text-white dark:text-gray-950 text-xs font-sans font-semibold rounded-[6px] transition-all flex items-center gap-2 shadow-sm cursor-pointer disabled:opacity-50"
+            title="Trigger manual scrape check across all 41 monitored portals immediately"
+          >
+            {triggeringAll ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Play className="h-3.5 w-3.5 fill-current" />
+            )}
+            <span>Recheck Everything</span>
           </button>
         </div>
       </div>
