@@ -39,6 +39,13 @@ export interface AdminUserRecord {
   last_login: string | null;
 }
 
+export interface VisitorStats {
+  active_online_visitors: number;
+  visitors_today: number;
+  page_views_today: number;
+  all_time_visitors: number;
+}
+
 export interface AdminUserStats {
   total_web_users: number;
   active_web_users: number;
@@ -47,6 +54,7 @@ export interface AdminUserStats {
   active_telegram_subscribers: number;
   total_keyword_subscribers: number;
   active_keyword_subscriptions: number;
+  visitor_stats?: VisitorStats;
 }
 
 export interface AdminAlert {
@@ -169,6 +177,7 @@ export interface AdminSystemHealth {
     success_rate_today: number;
     changes_detected_today: number;
     system_operational: boolean;
+    visitor_stats?: VisitorStats;
   };
   portals_breakdown: Array<{
     id: number;
