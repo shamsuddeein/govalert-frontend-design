@@ -235,9 +235,9 @@ function AdminLayout() {
 
             <div className="flex items-center gap-3 text-xs font-sans">
               <ThemeToggle />
-              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-blue-500/10 border border-blue-500/30 text-blue-500 font-sans text-[11px] font-semibold">
-                <span className="h-2 w-2 rounded-full bg-blue-500 animate-ping" />
-                142 Visitors Online
+              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-[6px] bg-muted border border-border text-muted-foreground font-sans text-[11px] font-semibold">
+                <span className="h-2 w-2 rounded-full bg-muted-foreground" />
+                0 Visitors Online
               </div>
               <div className="flex items-center gap-2 px-2.5 py-1 rounded-[6px] bg-muted border border-border text-primary font-sans text-[11px] font-semibold">
                 <span className="h-2 w-2 rounded-full bg-[#0a5c38] animate-pulse" />

@@ -276,23 +276,31 @@ function AdminSystemHealthComponent() {
       <div className="space-y-3">
         <div className="flex items-center justify-between border-b border-border pb-2">
           <h2 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-blue-500 animate-ping" />
+            <span className={cn("h-2 w-2 rounded-full", sys.visitor_stats?.has_data ? "bg-blue-500 animate-ping" : "bg-muted-foreground")} />
             Visitor Traffic Control & Live Audience
           </h2>
-          <span className="text-[11px] font-mono text-blue-500 font-semibold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/30">
-            Real-Time Analytics
-          </span>
+          {sys.visitor_stats?.has_data ? (
+            <span className="text-[11px] font-mono text-blue-500 font-semibold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/30">
+              ● Live Data Stream
+            </span>
+          ) : (
+            <span className="text-[11px] font-mono text-muted-foreground font-semibold bg-muted px-2 py-0.5 rounded border border-border">
+              ● No visitor data collected yet
+            </span>
+          )}
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-sans">
           {/* Active Online Visitors */}
-          <div className="bg-card border border-blue-500/30 rounded-[8px] p-4 space-y-1 shadow-xs">
+          <div className="bg-card border border-border rounded-[8px] p-4 space-y-1 shadow-xs">
             <div className="flex items-center justify-between text-muted-foreground text-xs font-semibold">
               <span>Active Online Visitors</span>
-              <span className="text-[10px] font-mono font-bold text-blue-500 bg-blue-500/10 px-1.5 py-0.2 rounded">● LIVE</span>
+              <span className={cn("text-[10px] font-mono font-bold px-1.5 py-0.2 rounded", (sys.visitor_stats?.active_online_visitors ?? 0) > 0 ? "text-blue-500 bg-blue-500/10" : "text-muted-foreground bg-muted")}>
+                {(sys.visitor_stats?.active_online_visitors ?? 0) > 0 ? "● LIVE" : "IDLE"}
+              </span>
             </div>
-            <div className="text-2xl font-bold font-sans text-blue-500">
-              {sys.visitor_stats?.active_online_visitors ?? 142}
+            <div className="text-2xl font-bold font-sans text-foreground">
+              {sys.visitor_stats?.active_online_visitors ?? 0}
             </div>
             <div className="text-[11px] text-muted-foreground">Visitors active in past 15 mins</div>
           </div>
@@ -304,7 +312,7 @@ function AdminSystemHealthComponent() {
               <TrendingUp className="h-4 w-4 text-primary" />
             </div>
             <div className="text-2xl font-bold font-sans text-foreground">
-              {(sys.visitor_stats?.visitors_today ?? 3480).toLocaleString()}
+              {(sys.visitor_stats?.visitors_today ?? 0).toLocaleString()}
             </div>
             <div className="text-[11px] text-muted-foreground">Unique IPs recorded today</div>
           </div>
@@ -316,7 +324,7 @@ function AdminSystemHealthComponent() {
               <Server className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
             </div>
             <div className="text-2xl font-bold font-sans text-foreground">
-              {(sys.visitor_stats?.page_views_today ?? 12850).toLocaleString()}
+              {(sys.visitor_stats?.page_views_today ?? 0).toLocaleString()}
             </div>
             <div className="text-[11px] text-muted-foreground font-sans">Total requests served today</div>
           </div>
@@ -328,7 +336,7 @@ function AdminSystemHealthComponent() {
               <Activity className="h-4 w-4 text-amber-500" />
             </div>
             <div className="text-2xl font-bold font-sans text-foreground">
-              {(sys.visitor_stats?.all_time_visitors ?? 284500).toLocaleString()}
+              {(sys.visitor_stats?.all_time_visitors ?? 0).toLocaleString()}
             </div>
             <div className="text-[11px] text-muted-foreground">Cumulative platform visitors</div>
           </div>
