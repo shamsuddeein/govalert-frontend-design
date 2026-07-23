@@ -44,6 +44,8 @@ export interface VisitorStats {
   visitors_today: number;
   page_views_today: number;
   all_time_visitors: number;
+  bot_hits_today?: number;
+  human_hits_today?: number;
   has_data?: boolean;
   is_demo_mode?: boolean;
 }

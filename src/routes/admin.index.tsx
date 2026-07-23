@@ -150,6 +150,19 @@ function AdminIndexComponent() {
             <div className="text-[11px] text-muted-foreground">Cumulative platform visitors</div>
           </div>
         </div>
+
+        {/* Bot & Crawler Traffic Breakdown Banner */}
+        <div className="flex items-center justify-between p-3 bg-muted/50 border border-border rounded-[8px] text-xs font-sans">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-foreground">🤖 Bot Crawlers Today:</span>
+            <span className="font-mono font-semibold text-primary">{(sys?.visitor_stats?.bot_hits_today ?? 0).toLocaleString()} Bot Hits</span>
+            <span className="text-muted-foreground text-[11px]">(Googlebot, Bingbot, AI crawlers)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-foreground">👤 Human Traffic:</span>
+            <span className="font-mono font-semibold text-[#0a5c38] dark:text-[#3fb68e]">{(sys?.visitor_stats?.human_hits_today ?? 0).toLocaleString()} Human Hits</span>
+          </div>
+        </div>
       </div>
 
       {/* ── 3. OPERATIONAL METRICS GRID ──────────────────────────────────────────────── */}
