@@ -899,6 +899,7 @@ function BroadcastModal({ onClose }: { onClose: () => void }) {
   const [subject, setSubject] = useState("📢 RecruitmentAlert Announcement");
   const [text, setText] = useState("");
   const [sending, setSending] = useState(false);
+  const [previewChannel, setPreviewChannel] = useState<"telegram" | "email">("telegram");
 
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -922,7 +923,7 @@ function BroadcastModal({ onClose }: { onClose: () => void }) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-card border border-primary/30 rounded-[12px] p-6 max-w-lg w-full space-y-4 shadow-xl text-foreground font-sans">
+      <div className="bg-card border border-primary/30 rounded-[12px] p-6 max-w-4xl w-full max-h-[92vh] overflow-y-auto space-y-4 shadow-2xl text-foreground font-sans">
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h2 className="text-base font-bold flex items-center gap-2 text-primary">
             <Radio className="h-5 w-5 text-amber-500 animate-pulse" />
@@ -938,30 +939,110 @@ function BroadcastModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <p className="text-xs text-muted-foreground font-sans">
-          This message will be immediately dispatched to **all active Telegram Bot subscribers**, **registered Web users**, and **Keyword search subscribers**.
+          This message will be immediately dispatched to <span className="text-foreground font-medium">all active Telegram Bot subscribers</span>, <span className="text-foreground font-medium">registered Web users</span>, and <span className="text-foreground font-medium">Keyword search subscribers</span>.
         </p>
 
         <form onSubmit={handleSend} className="space-y-4 text-xs font-sans">
-          <div className="space-y-1">
-            <label className="font-semibold text-muted-foreground block">Email Subject Line (Optional)</label>
-            <input
-              type="text"
-              value={subject}
-              onChange={(e) => setSubject(e.target.value)}
-              className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
-            />
-          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left Column: Input Form */}
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="font-semibold text-muted-foreground block">Email Subject Line (Optional)</label>
+                <input
+                  type="text"
+                  value={subject}
+                  onChange={(e) => setSubject(e.target.value)}
+                  className="w-full bg-background border border-border rounded-[6px] p-2.5 text-foreground font-sans text-xs focus:outline-none focus:border-primary"
+                />
+              </div>
 
-          <div className="space-y-1">
-            <label className="font-semibold text-muted-foreground block">Broadcast Message Content</label>
-            <textarea
-              rows={5}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Write your recruitment alert announcement or update here..."
-              className="w-full bg-background border border-border rounded-[6px] p-3 text-foreground font-sans text-xs focus:outline-none focus:border-primary leading-relaxed"
-              required
-            />
+              <div className="space-y-1">
+                <label className="font-semibold text-muted-foreground block">Broadcast Message Content</label>
+                <textarea
+                  rows={8}
+                  value={text}
+                  onChange={(e) => setText(e.target.value)}
+                  placeholder="Write your recruitment alert announcement or update here..."
+                  className="w-full bg-background border border-border rounded-[6px] p-3 text-foreground font-sans text-xs focus:outline-none focus:border-primary leading-relaxed"
+                  required
+                />
+              </div>
+            </div>
+
+            {/* Right Column: Live Chat & Message Preview */}
+            <div className="space-y-3 bg-muted/40 border border-border rounded-[8px] p-4 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between border-b border-border pb-2 mb-3">
+                  <span className="font-bold text-xs uppercase tracking-wider text-muted-foreground">Live Message Preview</span>
+                  <div className="flex items-center gap-1 bg-background border border-border rounded-[6px] p-0.5 text-[11px]">
+                    <button
+                      type="button"
+                      onClick={() => setPreviewChannel("telegram")}
+                      className={cn(
+                        "px-2.5 py-1 rounded-[4px] font-semibold transition-colors cursor-pointer",
+                        previewChannel === "telegram" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Telegram Bot
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewChannel("email")}
+                      className={cn(
+                        "px-2.5 py-1 rounded-[4px] font-semibold transition-colors cursor-pointer",
+                        previewChannel === "email" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+                      )}
+                    >
+                      Email Card
+                    </button>
+                  </div>
+                </div>
+
+                {previewChannel === "telegram" ? (
+                  /* Telegram Chat Card Preview */
+                  <div className="bg-[#17212b] border border-[#242f3d] text-[#f5f5f5] rounded-[10px] p-4 space-y-3 font-sans shadow-inner text-xs">
+                    <div className="flex items-center gap-2 border-b border-[#242f3d] pb-2 text-[11px] text-[#6c7883]">
+                      <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+                      <span className="font-semibold text-[#8799a7]">GovAlert Bot</span>
+                      <span className="bg-blue-500/20 text-blue-400 text-[10px] px-1.5 py-0.5 rounded font-mono">bot</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="font-bold text-[#64b5f6] flex items-center gap-1">
+                        📢 Broadcast Preview
+                      </div>
+                      <div className="border-l-2 border-[#64b5f6] pl-3 py-1 bg-[#202b36]/60 rounded-r text-[#e1e1e1] whitespace-pre-wrap leading-relaxed text-xs">
+                        {text.trim() || "Type your message on the left to see live Telegram chat card preview..."}
+                      </div>
+                      <div className="text-[11px] text-[#6c7883] pt-1">
+                        ───────────────<br />
+                        This broadcast will be delivered to active subscribers.
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  /* Email Notification Card Preview */
+                  <div className="bg-background border border-border text-foreground rounded-[10px] p-4 space-y-3 font-sans shadow-sm text-xs">
+                    <div className="border-b border-border pb-2">
+                      <div className="text-[10px] text-muted-foreground uppercase font-mono">Subject</div>
+                      <div className="font-bold text-foreground text-xs">{subject || "No subject line"}</div>
+                    </div>
+
+                    <div className="space-y-2 py-1">
+                      <div className="text-primary font-bold text-sm">RecruitmentAlert Announcement</div>
+                      <div className="bg-muted/30 border border-border rounded-[6px] p-3 text-muted-foreground whitespace-pre-wrap leading-relaxed text-xs">
+                        {text.trim() || "Type your broadcast message content on the left to see live Email card preview..."}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-border flex items-center justify-between text-[11px] text-muted-foreground">
+                      <span>RecruitmentAlert Nigeria</span>
+                      <span className="text-primary font-medium">www.recruitmentalert.com.ng</span>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-3 border-t border-border">

@@ -10,6 +10,7 @@ import {
   Menu,
   X,
   ChevronRight,
+  Radio,
 } from "lucide-react";
 import {
   adminApi,
@@ -96,6 +97,11 @@ function AdminLayout() {
       label: "Portals",
       to: "/admin/portals",
       icon: Globe,
+    },
+    {
+      label: "Monitor Viewer",
+      to: "/admin/monitor-viewer",
+      icon: Radio,
     },
     {
       label: "System Health",

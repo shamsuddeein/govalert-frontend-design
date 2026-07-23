@@ -35,6 +35,7 @@ import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agen
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSystemHealthRouteImport } from './routes/admin.system-health'
 import { Route as AdminPortalsRouteImport } from './routes/admin.portals'
+import { Route as AdminMonitorViewerRouteImport } from './routes/admin.monitor-viewer'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminAlertsRouteImport } from './routes/admin.alerts'
 import { Route as AdminAgenciesRouteImport } from './routes/admin.agencies'
@@ -169,6 +170,11 @@ const AdminPortalsRoute = AdminPortalsRouteImport.update({
   path: '/portals',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminMonitorViewerRoute = AdminMonitorViewerRouteImport.update({
+  id: '/monitor-viewer',
+  path: '/monitor-viewer',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminLoginRoute = AdminLoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -205,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
@@ -233,6 +240,7 @@ export interface FileRoutesByTo {
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
@@ -265,6 +273,7 @@ export interface FileRoutesById {
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
   '/admin/login': typeof AdminLoginRoute
+  '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
   '/admin/portals': typeof AdminPortalsRoute
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
@@ -298,6 +307,7 @@ export interface FileRouteTypes {
     | '/admin/agencies'
     | '/admin/alerts'
     | '/admin/login'
+    | '/admin/monitor-viewer'
     | '/admin/portals'
     | '/admin/system-health'
     | '/admin/users'
@@ -326,6 +336,7 @@ export interface FileRouteTypes {
     | '/admin/agencies'
     | '/admin/alerts'
     | '/admin/login'
+    | '/admin/monitor-viewer'
     | '/admin/portals'
     | '/admin/system-health'
     | '/admin/users'
@@ -357,6 +368,7 @@ export interface FileRouteTypes {
     | '/admin/agencies'
     | '/admin/alerts'
     | '/admin/login'
+    | '/admin/monitor-viewer'
     | '/admin/portals'
     | '/admin/system-health'
     | '/admin/users'
@@ -574,6 +586,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminPortalsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/monitor-viewer': {
+      id: '/admin/monitor-viewer'
+      path: '/monitor-viewer'
+      fullPath: '/admin/monitor-viewer'
+      preLoaderRoute: typeof AdminMonitorViewerRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/login': {
       id: '/admin/login'
       path: '/login'
@@ -602,6 +621,7 @@ interface AdminRouteChildren {
   AdminAgenciesRoute: typeof AdminAgenciesRoute
   AdminAlertsRoute: typeof AdminAlertsRoute
   AdminLoginRoute: typeof AdminLoginRoute
+  AdminMonitorViewerRoute: typeof AdminMonitorViewerRoute
   AdminPortalsRoute: typeof AdminPortalsRoute
   AdminSystemHealthRoute: typeof AdminSystemHealthRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -612,6 +632,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAgenciesRoute: AdminAgenciesRoute,
   AdminAlertsRoute: AdminAlertsRoute,
   AdminLoginRoute: AdminLoginRoute,
+  AdminMonitorViewerRoute: AdminMonitorViewerRoute,
   AdminPortalsRoute: AdminPortalsRoute,
   AdminSystemHealthRoute: AdminSystemHealthRoute,
   AdminUsersRoute: AdminUsersRoute,
