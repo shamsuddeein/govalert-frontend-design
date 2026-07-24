@@ -46,7 +46,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 
   const handleTryAgain = () => {
     if (isChunkError) {
-      window.location.reload();
+      window.location.href = window.location.pathname + "?v=" + Date.now();
     } else {
       router.invalidate();
       reset();
