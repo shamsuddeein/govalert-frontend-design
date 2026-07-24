@@ -416,17 +416,14 @@ function Hero({
               </form>
             </div>
 
-            <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground pt-1 overflow-x-auto pb-1 no-scrollbar max-w-full">
-              <span className="shrink-0">Quick tags:</span>
+            <div className="flex flex-row items-center gap-[8px] overflow-x-auto pt-2 pb-1 max-w-full no-scrollbar">
+              <span className="shrink-0 text-[12px] font-medium text-muted-foreground">Quick tags:</span>
               {["NNPC", "Customs", "EFCC", "NAF", "CBN", "FIRS"].map((tag) => (
                 <button
                   key={tag}
+                  type="button"
                   onClick={() => onTagClick(tag)}
-                  className={`rounded-[6px] border px-2.5 py-1 text-xs font-semibold transition-colors cursor-pointer shrink-0 ${
-                    searchQuery.toLowerCase() === tag.toLowerCase()
-                      ? "border-[#0a5c38] bg-muted text-[#0a5c38] dark:border-[#3fb68e] dark:text-[#3fb68e]"
-                      : "border-border bg-card text-muted-foreground hover:border-[#0a5c38] hover:text-[#0a5c38] dark:hover:border-[#3fb68e] dark:hover:text-[#3fb68e]"
-                  }`}
+                  className="shrink-0 bg-[#F3F4F6] text-[#374151] hover:bg-[#E5E7EB] dark:bg-[#F3F4F6] dark:text-[#374151] dark:hover:bg-[#E5E7EB] text-[12px] font-medium rounded-[16px] px-[12px] py-[4px] transition-colors cursor-pointer border-0"
                 >
                   {tag}
                 </button>
