@@ -981,36 +981,24 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       </div>
                     </div>
 
-                    {activeCount === 0 && (
-                      <div className="bg-muted/40 border border-border rounded-[6px] p-2 text-[11px]">
-                        <div className="flex items-center justify-between text-muted-foreground">
-                          <span className="font-semibold text-foreground">
-                            Active Monitoring
-                          </span>
-                          <span className="font-mono text-[10px] text-muted-foreground uppercase">
-                            Standby
-                          </span>
-                        </div>
-                        <p className="text-[11px] leading-tight text-muted-foreground mt-0.5">
-                          Last checked at {lastCheckedText}. Next check scheduled in 15 mins.
-                        </p>
-                      </div>
-                    )}
                   </div>
 
                   <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs gap-2 flex-wrap xs:flex-nowrap">
-                    {a.portal_url ? (
-                      <a
-                        href={a.portal_url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-primary underline hover:text-accent font-semibold truncate"
-                      >
-                        Official website
-                      </a>
-                    ) : (
-                      <span className="text-muted-foreground">No portal URL</span>
-                    )}
+                    <div className="flex items-center gap-2 min-w-0">
+                      {a.portal_url ? (
+                        <a
+                          href={a.portal_url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-primary underline hover:text-accent font-semibold truncate"
+                        >
+                          Official website
+                        </a>
+                      ) : (
+                        <span className="text-muted-foreground">No portal URL</span>
+                      )}
+                      <span className="text-[#6B7280] text-[12px] font-sans shrink-0">&middot; Next scan in 15 mins</span>
+                    </div>
                     <Link
                       to="/agencies/$agencyShort"
                       params={{ agencyShort: a.slug || a.acronym }}
