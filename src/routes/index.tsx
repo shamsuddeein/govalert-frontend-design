@@ -224,7 +224,7 @@ export function StatusBadge({ status }: { status: Status }) {
   const map: Record<Status, { label: string; cls: string; icon: React.ReactNode }> = {
     verified: {
       label: "Verified",
-      cls: "bg-[#0a5c38] text-white dark:bg-[#3fb68e] dark:text-[#0c1015]",
+      cls: "bg-[#DCFCE7] text-[#166534] dark:bg-[#DCFCE7] dark:text-[#166534] font-semibold border border-[#166534]/20",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
@@ -813,13 +813,7 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
                       </span>
                     )}
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs text-muted-foreground">
-                      {e.event_type === "new_opening" && "New opening detected"}
-                      {e.event_type === "verified" && "Surveillance verified"}
-                      {e.event_type === "urgent" && "Critical outage / incident"}
-                    </span>
-                    <span className="text-muted-foreground text-xs">&middot;</span>
+                  <div className="flex items-center gap-2 pt-0.5">
                     <StatusBadge status={e.event_type === "urgent" ? "warning" : e.event_type === "new_opening" ? "new" : "verified"} />
                   </div>
                 </div>
