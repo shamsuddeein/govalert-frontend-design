@@ -321,6 +321,7 @@ function Hero({
 }) {
   const [inputValue, setInputValue] = useState(searchQuery);
   const [showLiveFeed, setShowLiveFeed] = useState(false);
+  const [showAllActivity, setShowAllActivity] = useState(false);
 
   useEffect(() => {
     setInputValue(searchQuery);
@@ -337,7 +338,7 @@ function Hero({
   };
 
   return (
-    <section className="py-8 sm:py-12 bg-background">
+    <section className="py-6 sm:py-12 bg-background">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1fr_380px] lg:items-center">
           
@@ -442,8 +443,8 @@ function Hero({
           </div>
 
           {/* Right Side Live Feed Terminal */}
-          <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-full lg:max-w-[380px] justify-self-end bg-card border border-border rounded-[8px] p-5 text-left`}>
-            <div className="flex items-center justify-between mb-4">
+          <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-full lg:max-w-[380px] justify-self-end bg-card border border-border rounded-[8px] p-3 sm:p-5 text-left`}>
+            <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-1.5">
                 <span className="font-mono text-[11px] text-foreground tracking-wider font-bold">
                   RECENT ACTIVITY
@@ -452,21 +453,34 @@ function Hero({
               <span className="font-mono text-[11px] text-muted-foreground">{liveFeed?.[0]?.time_ago || "Not available"}</span>
             </div>
 
-            <div className="border-t border-border/60 my-3" />
+            <div className="border-t border-border/60 my-2.5" />
 
-            <div className="space-y-4">
-              {liveFeed && liveFeed.length > 0 ? liveFeed.slice(0, 4).map((item, idx) => (
-                <div key={idx} className="flex items-center justify-between border-b border-border/40 pb-3 last:border-0 last:pb-0">
-                  <div className="space-y-1">
-                    <p className="font-sans text-[13px] font-semibold text-foreground">{item.agency_name} ({item.agency_acronym})</p>
-                    <StatusBadge status={item.event_type === "urgent" ? "warning" : item.event_type === "new_opening" ? "new" : item.event_type === "verified" ? "verified" : "no-change"} />
+            <div className="space-y-3">
+              {liveFeed && liveFeed.length > 0 ? (
+                (showAllActivity ? liveFeed : liveFeed.slice(0, 3)).map((item, idx) => (
+                  <div key={idx} className="flex items-center justify-between border-b border-border/40 pb-2.5 last:border-0 last:pb-0">
+                    <div className="space-y-1">
+                      <p className="font-sans text-[13px] font-semibold text-foreground">{item.agency_name} ({item.agency_acronym})</p>
+                      <StatusBadge status={item.event_type === "urgent" ? "warning" : item.event_type === "new_opening" ? "new" : item.event_type === "verified" ? "verified" : "no-change"} />
+                    </div>
+                    <span className="font-mono text-[11px] text-muted-foreground self-start pt-1">{item.time_ago}</span>
                   </div>
-                  <span className="font-mono text-[11px] text-muted-foreground self-start pt-1">{item.time_ago}</span>
-                </div>
-              )) : <p className="text-sm text-muted-foreground">Recent activity is unavailable.</p>}
+                ))
+              ) : (
+                <p className="text-sm text-muted-foreground">Recent activity is unavailable.</p>
+              )}
             </div>
 
-            <div className="border-t border-border/60 mt-4 pt-3 flex items-center justify-between">
+            {liveFeed && liveFeed.length > 3 && (
+              <button
+                onClick={() => setShowAllActivity(!showAllActivity)}
+                className="mt-3 w-full text-center text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer font-sans"
+              >
+                {showAllActivity ? "Show Less ▲" : "Show More ▼"}
+              </button>
+            )}
+
+            <div className="border-t border-border/60 mt-3 pt-2.5 flex items-center justify-between">
               <span className="font-mono text-[10px] text-muted-foreground">Activity is shown when monitoring data is available.</span>
             </div>
           </div>
@@ -539,8 +553,8 @@ function LatestJobs({
   };
 
   return (
-    <section id="recruitments" className="py-12 bg-background">
-      <div className="mx-auto max-w-[1184px] px-6">
+    <section id="recruitments" className="py-6 sm:py-12 bg-background">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-primary">Latest Verified Recruitments</h2>
@@ -620,7 +634,7 @@ function LatestJobs({
                 return (
                   <div
                     key={job.id}
-                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card ${
+                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm interactive-card ${
                       isClosed ? "opacity-65 bg-muted/5" : ""
                     }`}
                   >
@@ -769,8 +783,8 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
   }, [filteredFeed]);
 
   return (
-    <section className="py-10 bg-background border-t border-border">
-      <div className="mx-auto max-w-[1184px] px-6">
+    <section className="py-6 sm:py-10 bg-background border-t border-border">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-primary">Recently Verified Recruitments & Activity</h2>
@@ -788,7 +802,7 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
 
         <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60 shadow-sm">
           {groupedFeed.length === 0 ? (
-            <div className="p-6 text-center space-y-2 font-sans">
+            <div className="p-3 sm:p-6 text-center space-y-2 font-sans">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold text-xs border border-[#0a5c38]/20">
                 <span className="h-2 w-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] animate-pulse" />
                 All 41 Monitored Portals Operational & Checked
@@ -799,7 +813,7 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
             </div>
           ) : (
             groupedFeed.map((e, idx) => (
-              <div key={idx} className="flex items-center justify-between p-4 text-sm font-sans">
+              <div key={idx} className="flex items-center justify-between p-3 sm:p-4 text-sm font-sans">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
                     <p className="font-semibold text-primary">
@@ -866,8 +880,8 @@ function VettedArc({ score }: { score: number }) {
 
 function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
   return (
-    <section id="health" className="py-16 bg-background border-t border-border">
-      <div className="mx-auto max-w-[1184px] px-6">
+    <section id="health" className="py-6 sm:py-16 bg-background border-t border-border">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-primary">Portal Health</h2>
@@ -886,7 +900,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
           {agencies.length === 0 ? (
             Array.from({ length: 8 }).map((_, idx) => (
-              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm space-y-4 animate-pulse">
                 <div className="h-6 bg-muted rounded w-3/4" />
                 <div className="h-4 bg-muted rounded w-1/2" />
                 <div className="h-10 bg-muted rounded w-full" />
@@ -910,7 +924,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
               return (
                 <div
                   key={a.acronym}
-                  className="rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
+                  className="rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
                 >
                   <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
@@ -1034,8 +1048,8 @@ function AgencyDirectory({
   ];
 
   return (
-    <section className="border-t border-border bg-muted/20 py-10">
-      <div className="mx-auto max-w-[1184px] px-6">
+    <section className="border-t border-border bg-muted/20 py-6 sm:py-10">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="flex items-end justify-between mb-4">
           <div>
             <h2 className="text-xl font-bold tracking-tight text-primary">Agency Directory</h2>
@@ -1092,8 +1106,8 @@ function VerificationMethodology() {
   ];
 
   return (
-    <section id="verification" className="border-t border-border bg-muted/20 py-16">
-      <div className="mx-auto max-w-[1184px] px-6">
+    <section id="verification" className="border-t border-border bg-muted/20 py-6 sm:py-16">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-12">
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#0a5c38] dark:text-[#3fb68e]">
             AUDIT PIPELINE
@@ -1161,8 +1175,8 @@ function VerificationMethodology() {
 
 function TelegramCTA() {
   return (
-    <section className="py-16 bg-background border-t border-border">
-      <div className="mx-auto max-w-2xl px-6 text-center space-y-4">
+    <section className="py-6 sm:py-16 bg-background border-t border-border">
+      <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center space-y-4">
         <h2 className="text-2xl font-bold tracking-tight text-primary">
           Stay updated
         </h2>
