@@ -1,23 +1,18 @@
-// Shared speed indicator: converts response-time ms into a 3-dot glyph
-// per the design system (banned: raw ms shown to end users).
-// Fast <400ms  = ●●●   OK 400-700ms = ●●○   Slow >700ms = ●○○
-
-export type SpeedTier = "fast" | "ok" | "slow" | "unknown";
+export type SpeedTier = "fast" | "moderate" | "slow" | "unreachable";
 
 export function speedTier(ms: number | null | undefined): SpeedTier {
-  if (ms == null) return "unknown";
-  if (ms < 400) return "fast";
-  if (ms <= 700) return "ok";
+  if (ms == null || ms <= 0) return "unreachable";
+  if (ms < 2000) return "fast";
+  if (ms <= 6000) return "moderate";
   return "slow";
 }
 
-export function speedLabel(tier: SpeedTier): string {
-  switch (tier) {
-    case "fast": return "Fast";
-    case "ok": return "OK";
-    case "slow": return "Slow";
-    default: return "No checks recorded";
-  }
+export function speedLabel(ms: number | null | undefined): string {
+  if (ms == null || ms <= 0) return "Portal Unreachable";
+  const sec = (ms / 1000).toFixed(1);
+  if (ms < 2000) return `⚡ Fast (${sec}s)`;
+  if (ms <= 6000) return `⏱️ Moderate (${sec}s)`;
+  return `🐢 Server Congested (${sec}s)`;
 }
 
 interface SpeedDotsProps {
@@ -26,37 +21,26 @@ interface SpeedDotsProps {
   className?: string;
 }
 
-export function SpeedDots({ ms, showLabel = false, className = "" }: SpeedDotsProps) {
+export function SpeedDots({ ms, className = "" }: SpeedDotsProps) {
   const tier = speedTier(ms);
+  const label = speedLabel(ms);
 
-  if (tier === "unknown") {
-    return (
-      <span className={`inline-flex items-center text-[13px] text-muted-foreground font-sans ${className}`}>
-        No checks recorded
-      </span>
-    );
+  let style = "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] border-[#0a5c38]/20";
+
+  if (tier === "unreachable") {
+    style = "bg-red-500/10 text-red-600 dark:text-red-400 border-red-500/30";
+  } else if (tier === "slow") {
+    style = "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-500/30";
+  } else if (tier === "moderate") {
+    style = "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/30";
   }
-
-  const filled = tier === "fast" ? 3 : tier === "ok" ? 2 : tier === "slow" ? 1 : 0;
-  const color =
-    tier === "slow"
-      ? "text-[color:var(--status-urgent,#b45309)]"
-      : "text-[#0a5c38] dark:text-[#3fb68e]";
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 font-mono text-[12px] ${color} ${className}`}
-      aria-label={`Response speed: ${speedLabel(tier)}`}
-      title={`Response speed: ${speedLabel(tier)}`}
+      className={`inline-flex items-center px-2 py-0.5 rounded-[4px] border text-[11px] font-sans font-semibold shrink-0 transition-colors select-none ${style} ${className}`}
+      title={label}
     >
-      <span aria-hidden className="tracking-[2px]">
-        {[0, 1, 2].map((i) => (
-          <span key={i} className={i < filled ? "" : "opacity-25"}>
-            ●
-          </span>
-        ))}
-      </span>
-      {showLabel && <span className="text-foreground font-sans text-[13px]">{speedLabel(tier)}</span>}
+      {label}
     </span>
   );
 }

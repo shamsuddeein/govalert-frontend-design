@@ -19,9 +19,26 @@ interface Props {
   rounded?: string;
 }
 
+function getSectorStyle(short: string): string {
+  const s = short.toUpperCase();
+  if (["ARMY", "NAVY", "NAF", "NPF", "POLICE", "NDA", "NCS", "CUSTOMS"].includes(s)) {
+    return "bg-[#0a5c38] text-white border-[#074228]";
+  }
+  if (["CBN", "FIRS", "NPA", "CREDICORP", "FMF"].includes(s)) {
+    return "bg-[#1e3a8a] text-white border-[#172554]";
+  }
+  if (["NIS", "NCOS", "NSCDC", "CDCFIB", "DSS", "EFCC", "ICPC", "NDLEA"].includes(s)) {
+    return "bg-[#0f766e] text-white border-[#115e59]";
+  }
+  if (["TRCN", "JAMB", "UBEC", "FCSC", "FME", "FMH", "FMA", "FMI"].includes(s)) {
+    return "bg-[#b45309] text-white border-[#78350f]";
+  }
+  return "bg-slate-800 text-slate-100 border-slate-900";
+}
+
 /**
  * Renders the real favicon/logo of a government agency via public favicon services.
- * Falls back gracefully to a green acronym chip if the domain image is unavailable or fails to load.
+ * Falls back gracefully to a heraldic monogram chip if the domain image is unavailable or fails to load.
  */
 export function AgencyLogo({ short, url, size = 40, className = "", rounded = "rounded-[6px]" }: Props) {
   const [srcIdx, setSrcIdx] = useState(0);
@@ -52,7 +69,8 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
   const altText = agency ? `${agency.name} official logo` : `${short} official logo`;
 
   if (!src || failedAll) {
-    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-[#0c1015] font-sans text-xs font-bold tracking-wider shrink-0 shadow-sm ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
+    const sectorStyle = getSectorStyle(short);
+    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden font-mono text-[11px] font-black tracking-wider shrink-0 border shadow-inner ${sectorStyle} ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
     return (
       <span
         tabIndex={0}
@@ -60,8 +78,9 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
         aria-label={altText}
         className={fallbackBoxCls}
         style={style}
+        title={`${agency?.name || short} (Official Federal Monogram)`}
       >
-        {short}
+        {short.slice(0, 4).toUpperCase()}
       </span>
     );
   }
