@@ -507,7 +507,7 @@ function AdminJobsCreate() {
         </form>
 
         {/* Right Column: Live Card Preview */}
-        <div className="lg:col-span-5 sticky top-6 space-y-4">
+        <div className="lg:col-span-5 sticky top-[24px] max-h-[calc(100vh-48px)] overflow-y-auto space-y-4 pr-1">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
               <Eye className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
