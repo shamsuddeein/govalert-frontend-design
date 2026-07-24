@@ -16,7 +16,8 @@ import {
 import { toast } from "sonner";
 import {
   ResponsiveContainer,
-  ComposedChart,
+  BarChart,
+  LineChart,
   Bar,
   Line,
   XAxis,
@@ -488,41 +489,85 @@ function AdminSystemHealthComponent() {
         )}
       </div>
 
-      {/* 3. 7-Day Reliability & Checks Trend Chart (Recharts) */}
-      <div className="bg-card border border-border rounded-[8px] p-6 space-y-4 shadow-sm font-sans">
-        <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-border pb-3 gap-2">
-          <div>
-            <h3 className="text-sm font-bold font-sans text-foreground flex items-center gap-2">
-              <TrendingUp className="h-4 w-4 text-primary" />
-              7-Day System Health & Volume Trend
-            </h3>
-            <p className="text-xs text-muted-foreground font-sans">Total automated checks (bars) vs success rate percentage (line).</p>
+      {/* 3. Stacked 7-Day System Health Charts */}
+      <div className="space-y-6 font-sans">
+        {/* Top Card: Total Checks Column Bar Chart */}
+        <div className="bg-card border border-border rounded-[8px] p-5 space-y-3 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2.5 gap-2">
+            <div>
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <Server className="h-4 w-4 text-[#3B82F6]" />
+                7-Day Total Checks (Scrape Volume)
+              </h3>
+              <p className="text-xs text-muted-foreground">Daily volume of automated portal health checks.</p>
+            </div>
+            <span className="text-xs font-mono text-muted-foreground">Total Checks / Day</span>
           </div>
-          <span className="text-xs font-mono text-muted-foreground">Aggregated from PortalHealthLog</span>
+
+          <div className="h-[180px] w-full pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={trend} margin={{ top: 10, right: 10, left: 15, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="date" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }} />
+                <YAxis
+                  stroke="var(--muted-foreground)"
+                  tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }}
+                  label={{ value: "Total Checks", angle: -90, position: "insideLeft", offset: -5, style: { fill: "var(--muted-foreground)", fontSize: 10, textAnchor: "middle" } }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "var(--card)",
+                    borderColor: "var(--border)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontFamily: "IBM Plex Sans, sans-serif",
+                    color: "var(--foreground)",
+                  }}
+                />
+                <Bar dataKey="total_checks" name="Total Checks" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={24} />
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
         </div>
 
-        <div className="h-64 w-full pt-2 font-sans">
-          <ResponsiveContainer width="100%" height="100%">
-            <ComposedChart data={trend} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
-              <XAxis dataKey="date" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }} />
-              <YAxis yAxisId="left" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }} />
-              <YAxis yAxisId="right" orientation="right" domain={[0, 100]} stroke="#0a5c38" tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "var(--card)",
-                  borderColor: "var(--border)",
-                  borderRadius: "6px",
-                  fontSize: "12px",
-                  fontFamily: "IBM Plex Sans, sans-serif",
-                  color: "var(--foreground)",
-                }}
-              />
-              <Legend wrapperStyle={{ fontSize: "12px", fontFamily: "IBM Plex Sans, sans-serif" }} />
-              <Bar yAxisId="left" dataKey="total_checks" name="Total Checks" fill="#3b82f6" radius={[4, 4, 0, 0]} barSize={24} />
-              <Line yAxisId="right" type="monotone" dataKey="success_rate" name="Success Rate (%)" stroke="#3fb68e" strokeWidth={3} dot={{ r: 4, fill: "#3fb68e" }} connectNulls={false} />
-            </ComposedChart>
-          </ResponsiveContainer>
+        {/* Bottom Card: Success Rate Percentage Line Chart */}
+        <div className="bg-card border border-border rounded-[8px] p-5 space-y-3 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-border pb-2.5 gap-2">
+            <div>
+              <h3 className="text-sm font-bold text-foreground flex items-center gap-2">
+                <TrendingUp className="h-4 w-4 text-[#10B981]" />
+                7-Day Success Rate Percentage
+              </h3>
+              <p className="text-xs text-muted-foreground">Percentage of successful reachability HTTP checks.</p>
+            </div>
+            <span className="text-xs font-mono text-muted-foreground">Success Rate (%)</span>
+          </div>
+
+          <div className="h-[180px] w-full pt-2">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={trend} margin={{ top: 10, right: 10, left: 15, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
+                <XAxis dataKey="date" stroke="var(--muted-foreground)" tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }} />
+                <YAxis
+                  domain={[0, 100]}
+                  stroke="var(--muted-foreground)"
+                  tick={{ fontSize: 11, fontFamily: "IBM Plex Sans, sans-serif" }}
+                  label={{ value: "Success Rate (%)", angle: -90, position: "insideLeft", offset: -5, style: { fill: "var(--muted-foreground)", fontSize: 10, textAnchor: "middle" } }}
+                />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "var(--card)",
+                    borderColor: "var(--border)",
+                    borderRadius: "6px",
+                    fontSize: "12px",
+                    fontFamily: "IBM Plex Sans, sans-serif",
+                    color: "var(--foreground)",
+                  }}
+                />
+                <Line type="monotone" dataKey="success_rate" name="Success Rate (%)" stroke="#10B981" strokeWidth={3} dot={{ r: 4, fill: "#10B981" }} connectNulls={false} />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
         </div>
       </div>
 
