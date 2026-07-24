@@ -334,9 +334,20 @@ function JobsPage() {
           <>
             {/* Info Counter Row */}
             <div className="mb-6 flex items-center justify-between border-b border-border/40 pb-3 text-[13px] text-muted-foreground font-sans">
-              <p>
-                Indexed <span className="font-semibold text-foreground">{jobs.length}</span> verified notices
-              </p>
+              <div className="flex items-center gap-3">
+                <p>
+                  Indexed <span className="font-semibold text-foreground">{jobs.length}</span> verified notices
+                </p>
+                {Boolean(search || agency || category || state || status) && (
+                  <button
+                    type="button"
+                    onClick={handleClearFilters}
+                    className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer font-sans"
+                  >
+                    Reset Filters
+                  </button>
+                )}
+              </div>
               <div className="flex items-center gap-1.5">
                 <span className="font-mono text-xs">Sort:</span>
                 <select
