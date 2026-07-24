@@ -69,8 +69,7 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
   const altText = agency ? `${agency.name} official logo` : `${short} official logo`;
 
   if (!src || failedAll) {
-    const sectorStyle = getSectorStyle(short);
-    const fallbackBoxCls = `relative inline-flex items-center justify-center overflow-hidden font-mono text-[11px] font-black tracking-wider shrink-0 border shadow-inner ${sectorStyle} ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0a5c38] focus-visible:ring-offset-2`;
+    const fallbackBoxCls = `relative inline-flex items-center justify-center text-center overflow-hidden bg-[#F0FDF4] text-[#166534] border border-[#166534]/30 font-mono font-bold text-xs shrink-0 shadow-xs ${rounded} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-[#166534]`;
     return (
       <span
         tabIndex={0}
