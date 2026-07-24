@@ -212,7 +212,7 @@ function AgenciesIndexPage() {
 
         {/* Loading and Error States */}
         {loading && (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3 my-8">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-8">
             {Array.from({ length: 6 }).map((_, idx) => (
               <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
                 <div className="flex justify-between items-center">
@@ -245,7 +245,7 @@ function AgenciesIndexPage() {
 
             {/* Grid Layout of Agencies */}
             {filteredAgencies.length > 0 ? (
-              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 {filteredAgencies.map((agency) => {
                   const isOnline = agency.status === "online";
                   const isMaintenance = agency.status === "maintenance";
@@ -253,7 +253,7 @@ function AgenciesIndexPage() {
                   return (
                     <div
                       key={agency.acronym}
-                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card"
+                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-4 sm:p-5 shadow-sm interactive-card"
                     >
                       <div className="space-y-3 sm:space-y-4">
                         {/* Top Row: Acronym + Status Badge */}
@@ -277,12 +277,14 @@ function AgenciesIndexPage() {
 
                         {/* Agency Info */}
                         <div>
-                          <h3 className="text-[15px] sm:text-[17px] font-semibold text-foreground transition-colors group-hover:text-primary font-sans leading-snug">
+                          <h3 className="text-[15px] sm:text-[16px] font-semibold text-foreground transition-colors group-hover:text-primary font-sans leading-snug">
                             {agency.name}
                           </h3>
-                          <p className="mt-1.5 text-[12px] sm:text-[13px] text-muted-foreground line-clamp-2 leading-relaxed font-sans">
-                            {agency.description}
-                          </p>
+                          {agency.description && agency.description.trim().length > 0 && (
+                            <p className="mt-1.5 text-[12px] text-muted-foreground line-clamp-2 leading-relaxed font-sans">
+                              {agency.description}
+                            </p>
+                          )}
                         </div>
 
                         {/* Metrics details */}
