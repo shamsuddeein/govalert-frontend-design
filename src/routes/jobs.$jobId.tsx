@@ -280,18 +280,32 @@ function JobDetailsPage() {
         <section>
           <h2 className="text-[17px] font-semibold text-foreground">Verification</h2>
           
-          {job.confidence_score != null ? <div className="mt-6">
-            <div className="flex items-center justify-between text-[15px] font-medium max-w-[280px]">
-              <span>Verification Score:</span>
-              <span className="font-mono font-bold text-[#0a5c38] dark:text-[#3fb68e]">{job.confidence_score}%</span>
-            </div>
-            <div className="mt-2 h-2 w-full max-w-[280px] overflow-hidden rounded bg-muted dark:bg-[#242c38]">
-              <div 
-                className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]" 
-                style={{ width: `${job.confidence_score}%` }}
-              />
-            </div>
-          </div> : <p className="mt-4 text-sm text-muted-foreground">Verification score unavailable.</p>}
+          {job.confidence_score != null ? (() => {
+            const score = Math.max(0, Math.min(100, Math.round(job.confidence_score)));
+            let barColor = "#10B981";
+            if (score < 50) {
+              barColor = "#EF4444";
+            } else if (score < 80) {
+              barColor = "#F59E0B";
+            }
+
+            return (
+              <div className="mt-6">
+                <div className="flex items-center justify-between text-[15px] font-medium max-w-[280px]">
+                  <span>Verification Score:</span>
+                  <span className="font-mono font-bold" style={{ color: barColor }}>
+                    {job.confidence_score}%
+                  </span>
+                </div>
+                <div className="mt-2 h-2 w-full max-w-[280px] overflow-hidden rounded bg-muted dark:bg-[#242c38]">
+                  <div 
+                    className="h-full transition-all duration-300" 
+                    style={{ width: `${job.confidence_score}%`, backgroundColor: barColor }}
+                  />
+                </div>
+              </div>
+            );
+          })() : <p className="mt-4 text-sm text-muted-foreground">Verification score unavailable.</p>}
 
           <div className="mt-6">
             <div className="text-[13px] font-semibold uppercase tracking-wider text-muted-foreground font-mono">
