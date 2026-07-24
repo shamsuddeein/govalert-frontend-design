@@ -321,47 +321,47 @@ export function Footer() {
 
   return (
     <footer className="border-t border-gray-200 dark:border-gray-800 bg-background text-foreground py-10 sm:py-16">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
-        <div className="grid gap-8 sm:gap-12 md:grid-cols-[1.4fr_2fr] pb-8 sm:pb-12">
-          <div className="space-y-3 sm:space-y-4">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-8 sm:pb-12">
+          {/* Brand Logo Column (Span 2) */}
+          <div className="md:col-span-2 space-y-3 sm:space-y-4">
             <Logo />
             <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed">
               Verified recruitment intelligence.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 xs:grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3">
-            {cols.map((c) => (
-              <div key={c.heading}>
-                <h5 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
-                  {c.heading}
-                </h5>
-                <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] text-foreground">
-                  {c.links.map((l) => (
-                    <li key={l.label}>
-                      {l.external ? (
-                        <a
-                          href={l.to}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="transition-colors hover:text-primary inline-flex items-center gap-1 py-1"
-                        >
-                          {l.label}
-                          <svg className="size-3 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      ) : (
-                        <Link to={l.to} className="transition-colors hover:text-primary inline-block py-1">
-                          {l.label}
-                        </Link>
-                      )}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
+          {/* Navigation Columns (1 column each for Resources, Platform, Legal) */}
+          {cols.map((c) => (
+            <div key={c.heading} className="md:col-span-1">
+              <h5 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+                {c.heading}
+              </h5>
+              <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] text-foreground">
+                {c.links.map((l) => (
+                  <li key={l.label}>
+                    {l.external ? (
+                      <a
+                        href={l.to}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="transition-colors hover:text-primary inline-flex items-center gap-1 py-1"
+                      >
+                        {l.label}
+                        <svg className="size-3 text-muted-foreground shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      </a>
+                    ) : (
+                      <Link to={l.to} className="transition-colors hover:text-primary inline-block py-1">
+                        {l.label}
+                      </Link>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
         </div>
 
         <div className="mt-8 sm:mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:pt-8 md:flex-row md:items-center">
