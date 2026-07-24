@@ -320,7 +320,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-800 bg-background text-foreground py-10 sm:py-16">
+    <footer className="border-t border-gray-200 dark:border-gray-800 bg-[#F9FAFB] dark:bg-[#0F172A] text-foreground py-10 sm:py-16">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-8 sm:pb-12">
           {/* Brand Logo Column (Span 2) */}
