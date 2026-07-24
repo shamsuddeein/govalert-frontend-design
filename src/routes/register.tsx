@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
-import { ShieldCheck, User, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ShieldCheck, User, Mail, Lock, ArrowRight, Eye, EyeOff, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../lib/api";
+import { cn } from "../lib/utils";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
@@ -19,8 +20,16 @@ function RegisterPage() {
   const [agree, setAgree] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const hasMinLength = password.length >= 8;
+  const hasNumber = /\d/.test(password);
+  const passwordsMatch = password.length > 0 && confirmPassword.length > 0 && password === confirmPassword;
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!hasMinLength || !hasNumber) {
+      toast.error("Password does not meet requirements.");
+      return;
+    }
     if (password !== confirmPassword) {
       toast.error("Passwords do not match!");
       return;
@@ -109,6 +118,45 @@ function RegisterPage() {
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
+              </div>
+
+              {/* Live Password Requirement Checklist */}
+              <div className="mt-1 rounded-[6px] border border-border/60 bg-muted/20 p-2.5 space-y-1.5 font-sans">
+                <div className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={cn(
+                      "size-3.5 shrink-0 transition-colors",
+                      hasMinLength ? "text-[#166534]" : "text-[#9CA3AF]"
+                    )}
+                  />
+                  <span className={cn("text-[11px] font-medium transition-colors", hasMinLength ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
+                    Minimum 8 characters
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={cn(
+                      "size-3.5 shrink-0 transition-colors",
+                      hasNumber ? "text-[#166534]" : "text-[#9CA3AF]"
+                    )}
+                  />
+                  <span className={cn("text-[11px] font-medium transition-colors", hasNumber ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
+                    At least one number
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <CheckCircle2
+                    className={cn(
+                      "size-3.5 shrink-0 transition-colors",
+                      passwordsMatch ? "text-[#166534]" : "text-[#9CA3AF]"
+                    )}
+                  />
+                  <span className={cn("text-[11px] font-medium transition-colors", passwordsMatch ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
+                    Passwords match
+                  </span>
+                </div>
               </div>
             </div>
 
