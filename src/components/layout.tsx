@@ -320,7 +320,7 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t-[3px] border-[#0a5c38] dark:border-[#3fb68e] bg-[#f0ede8] dark:bg-[#0a0e13] py-10 sm:py-16">
+    <footer className="border-t border-gray-200 dark:border-gray-800 bg-[#f0ede8] dark:bg-[#0a0e13] py-10 sm:py-16">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="grid gap-8 sm:gap-12 md:grid-cols-[1.4fr_2fr] pb-8 sm:pb-12">
           <div className="space-y-3 sm:space-y-4">
