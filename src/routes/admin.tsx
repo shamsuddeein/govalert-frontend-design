@@ -212,7 +212,10 @@ function AdminLayout() {
                 <span className="block text-xs font-semibold text-foreground truncate font-sans">
                   {user?.username || "Admin User"}
                 </span>
-                <span className="block text-[11px] text-muted-foreground truncate font-sans">
+                <span
+                  title={user?.email || "staff@recruitmentalert.com.ng"}
+                  className="block text-[11px] text-muted-foreground font-sans w-full max-w-[130px] whitespace-nowrap overflow-hidden text-ellipsis"
+                >
                   {user?.email || "staff@recruitmentalert.com.ng"}
                 </span>
               </div>
