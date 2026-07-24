@@ -997,17 +997,17 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                     </div>
 
                     {activeCount === 0 && (
-                      <div className="bg-[#0a5c38]/5 dark:bg-[#3fb68e]/10 border border-[#0a5c38]/20 dark:border-[#3fb68e]/20 rounded-[6px] p-2 text-[11px] space-y-1">
-                        <div className="flex items-center justify-between">
-                          <span className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] flex items-center gap-1">
-                            🔒 Monitored Today
+                      <div className="bg-muted/40 border border-border rounded-[6px] p-2 text-[11px]">
+                        <div className="flex items-center justify-between text-muted-foreground">
+                          <span className="font-semibold text-foreground">
+                            Active Monitoring
                           </span>
-                          <span className="font-mono text-[9px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/20 dark:text-[#3fb68e] px-1.5 py-0.5 rounded font-bold uppercase">
+                          <span className="font-mono text-[10px] text-muted-foreground uppercase">
                             Standby
                           </span>
                         </div>
-                        <p className="text-[10px] leading-tight text-muted-foreground">
-                          Zero fake/scam postings detected. Next scan in ~15 mins.
+                        <p className="text-[11px] leading-tight text-muted-foreground mt-0.5">
+                          Last checked at {lastCheckedText}. Next check scheduled in 15 mins.
                         </p>
                       </div>
                     )}

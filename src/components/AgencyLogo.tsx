@@ -78,7 +78,7 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
         aria-label={altText}
         className={fallbackBoxCls}
         style={style}
-        title={`${agency?.name || short} (Official Federal Monogram)`}
+        title={agency?.name || short}
       >
         {short.slice(0, 4).toUpperCase()}
       </span>

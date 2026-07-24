@@ -8,11 +8,11 @@ export function speedTier(ms: number | null | undefined): SpeedTier {
 }
 
 export function speedLabel(ms: number | null | undefined): string {
-  if (ms == null || ms <= 0) return "Portal Unreachable";
+  if (ms == null || ms <= 0) return "Offline";
   const sec = (ms / 1000).toFixed(1);
-  if (ms < 2000) return `⚡ Fast (${sec}s)`;
-  if (ms <= 6000) return `⏱️ Moderate (${sec}s)`;
-  return `🐢 Server Congested (${sec}s)`;
+  if (ms < 2000) return `Fast (${sec}s)`;
+  if (ms <= 6000) return `Moderate (${sec}s)`;
+  return `Slow (${sec}s)`;
 }
 
 interface SpeedDotsProps {
