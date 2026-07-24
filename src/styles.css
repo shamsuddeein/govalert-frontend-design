@@ -73,7 +73,7 @@
   --gold: #c8960c;
   
   /* Surfaces & Backgrounds */
-  --background: #f5f3ef; /* Warm off-white page background */
+  --background: #FAFAFA; /* High-contrast clean neutral page background */
   --surface: #ffffff;
   --card: #ffffff;
   --popover: #ffffff;
@@ -85,8 +85,8 @@
   --muted-foreground: #5a6370;
   
   /* Borders, Inputs, Ring */
-  --border: #e2ddd6;
-  --input: #e2ddd6;
+  --border: #E5E7EB;
+  --input: #E5E7EB;
   --ring: #0a5c38;
   
   /* Semantic Brand Roles */
