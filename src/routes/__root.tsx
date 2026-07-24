@@ -38,33 +38,47 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error("Root Route Error:", error);
   const router = useRouter();
 
+  const isChunkError =
+    error?.message &&
+    (error.message.toLowerCase().includes("dynamically imported module") ||
+      error.message.toLowerCase().includes("failed to fetch") ||
+      error.message.toLowerCase().includes("importing a module script failed"));
+
+  const handleTryAgain = () => {
+    if (isChunkError) {
+      window.location.reload();
+    } else {
+      router.invalidate();
+      reset();
+    }
+  };
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
+    <div className="flex min-h-screen items-center justify-center bg-background px-4 font-sans">
       <div className="max-w-md text-center">
-        <h1 className="text-xl font-semibold tracking-tight text-foreground">
-          This page didn't load
+        <h1 className="text-xl font-bold tracking-tight text-foreground font-sans">
+          {isChunkError ? "New Version Available" : "This page didn't load"}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Something went wrong on our end. You can try refreshing or head back home.
+        <p className="mt-2 text-sm text-muted-foreground font-sans">
+          {isChunkError
+            ? "RecruitmentAlert was updated with new features. Please reload the page to get the latest version."
+            : "Something went wrong on our end. You can try refreshing or head back home."}
         </p>
         {error?.message && (
-          <div className="mt-3 p-3 text-xs font-mono text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400 rounded border border-red-200 dark:border-red-900 text-left overflow-auto max-h-32">
+          <div className="mt-3 p-3 text-xs font-mono text-red-600 bg-red-50 dark:bg-red-950/40 dark:text-red-400 rounded-[6px] border border-red-200 dark:border-red-900 text-left overflow-auto max-h-32">
             {error.message}
           </div>
         )}
-        <div className="mt-6 flex flex-wrap justify-center gap-2">
+        <div className="mt-6 flex flex-wrap justify-center gap-2 font-sans">
           <button
-            onClick={() => {
-              router.invalidate();
-              reset();
-            }}
-            className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            onClick={handleTryAgain}
+            className="inline-flex items-center justify-center rounded-[6px] bg-[#0a5c38] dark:bg-[#3fb68e] px-4 py-2 text-sm font-semibold text-white dark:text-[#0c1015] transition-colors hover:opacity-90 cursor-pointer"
           >
-            Try again
+            {isChunkError ? "Reload Page" : "Try again"}
           </button>
           <a
             href="/"
-            className="inline-flex items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="inline-flex items-center justify-center rounded-[6px] border border-border bg-background px-4 py-2 text-sm font-semibold text-foreground transition-colors hover:bg-muted"
           >
             Go home
           </a>
