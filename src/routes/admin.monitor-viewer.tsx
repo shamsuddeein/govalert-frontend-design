@@ -67,28 +67,42 @@ function getPortalState(portal: AdminPortal): { label: string; color: string; do
   if (portal.last_change_detected_at && new Date(portal.last_change_detected_at).getTime() > Date.now() - 24 * 3600 * 1000) {
     return {
       label: "Content Changed",
-      color: "text-amber-500 bg-amber-500/10 border-amber-500/30",
-      dot: "bg-amber-500",
+      color: "text-[#92400E] bg-[#FEF3C7] border-[#92400E]/20 font-semibold",
+      dot: "bg-[#92400E]",
     };
   }
   if (norm === "ONLINE") {
     return {
       label: "Healthy",
-      color: "text-[#0a5c38] dark:text-[#3fb68e] bg-[#0a5c38]/10 border-[#0a5c38]/30",
-      dot: "bg-[#0a5c38] dark:bg-[#3fb68e]",
+      color: "text-[#166534] bg-[#DCFCE7] border-[#166534]/20 font-semibold",
+      dot: "bg-[#166534]",
     };
   }
-  if (norm === "OFFLINE") {
+  if (norm === "OFFLINE" || norm === "FAILING") {
     return {
       label: "Offline",
-      color: "text-destructive bg-destructive/10 border-destructive/30",
-      dot: "bg-destructive",
+      color: "text-[#991B1B] bg-[#FEE2E2] border-[#991B1B]/20 font-semibold",
+      dot: "bg-[#991B1B]",
+    };
+  }
+  if (norm === "CAPTCHA") {
+    return {
+      label: "CAPTCHA",
+      color: "text-[#92400E] bg-[#FEF3C7] border-[#92400E]/20 font-semibold",
+      dot: "bg-[#92400E]",
+    };
+  }
+  if (norm === "BLOCKED" || norm === "FIREWALL BLOCKED" || norm === "FIREWALL_BLOCKED") {
+    return {
+      label: "Firewall Blocked",
+      color: "text-[#6B21A8] bg-[#F3E8FF] border-[#6B21A8]/20 font-semibold",
+      dot: "bg-[#6B21A8]",
     };
   }
   return {
     label: norm || "Maintenance",
-    color: "text-muted-foreground bg-muted border-border",
-    dot: "bg-muted-foreground",
+    color: "text-[#4B5563] bg-muted border-border font-medium",
+    dot: "bg-[#4B5563]",
   };
 }
 

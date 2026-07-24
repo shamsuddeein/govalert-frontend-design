@@ -42,34 +42,53 @@ function timeAgo(dateStr?: string | null): string {
   return `${days}d ago`;
 }
 
-// STEP 5: Strict Health Status Badge helper
+// Strict Health Status Badge helper
 function getHealthBadgeStyle(status?: string) {
   const norm = (status || "UNKNOWN").toUpperCase();
+
   if (norm === "ONLINE") {
     return {
-      dotColor: "bg-[#0a5c38]",
-      badgeClass: "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30",
+      dotColor: "bg-[#166534]",
+      badgeClass: "bg-[#DCFCE7] text-[#166534] border-[#166534]/20 font-semibold",
       label: "ONLINE",
     };
   }
-  if (norm === "OFFLINE") {
+
+  if (norm === "OFFLINE" || norm === "FAILING") {
     return {
-      dotColor: "bg-destructive",
-      badgeClass: "bg-destructive/10 text-destructive border-destructive/30",
-      label: "OFFLINE",
+      dotColor: "bg-[#991B1B]",
+      badgeClass: "bg-[#FEE2E2] text-[#991B1B] border-[#991B1B]/20 font-semibold",
+      label: norm === "FAILING" ? "FAILING" : "OFFLINE",
     };
   }
-  if (norm === "MAINTENANCE" || norm === "BLOCKED" || norm === "CAPTCHA" || norm === "RATE_LIMITED") {
+
+  if (norm === "CAPTCHA") {
     return {
-      dotColor: "bg-[color:var(--warning)]",
-      badgeClass: "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30",
-      label: norm === "MAINTENANCE" ? "MAINTENANCE" : norm,
+      dotColor: "bg-[#92400E]",
+      badgeClass: "bg-[#FEF3C7] text-[#92400E] border-[#92400E]/20 font-semibold",
+      label: "CAPTCHA",
     };
   }
-  // UNKNOWN or unrecognized status -> Neutral Gray (NOT GREEN, NOT RED!)
+
+  if (norm === "BLOCKED" || norm === "FIREWALL BLOCKED" || norm === "FIREWALL_BLOCKED") {
+    return {
+      dotColor: "bg-[#6B21A8]",
+      badgeClass: "bg-[#F3E8FF] text-[#6B21A8] border-[#6B21A8]/20 font-semibold",
+      label: "FIREWALL BLOCKED",
+    };
+  }
+
+  if (norm === "MAINTENANCE" || norm === "RATE_LIMITED") {
+    return {
+      dotColor: "bg-[#92400E]",
+      badgeClass: "bg-[#FEF3C7] text-[#92400E] border-[#92400E]/20 font-semibold",
+      label: norm === "MAINTENANCE" ? "MAINTENANCE" : "RATE LIMITED",
+    };
+  }
+
   return {
-    dotColor: "bg-[color:var(--closed)]",
-    badgeClass: "bg-[color:var(--closed)]/10 text-muted-foreground border-[color:var(--closed)]/20",
+    dotColor: "bg-[#4B5563]",
+    badgeClass: "bg-muted text-[#4B5563] border-border font-medium",
     label: norm || "UNKNOWN",
   };
 }
