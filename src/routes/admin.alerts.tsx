@@ -379,19 +379,9 @@ function PendingAlertCard({
 
         {/* AI & Trust Badges */}
         <div className="flex flex-row md:flex-col items-end justify-between md:justify-start gap-2">
-          {/* AI Classification Badge */}
-          <div
-            className={cn(
-              "px-3 py-1 rounded-[6px] text-xs font-semibold font-sans uppercase tracking-wider flex items-center gap-1.5 border",
-              aiClass === "REAL"
-                ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border-[#0a5c38]/30"
-                : aiClass === "FAKE"
-                ? "bg-destructive/10 text-destructive border-destructive/30"
-                : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border-[color:var(--warning)]/30"
-            )}
-          >
-            <span>{aiClass}</span>
-            <span className="font-mono text-[11px]">({confidence}%)</span>
+          {/* AI Classification */}
+          <div className="text-xs font-medium font-sans text-[#4B5563] dark:text-muted-foreground">
+            AI Class: {aiClass} ({confidence}%)
           </div>
 
           {/* Trust Score Indicator */}
@@ -586,19 +576,8 @@ function CompactAlertsTable({
                   <td className="p-3.5 font-mono font-bold text-primary">
                     {alert.agency_acronym || (alert.agency ? alert.agency.acronym : "—")}
                   </td>
-                  <td className="p-3.5 font-sans">
-                    <span
-                      className={cn(
-                        "px-2.5 py-0.5 rounded-[6px] text-[11px] font-semibold uppercase tracking-wider inline-block",
-                        alert.ai_classification === "REAL"
-                          ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border border-[#0a5c38]/30"
-                          : alert.ai_classification === "FAKE"
-                          ? "bg-destructive/10 text-destructive border border-destructive/30"
-                          : "bg-[color:var(--warning)]/10 text-[color:var(--warning)] border border-[color:var(--warning)]/30"
-                      )}
-                    >
-                      {alert.ai_classification} ({alert.ai_confidence}%)
-                    </span>
+                  <td className="p-3.5 font-sans font-medium text-[12px] text-[#4B5563] dark:text-muted-foreground">
+                    {alert.ai_classification} ({alert.ai_confidence}%)
                   </td>
                   <td className="p-3.5 font-mono font-bold">{alert.trust_score}/100</td>
                   <td className="p-3.5 font-sans text-muted-foreground">{alert.verified_by || "—"}</td>
