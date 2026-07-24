@@ -9,6 +9,53 @@ import { ExternalLink, Bookmark, BookmarkCheck } from "lucide-react";
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
+function renderFormattedDescription(rawText: string | undefined | null) {
+  if (!rawText || !rawText.trim()) {
+    return (
+      <p className="mt-4 mb-[12px] text-[14px] leading-[1.6] text-[#374151] dark:text-muted-foreground font-sans">
+        No description provided.
+      </p>
+    );
+  }
+
+  const lines = rawText.split(/\r?\n/).map((l) => l.trim()).filter((l) => l.length > 0);
+  const elements: React.ReactNode[] = [];
+  let currentBulletGroup: string[] = [];
+
+  const flushBullets = (keyPrefix: number) => {
+    if (currentBulletGroup.length > 0) {
+      elements.push(
+        <ul key={`ul-${keyPrefix}`} className="mb-[12px] list-disc pl-5 space-y-1 text-[14px] leading-[1.6] text-[#374151] dark:text-muted-foreground font-sans">
+          {currentBulletGroup.map((item, idx) => (
+            <li key={idx}>{item}</li>
+          ))}
+        </ul>
+      );
+      currentBulletGroup = [];
+    }
+  };
+
+  lines.forEach((line, idx) => {
+    const bulletMatch = line.match(/^([•\*\-\–\—\◦\▪]|\d+[\.\)])\s*(.+)/);
+    if (bulletMatch) {
+      currentBulletGroup.push(bulletMatch[2]);
+    } else if (/^[•\*\-\–\—\◦\▪]\s*/.test(line)) {
+      currentBulletGroup.push(line.replace(/^[•\*\-\–\—\◦\▪]\s*/, ""));
+    } else {
+      flushBullets(idx);
+      elements.push(
+        <p key={`p-${idx}`} className="mb-[12px] text-[14px] leading-[1.6] text-[#374151] dark:text-muted-foreground font-sans">
+          {line}
+        </p>
+      );
+    }
+  });
+
+  flushBullets(lines.length);
+
+  return <div className="mt-4">{elements}</div>;
+}
+
 export const Route = createFileRoute("/jobs/$jobId")({
   component: JobDetailsPage,
 });
@@ -310,9 +357,7 @@ function JobDetailsPage() {
         {/* RECRUITMENT DETAILS SECTION */}
         <section>
           <h2 className="text-[17px] font-semibold text-foreground">Recruitment Details</h2>
-          <p className="mt-4 text-[15px] leading-relaxed text-muted-foreground">
-            {job.description || "No description provided."}
-          </p>
+          {renderFormattedDescription(job.description)}
           
           {job.requirements && job.requirements.length > 0 && (
             <>
