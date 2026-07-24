@@ -66,7 +66,7 @@ export function ThemeToggle({ storageKey }: ThemeToggleProps) {
   return (
     <button
       onClick={toggleTheme}
-      className="inline-flex size-9 items-center justify-center rounded-full border border-border bg-card text-muted-foreground transition-colors hover:bg-muted hover:text-primary cursor-pointer focus:outline-none"
+      className="inline-flex w-[36px] h-[36px] items-center justify-center rounded-full bg-transparent text-muted-foreground hover:bg-[#F3F4F6] dark:hover:bg-[#1f2937] hover:text-foreground transition-colors cursor-pointer focus:outline-none border-0 shrink-0"
       aria-label="Toggle theme"
     >
       {theme === "light" ? (
