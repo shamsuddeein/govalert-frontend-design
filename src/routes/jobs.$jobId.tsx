@@ -388,7 +388,7 @@ function JobDetailsPage() {
             {isClosed ? (
               <button
                 disabled
-                className="inline-flex h-[44px] items-center justify-center rounded-[8px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
+                className="inline-flex items-center justify-center rounded-[6px] bg-muted text-muted-foreground px-[20px] py-[10px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
               >
                 Recruitment Portal Closed
               </button>
@@ -396,7 +396,7 @@ function JobDetailsPage() {
               <button
                 disabled
                 title="Official direct portal URL is not provided in source notice"
-                className="inline-flex h-[44px] items-center justify-center gap-2 rounded-[8px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border font-sans"
+                className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-muted text-muted-foreground px-[20px] py-[10px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border font-sans"
               >
                 <span>No Direct Application Link Available</span>
               </button>
@@ -405,9 +405,9 @@ function JobDetailsPage() {
                 href={job.official_url.trim()}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-[44px] items-center justify-center gap-2 rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] px-[20px] text-[14px] font-semibold text-white dark:text-[#0c1015] hover:opacity-90 cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-[#15803D] hover:bg-[#15803D]/90 text-[#FFFFFF] px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer"
               >
-                Apply on Official Portal (External) <ExternalLink className="size-4" />
+                Apply on Official Portal <ExternalLink className="size-4" />
               </a>
             )}
 
@@ -415,49 +415,26 @@ function JobDetailsPage() {
               href={`https://t.me/govalerts_bot?start=watch_${job.ref}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex h-[44px] items-center gap-2 rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/20 dark:hover:bg-[#3fb68e]/25 px-[20px] text-[14px] font-semibold transition-all cursor-pointer shadow-sm font-sans"
+              className="inline-flex items-center gap-2 rounded-[6px] border border-[#15803D] text-[#15803D] hover:bg-[#15803D]/10 bg-transparent px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer font-sans"
             >
               <svg className="size-[16px] fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
               </svg>
-              <span>🔔 Get Alerts for this Job</span>
+              <span>Get Alerts</span>
             </a>
 
             <button
               onClick={handleToggleSave}
               disabled={saving}
-              className={`inline-flex h-[44px] items-center gap-2 rounded-[8px] border px-[20px] text-[14px] font-semibold transition-colors cursor-pointer ${
+              className={`inline-flex items-center gap-2 rounded-[6px] border px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer ${
                 isSaved
-                  ? "bg-[#0a5c38]/10 border-[#0a5c38] text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:border-[#3fb68e] dark:text-[#3fb68e]"
+                  ? "bg-[#15803D]/10 border-[#15803D] text-[#15803D]"
                   : "border-border bg-card text-foreground hover:bg-muted"
               }`}
             >
               {isSaved ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
               {saving ? "Updating..." : isSaved ? "Bookmarked" : "Save Job"}
             </button>
-          </div>
-
-          {/* Dedicated Telegram Deep Link Card */}
-          <div className="mt-8 p-5 bg-card border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 rounded-[8px] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans shadow-sm">
-            <div className="space-y-1 max-w-lg">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
-                <svg className="size-4 shrink-0 fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
-                </svg>
-                Instant Job Updates via Telegram
-              </div>
-              <p className="text-xs text-muted-foreground leading-relaxed">
-                Tap once to watch updates for <span className="font-semibold text-foreground">{job.title}</span>. Get direct alerts on Telegram for deadline extensions, shortlist releases, and portal updates.
-              </p>
-            </div>
-            <a
-              href={`https://t.me/govalerts_bot?start=watch_${job.ref}`}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex h-[42px] items-center gap-2 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-5 text-xs font-semibold shrink-0 cursor-pointer shadow-sm transition-transform active:scale-[0.98] font-sans"
-            >
-              🔔 Watch This Job &rarr;
-            </a>
           </div>
         </section>
 
