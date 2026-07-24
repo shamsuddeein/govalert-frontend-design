@@ -328,9 +328,6 @@ export function Footer() {
             <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed">
               Verified recruitment intelligence.
             </p>
-            <p className="text-[11px] sm:text-[12px] text-muted-foreground max-w-sm leading-relaxed">
-              Independent monitoring. Not affiliated with the Federal Government.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 xs:grid-cols-2 gap-6 sm:gap-8 md:grid-cols-3">
