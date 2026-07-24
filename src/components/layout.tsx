@@ -364,16 +364,16 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-8 sm:mt-12 flex flex-col items-start justify-between gap-4 border-t border-border pt-6 sm:pt-8 md:flex-row md:items-center">
+        <div className="flex flex-col md:flex-row justify-between items-center mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 gap-4">
           <p className="font-sans text-[11px] text-muted-foreground max-w-xl leading-relaxed">
             © {new Date().getFullYear()} RecruitmentAlert. Independent monitoring. Not affiliated with the Federal Government.
           </p>
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="relative flex h-2 w-2">
-              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
+          <div className="flex items-center shrink-0">
+            <span className="relative flex h-2 w-2 mr-[6px]">
+              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#22C55E] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22C55E]"></span>
             </span>
-            <span className="font-mono text-[11px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
+            <span className="font-mono text-[12px] font-semibold uppercase tracking-wider text-[#166534]">
               SYSTEMS OPERATIONAL
             </span>
           </div>
