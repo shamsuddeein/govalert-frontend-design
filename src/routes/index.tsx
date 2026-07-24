@@ -6,6 +6,7 @@ import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
 import { api, ApiAgency, ApiJob, ApiSystemStatus, ApiLiveFeedItem } from "../lib/api";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
+import { SpeedDots } from "../lib/speedIndicator";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -901,28 +902,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
               const isOnline = a.status === "online";
               const isMaintenance = a.status === "maintenance";
 
-              // Determine response time dots
-              const resMs = a.response_time_ms ?? 500;
-              let dots = null;
-              if (resMs < 400) {
-                dots = (
-                  <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
-                    <span>●</span><span>●</span><span>●</span>
-                  </span>
-                );
-              } else if (resMs <= 700) {
-                dots = (
-                  <span className="flex items-center gap-0.5 text-[#0a5c38] dark:text-[#3fb68e]">
-                    <span>●</span><span>●</span><span className="opacity-30">○</span>
-                  </span>
-                );
-              } else {
-                dots = (
-                  <span className="flex items-center gap-0.5 text-[#b45309]">
-                    <span>●</span><span className="opacity-30">○</span><span className="opacity-30">○</span>
-                  </span>
-                );
-              }
+              const resMs = a.response_time_ms ?? 120;
 
               const lastCheckedText = a.last_checked
                 ? new Date(a.last_checked).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
@@ -982,7 +962,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       </div>
                       <div>
                         <span className="block text-muted-foreground text-[11px]">Response time</span>
-                        <div className="font-sans text-[11px]">{dots}</div>
+                        <div className="pt-0.5"><SpeedDots ms={resMs} /></div>
                       </div>
                       <div>
                         <span className="block text-muted-foreground text-[11px]">Monitoring Cycle</span>
