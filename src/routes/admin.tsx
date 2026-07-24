@@ -11,6 +11,7 @@ import {
   X,
   ChevronRight,
   Radio,
+  PlusCircle,
 } from "lucide-react";
 import {
   adminApi,
@@ -87,6 +88,11 @@ function AdminLayout() {
       to: "/admin/alerts",
       icon: ShieldAlert,
       badge: pendingCount > 0 ? pendingCount : null,
+    },
+    {
+      label: "Post New Job",
+      to: "/admin/jobs-create",
+      icon: PlusCircle,
     },
     {
       label: "Agencies",

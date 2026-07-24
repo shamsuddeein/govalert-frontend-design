@@ -457,6 +457,26 @@ export const adminApi = {
     }) as Promise<{ detail: string; id: number }>;
   },
 
+  createAlert: async (data: {
+    agency_id: number;
+    portal_id?: number | null;
+    title: string;
+    event_type: string;
+    positions?: string;
+    deadline?: string;
+    requirements?: string;
+    source_url?: string;
+    content_excerpt?: string;
+    trust_score?: number;
+    status?: "APPROVED" | "PENDING" | "HELD";
+    notify_subscribers?: boolean;
+  }): Promise<{ detail: string; alert: AdminAlert }> => {
+    return adminRequest<{ detail: string; alert: AdminAlert }>("/alerts/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    }) as Promise<{ detail: string; alert: AdminAlert }>;
+  },
+
   sendBroadcast: async (
     text: string,
     subject?: string

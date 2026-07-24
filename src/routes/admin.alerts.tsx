@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
   ShieldAlert,
@@ -15,6 +15,7 @@ import {
   Trash2,
   Send,
   Radio,
+  PlusCircle,
 } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -107,13 +108,23 @@ function AdminAlertsComponent() {
           </p>
         </div>
 
-        <button
-          onClick={() => setShowBroadcastModal(true)}
-          className="px-4 py-2.5 bg-primary text-primary-foreground font-semibold rounded-[8px] text-xs flex items-center gap-2 shadow-sm hover:bg-primary/90 transition-all cursor-pointer self-start md:self-auto"
-        >
-          <Radio className="h-4 w-4 animate-pulse text-amber-300" />
-          <span>Broadcast to All Subscribers</span>
-        </button>
+        <div className="flex items-center gap-2 self-start md:self-auto">
+          <Link
+            to="/admin/jobs-create"
+            className="px-4 py-2.5 bg-[#0a5c38] dark:bg-[#3fb68e] text-white dark:text-zinc-950 font-semibold rounded-[8px] text-xs flex items-center gap-2 shadow-sm hover:opacity-90 transition-all cursor-pointer"
+          >
+            <PlusCircle className="h-4 w-4" />
+            <span>Post New Job</span>
+          </Link>
+
+          <button
+            onClick={() => setShowBroadcastModal(true)}
+            className="px-4 py-2.5 bg-primary text-primary-foreground font-semibold rounded-[8px] text-xs flex items-center gap-2 shadow-sm hover:bg-primary/90 transition-all cursor-pointer"
+          >
+            <Radio className="h-4 w-4 animate-pulse text-amber-300" />
+            <span>Broadcast</span>
+          </button>
+        </div>
       </div>
 
       {/* 1. Stat Cards Header */}
