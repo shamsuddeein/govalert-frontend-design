@@ -27,6 +27,13 @@ export const Route = createFileRoute("/admin/users")({
   component: AdminUsersComponent,
 });
 
+function stripEmojis(text?: string | null): string {
+  if (!text) return "";
+  return text
+    .replace(/[\p{Extended_Pictographic}\u{1F300}-\u{1F9FF}\u{2600}-\u{27BF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}]/gu, "")
+    .trim();
+}
+
 function timeAgo(dateStr?: string | null): string {
   if (!dateStr) return "Never";
   const date = new Date(dateStr);
@@ -269,17 +276,24 @@ function AdminUsersComponent() {
                   const isTg = u.user_type === "TELEGRAM";
                   const isKw = u.user_type === "KEYWORD_SUBSCRIBER";
                   const isWeb = u.user_type === "WEB";
+                  const sanitizedName = stripEmojis(u.display_name) || u.username || "User";
 
                   return (
-                    <tr key={u.id} className="hover:bg-muted/30 transition-colors">
+                    <tr key={u.id} className="h-[48px] hover:bg-muted/30 transition-colors">
                       {/* User Info */}
-                      <td className="py-3 px-4">
-                        <div className="font-semibold text-foreground">{u.display_name}</div>
-                        {u.email && <div className="text-[11px] text-muted-foreground">{u.email}</div>}
+                      <td className="h-[48px] py-1.5 px-4 whitespace-nowrap overflow-hidden text-ellipsis max-w-[220px]">
+                        <div className="font-semibold text-foreground whitespace-nowrap overflow-hidden text-ellipsis leading-tight" title={sanitizedName}>
+                          {sanitizedName}
+                        </div>
+                        {u.email && (
+                          <div className="text-[11px] text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis leading-tight" title={u.email}>
+                            {u.email}
+                          </div>
+                        )}
                       </td>
 
                       {/* Platform */}
-                      <td className="py-3 px-4">
+                      <td className="h-[48px] py-1.5 px-4 whitespace-nowrap">
                         {isWeb && (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-primary/10 text-primary border border-primary/20 text-[10px] font-bold uppercase">
                             <Globe className="h-3 w-3" /> Web User
@@ -298,7 +312,7 @@ function AdminUsersComponent() {
                       </td>
 
                       {/* Identifier / Detail */}
-                      <td className="py-3 px-4 font-mono text-[11px]">
+                      <td className="h-[48px] py-1.5 px-4 font-mono text-[11px] whitespace-nowrap overflow-hidden text-ellipsis max-w-[180px]">
                         {isTg && u.telegram_id && (
                           <span className="text-foreground font-semibold">ID: {u.telegram_id}</span>
                         )}
@@ -311,7 +325,7 @@ function AdminUsersComponent() {
                       </td>
 
                       {/* Status */}
-                      <td className="py-3 px-4">
+                      <td className="h-[48px] py-1.5 px-4 whitespace-nowrap">
                         {u.is_active ? (
                           <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] border border-[#0a5c38]/30 font-semibold text-[10px]">
                             <span className="h-1.5 w-1.5 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
@@ -326,17 +340,17 @@ function AdminUsersComponent() {
                       </td>
 
                       {/* Joined Date */}
-                      <td className="py-3 px-4 text-muted-foreground font-mono text-[11px]">
+                      <td className="h-[48px] py-1.5 px-4 text-muted-foreground font-mono text-[11px] whitespace-nowrap">
                         {u.date_joined ? new Date(u.date_joined).toLocaleDateString() : "Unknown"}
                       </td>
 
                       {/* Last Active */}
-                      <td className="py-3 px-4 text-muted-foreground font-mono text-[11px]">
+                      <td className="h-[48px] py-1.5 px-4 text-muted-foreground font-mono text-[11px] whitespace-nowrap">
                         {timeAgo(u.last_login)}
                       </td>
 
                       {/* Action */}
-                      <td className="py-3 px-4 text-right">
+                      <td className="h-[48px] py-1.5 px-4 text-right whitespace-nowrap">
                         <button
                           onClick={() => handleToggleActive(u)}
                           disabled={togglingId === u.id}
