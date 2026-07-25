@@ -287,7 +287,7 @@ function SearchPage() {
                     <option value="" className="bg-card text-foreground">All Statuses</option>
                     <option value="verified" className="bg-card text-foreground">Verified</option>
                     <option value="urgent" className="bg-card text-foreground">Urgent</option>
-                    <option value="warning" className="bg-card text-foreground">Updating</option>
+                    <option value="warning" className="bg-card text-foreground">Notice</option>
                     <option value="closed" className="bg-card text-foreground">Closed</option>
                   </select>
                 </div>

@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 
 import { api, ApiSystemStatus, ApiAgency } from "../lib/api";
-import { SpeedDots } from "../lib/speedIndicator";
 import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/status")({

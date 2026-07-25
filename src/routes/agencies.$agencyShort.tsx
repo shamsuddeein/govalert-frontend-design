@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, JobsEmptyState, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
-import { SpeedDots } from "../lib/speedIndicator";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
@@ -343,11 +342,21 @@ function AgencyProfilePage() {
 
         {/* PORTAL HEALTH */}
         <section>
-          <h2 className="text-[17px] font-semibold text-foreground">Portal Health</h2>
+          <h2 className="text-[17px] font-semibold text-foreground">Portal Availability</h2>
           <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <div className="text-[14px] text-muted-foreground">Response speed</div>
-              <div className="mt-1"><SpeedDots ms={agency.response_time_ms} showLabel /></div>
+              <div className="text-[14px] text-muted-foreground">Reachable Status</div>
+              <div className="mt-1 flex items-center gap-1.5 font-medium text-[14px]">
+                <span style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: isOnline ? '#0a5c38' : agency.status === 'maintenance' ? '#b45309' : '#b91c1c',
+                  display: 'inline-block',
+                  flexShrink: 0,
+                }} />
+                <span>{portalStatusLabel}</span>
+              </div>
             </div>
             <div>
               <div className="text-[14px] text-muted-foreground">Uptime</div>
