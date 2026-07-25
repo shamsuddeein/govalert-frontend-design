@@ -136,7 +136,7 @@ function AgenciesIndexPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="Federal MDAs & Official Recruitment Portal Directory — RecruitmentAlert"
+        title="Federal MDAs & Official Recruitment Portal Directory | RecruitmentAlert"
         description="Directory of 42 Nigerian Ministries, Departments, and Agencies (MDAs). Verify official recruitment URLs, server uptime, and historical recruitment campaigns."
         canonicalUrl="/agencies"
         jsonLd={[breadcrumbSchema]}

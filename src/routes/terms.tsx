@@ -26,7 +26,7 @@ export function TermsOfServicePage() {
         <section className="bg-[#0a5c38]/10 dark:bg-[#3fb68e]/10 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 p-4 rounded-[8px] space-y-2">
           <div className="flex items-center gap-2 text-[#0a5c38] dark:text-[#3fb68e] font-bold text-base">
             <CheckCircle2 className="size-5 shrink-0" />
-            <h2>Zero Fee Guarantee — Beware of Scams</h2>
+            <h2>Zero Fee Guarantee: Beware of Scams</h2>
           </div>
           <p className="text-xs text-foreground font-medium leading-relaxed">
             <strong>Official Nigerian Government recruitment is 100% FREE.</strong> Legitimate federal agencies (Customs, Immigration, Police, EFCC, Civil Service, NNPC) never demand money, processing fees, scratch cards, or payments for application forms. RecruitmentAlert.com.ng will NEVER ask you for money or fees. If anyone asks you for money in exchange for a government job, it is a scam.

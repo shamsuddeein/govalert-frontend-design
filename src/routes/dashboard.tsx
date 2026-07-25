@@ -585,7 +585,7 @@ function DashboardPage() {
                       <div>
                         <h4 className="text-xs font-bold text-primary uppercase">Weekly Intelligence Digest</h4>
                         <p className="text-xs text-muted-foreground">
-                          A curated digest of the week's scam alerts and portal checks.
+                          A weekly summary of scam alerts and portal checks.
                         </p>
                       </div>
                       <button

@@ -146,7 +146,7 @@ function AgencyProfilePage() {
   const fallbackDescription = `The ${agency.name} (${agency.acronym}) is a Nigerian federal ${agency.category || 'government'} institution monitored in real time by RecruitmentAlert. Job seekers can verify official portal endpoints, track historical hiring campaigns, and check portal availability to protect themselves against fraudulent recruitment scams.`;
   const agencyDescription = agency.description && agency.description.trim().length > 20 ? agency.description.trim() : fallbackDescription;
 
-  const pageTitle = `${agency.acronym} Recruitment 2026 — Verified Portal Status & History | RecruitmentAlert`;
+  const pageTitle = `${agency.acronym} Recruitment 2026: Verified Portal Status and History | RecruitmentAlert`;
   const pageMetaDescription = `Official recruitment portal status, uptime, and recruitment history for ${agency.name} (${agency.acronym}). Verify official .gov.ng portal link and active civil service openings.`;
 
   const govtOrgSchema = {
@@ -405,8 +405,8 @@ function AgencyProfilePage() {
               {totalChecksCount === 0
                 ? "Monitoring history is not available."
                 : totalChecksCount < 20
-                ? `Real-time monitoring active — based on initial sample of ${totalChecksCount} check${totalChecksCount === 1 ? '' : 's'}. History builds automatically.`
-                : `Real-time monitoring active — metrics computed across ${totalChecksCount} checks.`}
+                ? `Monitoring active. Based on initial sample of ${totalChecksCount} check${totalChecksCount === 1 ? '' : 's'}. History builds over time.`
+                : `Monitoring active. Metrics computed across ${totalChecksCount} checks.`}
             </span>
           </div>
         </section>

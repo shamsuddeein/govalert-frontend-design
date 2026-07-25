@@ -159,7 +159,7 @@ export function JobsEmptyState({
           {queryText ? `No matches for '${queryText}' right now.` : "No verified recruitment alerts found."}
         </h3>
         <p className="text-xs sm:text-sm text-muted-foreground font-sans leading-relaxed">
-          Get notified the moment a matching recruitment appears — join our Telegram channel or subscribe to email alerts for instant updates.
+          Get notified when a matching recruitment appears. Join our Telegram channel or subscribe to email alerts.
         </p>
       </div>
 
@@ -868,7 +868,7 @@ export function Index() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
       <SeoHead
-        title="RecruitmentAlert — Verified Nigerian Federal Government Job Portal Monitor"
+        title="RecruitmentAlert: Verified Nigerian Federal Government Job Portal Monitor"
         description="Real-time verified recruitment intelligence across 41 Nigerian federal MDA portals (NNPC, Customs, EFCC, Police, Immigration, FIRS). Stop scams and find official job openings."
         canonicalUrl="/"
       />

@@ -29,7 +29,7 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="About RecruitmentAlert — Independent Nigerian Government Recruitment Verification"
+        title="About RecruitmentAlert: Independent Nigerian Government Recruitment Verification"
         description="Why RecruitmentAlert was built: an independent monitoring system checking 42 official Nigerian federal portals to protect job seekers from recruitment scams."
         canonicalUrl="/about"
         jsonLd={[breadcrumbSchema]}

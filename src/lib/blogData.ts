@@ -12,7 +12,7 @@ export interface BlogPost {
 export const blogPosts: BlogPost[] = [
   {
     slug: "spot-fake-nnpc-recruitment-warning-signs",
-    title: "How to spot a fake NNPC recruitment — 7 warning signs every Nigerian job seeker must know",
+    title: "How to spot a fake NNPC recruitment: 7 warning signs every Nigerian job seeker must know",
     excerpt: "Learn how to identify fake NNPC recruitment websites, fraudulent WhatsApp groups, and scam portal URLs before wasting your time and money.",
     date: "24 July 2026",
     readTime: "6 min read",
@@ -91,11 +91,11 @@ Before applying or sharing any recruitment link on social media:
 3. **Audit the Endpoint:** Check our live [Public Audit Log](/audit-log) to confirm if our automated nodes detected an active change on the portal.
 
 Stay vigilant, protect your hard-earned money, and share this guide with fellow job seekers.
-`
+\`
   },
   {
     slug: "official-gov-ng-recruitment-portals-2026-list",
-    title: "Official .gov.ng recruitment portals — the complete verified list for 2026",
+    title: "Official .gov.ng recruitment portals: the complete verified list for 2026",
     excerpt: "The master verified directory of official Nigerian federal agency recruitment portals. bookmark this page to avoid fake job sites.",
     date: "24 July 2026",
     readTime: "7 min read",
