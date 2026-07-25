@@ -99,11 +99,7 @@ function AuditLogPage() {
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[1184px] w-full px-4 sm:px-6 py-10 space-y-6 outline-none">
         
-        {/* Header Banner */}
         <div className="border-b border-border pb-6 space-y-2">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-3 py-1 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] font-mono">
-            TRANSPARENT SYSTEM RECORD &middot; NO AUTH REQUIRED
-          </div>
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary">
             Public Automated Portal Audit Log
           </h1>

@@ -83,9 +83,6 @@ function PortalsDirectoryPage() {
         {/* Header Section */}
         <div className="border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">
-            <div className="inline-flex items-center gap-2 rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-3 py-1 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] font-mono">
-              OFFICIAL GOVERNMENT ENDPOINTS &middot; ALPHABETICAL DIRECTORY
-            </div>
             <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary">
               Monitored Federal MDA Portals
             </h1>

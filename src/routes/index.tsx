@@ -331,20 +331,13 @@ function Hero({
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6 w-full min-w-0">
         <div className="max-w-3xl space-y-5 sm:space-y-6 text-left">
           
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e] font-sans">
-            <span className="relative flex h-2 w-2">
-              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
-            </span>
-            <span>VERIFIED NIGERIAN GOVERNMENT RECRUITMENTS</span>
-          </div>
 
           <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground leading-[1.15]">
             Is that recruitment portal <span className="text-[#0a5c38] dark:text-[#3fb68e]">real or fake?</span>
           </h1>
 
           <p className="text-[15px] sm:text-[17px] leading-relaxed text-muted-foreground max-w-2xl font-sans">
-            Built by a Nigerian developer, launched July 2026, monitoring federal recruitment portals in real time. We audit official Nigerian government portals to bring you verified job openings, official deadlines, and direct application links, protected against fake recruitment scams.
+            We check 42 official Nigerian federal MDA portals and surface verified job openings, official deadlines, and direct application links. No payment is ever required to apply for a federal government job.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">

@@ -28,9 +28,6 @@ export function Logo() {
           <span className="font-normal">Alert</span>
         </span>
       </Link>
-      <span className="hidden xs:inline-flex items-center rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-2 py-0.5 text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] shrink-0 font-mono">
-        Launched July 2026
-      </span>
     </div>
   );
 }
@@ -418,7 +415,7 @@ export function Footer() {
           <div className="md:col-span-2 space-y-3 sm:space-y-4">
             <Logo />
             <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed font-sans">
-              Built by Shamsuddeen Yusuf, a backend developer in Kaduna, Nigeria. Protecting Nigerian job seekers from recruitment scams.
+              Independent recruitment verification for Nigerian job seekers. We monitor official federal government portals so you can tell real listings from fake ones.
             </p>
           </div>
 
@@ -457,7 +454,7 @@ export function Footer() {
 
         <div className="flex flex-col md:flex-row justify-between items-center mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 gap-4 font-sans">
           <p className="font-sans text-[11px] text-muted-foreground max-w-xl leading-relaxed">
-            © {new Date().getFullYear()} RecruitmentAlert. Built by Shamsuddeen Yusuf in Kaduna, Nigeria. Independent monitoring, not affiliated with the Federal Government.
+            &copy; {new Date().getFullYear()} RecruitmentAlert. Independent monitoring, not affiliated with the Federal Government of Nigeria.
           </p>
           <div className="flex items-center shrink-0">
             <span className="relative flex h-2 w-2 mr-[6px]">

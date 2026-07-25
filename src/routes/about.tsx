@@ -29,68 +29,48 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="About RecruitmentAlert. Built by Shamsuddeen Yusuf in Kaduna, Nigeria"
-        description="Why RecruitmentAlert was built by Shamsuddeen Yusuf, a developer in Kaduna, Nigeria, to protect Nigerian job seekers against recruitment scams."
+        title="About RecruitmentAlert — Independent Nigerian Government Recruitment Verification"
+        description="Why RecruitmentAlert was built: an independent monitoring system checking 42 official Nigerian federal portals to protect job seekers from recruitment scams."
         canonicalUrl="/about"
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
       <main id="main-content" tabIndex={-1} className="mx-auto max-w-[760px] px-6 py-12 outline-none">
-        
-        {/* Header */}
+
         <div className="mb-10 text-left space-y-3 border-b border-border pb-8">
-          <div className="inline-flex items-center gap-2 rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-3 py-1 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] font-mono">
-            LAUNCHED JULY 2026 &middot; KADUNA, NIGERIA
-          </div>
           <h1 className="text-3xl font-extrabold tracking-tight text-primary md:text-[34px] leading-tight">
             Why I Built RecruitmentAlert
           </h1>
           <p className="text-[16px] text-muted-foreground leading-relaxed font-sans">
-            A personal project by a developer who got tired of seeing friends lose money and hope to fake government job portals.
+            A developer who got tired of watching people lose money to fake government job portals built a system to check them automatically.
           </p>
         </div>
 
-        {/* Founder Story Article */}
         <article className="prose dark:prose-invert max-w-none space-y-6 text-[15px] sm:text-[16px] leading-[1.75] text-foreground font-sans">
-          
-          <p className="font-medium text-lg text-primary leading-snug">
-            My name is <strong>Shamsuddeen Yusuf</strong>. I am a backend developer and HND Software Engineering student at Kaduna Polytechnic in Kaduna, Nigeria.
+
+          <p>
+            My name is Shamsuddeen Yusuf. I am a backend developer and HND Software Engineering student at Kaduna Polytechnic in Kaduna, Nigeria.
           </p>
 
           <p>
-            In Nigeria, looking for a job is hard enough. But what makes it painful is the industry of recruitment scams that target young graduates. Every week, fake websites pop up claiming that NNPC, Customs, EFCC, or Immigration are recruiting. They copy government logos, invent deadline dates, and demand ₦5,000 or ₦10,000 "application form fee" or "scratch card pins".
+            In Nigeria, looking for a government job is hard. What makes it worse is the industry of fake recruitment that targets graduates who cannot afford to get it wrong. Every week, sites appear claiming NNPC, Customs, EFCC, or Immigration are recruiting. They copy government logos, invent deadlines, and charge ₦5,000 or ₦10,000 for an "application form fee" or "scratch card pins." People who cannot spare that money pay it, wait weeks for a result, and eventually realize no recruitment ever existed.
           </p>
 
           <p>
-            Many job seekers in Kaduna, Kano, Ibadan, and across the country spend their last savings on these fake portals, only to realize weeks later that no recruitment ever existed. It costs people their time, their money, and their dignity.
+            Legitimate Nigerian federal government recruitment is 100% free. No agency will ever ask you to pay to submit an application. But that fact is easy to say and hard to verify when you are looking at a convincing-looking website with a government logo on it. That is the gap this tool addresses.
           </p>
 
-          <div className="my-8 rounded-[8px] border border-[#0a5c38]/30 bg-[#0a5c38]/5 dark:bg-[#3fb68e]/10 p-6 space-y-2">
-            <h2 className="text-base font-bold text-[#0a5c38] dark:text-[#3fb68e]">The Simple Goal</h2>
-            <p className="text-sm text-foreground leading-relaxed">
-              Legitimate Nigerian government recruitment is 100% free. No federal agency will ever ask you to pay money to submit an application. RecruitmentAlert exists to answer one question instantly: <em>Is this recruitment portal real or fake?</em>
-            </p>
-          </div>
-
-          <h2 className="text-xl font-bold tracking-tight text-primary pt-2">How It Works</h2>
           <p>
-            Instead of relying on WhatsApp rumors or sponsored blog posts, I built an automated monitoring system that directly checks 42 official Nigerian federal MDA subdomains (like <code>nnpcgroup.com</code>, <code>customs.gov.ng</code>, and <code>efcc.gov.ng</code>) in real-time.
-          </p>
-          <p>
-            When an official agency portal updates its public page with a verified hiring notice, shortlisted candidate list, or portal closure, the system verifies the domain SSL certificate and notifies subscribers on Telegram and email.
+            I built an automated monitoring system that directly checks 42 official Nigerian federal MDA portals (including <code>nnpcgroup.com</code>, <code>customs.gov.ng</code>, and <code>efcc.gov.ng</code>) and records what it finds. When an official portal updates with a hiring notice, shortlist, or closure, the system verifies the domain, records a timestamped check, and notifies subscribers through Telegram and email. Every check is logged and the timestamps are public on the <Link to="/audit-log" className="text-[#0a5c38] dark:text-[#3fb68e] font-semibold underline">Audit Log</Link> page so anyone can verify what was checked and when.
           </p>
 
-          <h2 className="text-xl font-bold tracking-tight text-primary pt-2">No Corporate BS, Just Real Code</h2>
           <p>
-            There is no corporate board behind this, no stock photos, and no fake team members. I built this platform myself in July 2026 using Python, Django, APScheduler, and React.
-          </p>
-          <p>
-            The entire backend code and audit logic are open and transparent. If our system checks a portal, you can verify the exact check timestamp on our public <Link to="/audit-log" className="text-[#0a5c38] dark:text-[#3fb68e] font-semibold underline">Audit Log</Link> page.
+            I built this in July 2026 using Python, Django, APScheduler, and React. There is no company behind it, no investors, and no team. If something breaks I fix it. If you find an error in a listing, email me and I will look into it.
           </p>
 
           {/* Contact & GitHub Info Card */}
           <div className="mt-10 rounded-[8px] border border-border bg-card p-6 space-y-4">
-            <h3 className="text-base font-bold text-primary">Direct Contact & Verification</h3>
+            <h3 className="text-base font-bold text-primary">Contact</h3>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 <strong className="text-foreground">Developer:</strong> Shamsuddeen Yusuf
