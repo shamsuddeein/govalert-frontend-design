@@ -458,11 +458,11 @@ function JobDetailsPage() {
             </>
           )}
           
-          <div className="mt-8 flex flex-wrap items-center gap-3">
+          <div className="mt-8 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             {isClosed ? (
               <button
                 disabled
-                className="inline-flex items-center justify-center rounded-[6px] bg-muted text-muted-foreground px-[20px] py-[10px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
+                className="inline-flex h-[44px] w-full sm:w-auto items-center justify-center rounded-[6px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border"
               >
                 Recruitment Portal Closed
               </button>
@@ -470,7 +470,7 @@ function JobDetailsPage() {
               <button
                 disabled
                 title="Official direct portal URL is not provided in source notice"
-                className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-muted text-muted-foreground px-[20px] py-[10px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border font-sans"
+                className="inline-flex h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-[6px] bg-muted text-muted-foreground px-[20px] text-[14px] font-semibold opacity-70 cursor-not-allowed border border-border font-sans"
               >
                 <span>No Direct Application Link Available</span>
               </button>
@@ -479,9 +479,9 @@ function JobDetailsPage() {
                 href={job.official_url.trim()}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-[#15803D] hover:bg-[#15803D]/90 text-[#FFFFFF] px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer"
+                className="inline-flex h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-[6px] bg-[#15803D] hover:bg-[#15803D]/90 text-[#FFFFFF] px-[20px] text-[14px] font-semibold transition-colors cursor-pointer"
               >
-                Apply on Official Portal
+                <span>Apply on Official Portal</span>
                 {/* Diagonal arrow — external */}
                 <svg className="size-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M3 13 L13 3" />
@@ -494,7 +494,7 @@ function JobDetailsPage() {
               href={`https://t.me/govalerts_bot?start=watch_${job.ref}`}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-[6px] border border-[#15803D] text-[#15803D] hover:bg-[#15803D]/10 bg-transparent px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer font-sans"
+              className="inline-flex h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-[6px] border border-[#15803D] text-[#15803D] hover:bg-[#15803D]/10 bg-transparent px-[20px] text-[14px] font-semibold transition-colors cursor-pointer font-sans"
             >
               <svg className="size-[16px] fill-current shrink-0" viewBox="0 0 24 24">
                 <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
@@ -505,7 +505,7 @@ function JobDetailsPage() {
             <button
               onClick={handleToggleSave}
               disabled={saving}
-              className={`inline-flex items-center gap-2 rounded-[6px] border px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer ${
+              className={`inline-flex h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-[6px] border px-[20px] text-[14px] font-semibold transition-colors cursor-pointer ${
                 isSaved
                   ? "bg-[#15803D]/10 border-[#15803D] text-[#15803D]"
                   : "border-border bg-card text-foreground hover:bg-muted"
@@ -523,7 +523,7 @@ function JobDetailsPage() {
                   <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5l-5-3.5-5 3.5V2z" />
                 </svg>
               )}
-              {saving ? "Updating..." : isSaved ? "Bookmarked" : "Save Job"}
+              <span>{saving ? "Updating..." : isSaved ? "Bookmarked" : "Save Job"}</span>
             </button>
           </div>
         </section>

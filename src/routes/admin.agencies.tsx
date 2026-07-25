@@ -110,21 +110,21 @@ function AdminAgenciesComponent() {
       {/* Filter & Search Bar */}
       <div className="flex flex-col md:flex-row items-center justify-between gap-3 bg-card p-3.5 rounded-[8px] border border-border">
         <form onSubmit={handleSearchSubmit} className="relative w-full md:w-80 font-sans">
-          <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search acronym or name..."
-            className="w-full pl-9 pr-4 py-2 bg-background border border-border rounded-[6px] text-xs text-foreground placeholder-muted-foreground focus:outline-none focus:border-primary font-sans"
+            className="pl-9 pr-4 h-[44px] w-full bg-card border border-border rounded-[6px] text-xs text-foreground placeholder:text-muted-foreground outline-none focus:border-primary font-sans"
           />
         </form>
 
-        <div className="flex items-center gap-3 w-full md:w-auto font-sans">
+        <div className="w-full sm:w-48">
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="px-3 py-2 bg-background border border-border rounded-[6px] text-xs font-sans text-foreground focus:outline-none focus:border-primary"
+            className="h-[44px] w-full px-3 bg-card border border-border rounded-[6px] text-xs font-medium text-foreground outline-none cursor-pointer focus:border-primary font-sans"
           >
             <option value="">All Categories</option>
             <option value="SECURITY">Security & Law Enforcement</option>

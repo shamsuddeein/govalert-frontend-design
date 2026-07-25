@@ -247,7 +247,7 @@ function AdminJobsCreate() {
                   <select
                     value={selectedAgencyId}
                     onChange={(e) => setSelectedAgencyId(e.target.value ? Number(e.target.value) : "")}
-                    className="w-full h-10 px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans"
+                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans cursor-pointer"
                     required
                   >
                     <option value="" disabled>

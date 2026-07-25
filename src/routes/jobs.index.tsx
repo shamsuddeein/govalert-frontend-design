@@ -445,13 +445,13 @@ function JobsPage() {
                         </div>
                       </div>
 
-                      <div className="mt-6 pt-3 flex items-center justify-between border-t border-border/40">
+                      <div className="mt-6 pt-3 flex items-center justify-between gap-3 border-t border-border/40">
                         <button
                           onClick={(e) => handleToggleBookmark(job.id, e)}
-                          className={`inline-flex items-center gap-1.5 text-[12px] font-semibold transition-colors cursor-pointer font-sans ${
+                          className={`inline-flex items-center gap-1.5 h-[44px] px-3 rounded-[6px] text-[13px] font-semibold transition-colors cursor-pointer font-sans shrink-0 ${
                             savedRefMap[job.id]
-                              ? "text-[#0a5c38] dark:text-[#3fb68e]"
-                              : "text-muted-foreground hover:text-foreground"
+                              ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e]"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
                           }`}
                         >
                           {savedRefMap[job.id] ? (
@@ -472,7 +472,7 @@ function JobsPage() {
                         <Link
                           to="/jobs/$jobId"
                           params={{ jobId: job.id }}
-                          className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold font-sans"
+                          className="inline-flex items-center justify-center h-[44px] px-4 rounded-[6px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] hover:bg-[#0a5c38] hover:text-white dark:hover:bg-[#3fb68e] dark:hover:text-[#0c1015] text-[13px] font-semibold transition-colors font-sans"
                         >
                           View details &rarr;
                         </Link>

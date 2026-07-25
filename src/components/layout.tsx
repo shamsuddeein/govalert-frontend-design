@@ -240,32 +240,99 @@ export function Nav() {
         {mobileMenuOpen && (
           <div className="absolute top-[60px] left-0 w-full bg-background border-b border-border z-40 flex flex-col p-6 md:hidden shadow-lg animate-in slide-in-from-top-4 duration-200">
             {/* Section 1: Navigation */}
-            <div className="flex flex-col space-y-3">
-              <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Home</Link>
-              <Link to="/jobs" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Jobs</Link>
-              <Link to="/agencies" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Agencies</Link>
-              <Link to="/verification" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Verification</Link>
-              <Link to="/about" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">About</Link>
+            <div className="flex flex-col space-y-1">
+              <Link
+                to="/"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                Home
+              </Link>
+              <Link
+                to="/jobs"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                Jobs
+              </Link>
+              <Link
+                to="/agencies"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                Agencies
+              </Link>
+              <Link
+                to="/verification"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                Verification
+              </Link>
+              <Link
+                to="/about"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                About
+              </Link>
+              <Link
+                to="/telegram"
+                onClick={() => setMobileMenuOpen(false)}
+                className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60 transition-colors"
+                activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+              >
+                Telegram Alerts
+              </Link>
             </div>
 
-            <hr className="my-4 border-border/60" />
+            <hr className="my-3 border-border/60" />
 
             {/* Section 2: Account */}
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-col space-y-1">
               {authed ? (
                 <>
-                  <Link to="/dashboard" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Dashboard</Link>
-                  <button onClick={() => { setMobileMenuOpen(false); handleLogout(); }} className="text-left text-[15px] font-medium text-muted-foreground hover:text-red-600">Sign Out</button>
+                  <Link
+                    to="/dashboard"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60"
+                    activeProps={{ className: "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] font-semibold" }}
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={() => { setMobileMenuOpen(false); handleLogout(); }}
+                    className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-muted-foreground hover:text-red-600 w-full text-left"
+                  >
+                    Sign Out
+                  </button>
                 </>
               ) : (
                 <>
-                  <Link to="/sign-in" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-medium text-foreground hover:text-primary">Sign In</Link>
-                  <Link to="/register" onClick={() => setMobileMenuOpen(false)} className="text-[15px] font-semibold text-[#0a5c38] dark:text-[#3fb68e]">Sign Up</Link>
+                  <Link
+                    to="/sign-in"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-medium text-foreground hover:bg-muted/60"
+                  >
+                    Sign In
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center h-[44px] px-3 rounded-[6px] text-[15px] font-semibold text-[#0a5c38] dark:text-[#3fb68e]"
+                  >
+                    Sign Up
+                  </Link>
                 </>
               )}
             </div>
 
-            <hr className="my-4 border-border/60" />
+            <hr className="my-3 border-border/60" />
 
             {/* Section 3: Get Alerts CTA */}
             <a
@@ -280,17 +347,17 @@ export function Nav() {
               Get Alerts
             </a>
 
-            <hr className="my-4 border-border/60" />
+            <hr className="my-3 border-border/60" />
 
             {/* Section 4: Legal & Verification Links */}
             <div>
-              <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground mb-1">
                 Legal & Governance
               </p>
-              <div className="flex flex-col space-y-2">
-                <Link to="/verification" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Verification FAQ</Link>
-                <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Privacy Policy</Link>
-                <Link to="/terms" onClick={() => setMobileMenuOpen(false)} className="text-[12px] text-muted-foreground hover:text-primary">Terms of Service</Link>
+              <div className="flex flex-col space-y-1">
+                <Link to="/verification" onClick={() => setMobileMenuOpen(false)} className="flex items-center h-[36px] text-[13px] text-muted-foreground hover:text-primary">Verification FAQ</Link>
+                <Link to="/privacy" onClick={() => setMobileMenuOpen(false)} className="flex items-center h-[36px] text-[13px] text-muted-foreground hover:text-primary">Privacy Policy</Link>
+                <Link to="/terms" onClick={() => setMobileMenuOpen(false)} className="flex items-center h-[36px] text-[13px] text-muted-foreground hover:text-primary">Terms of Service</Link>
               </div>
             </div>
           </div>

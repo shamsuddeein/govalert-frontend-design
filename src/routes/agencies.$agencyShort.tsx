@@ -308,7 +308,7 @@ function AgencyProfilePage() {
                 href="https://t.me/govalerts_bot"
                 target="_blank"
                 rel="noreferrer"
-                className="mt-6 inline-flex h-[44px] items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[20px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10 cursor-pointer"
+                className="mt-6 inline-flex h-[44px] w-full sm:w-auto items-center justify-center rounded-[8px] border border-[#0a5c38] dark:border-[#3fb68e] bg-transparent px-[20px] text-[14px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:bg-[#0a5c38]/5 dark:hover:bg-[#3fb68e]/10 cursor-pointer"
               >
                 Subscribe to alerts for this agency
               </a>

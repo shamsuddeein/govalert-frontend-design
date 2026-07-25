@@ -339,7 +339,7 @@ function AgenciesIndexPage() {
                         <Link
                           to="/agencies/$agencyShort"
                           params={{ agencyShort: agency.slug || agency.acronym }}
-                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-sans shrink-0"
+                          className="font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-sans shrink-0 h-[36px] px-2 flex items-center justify-center rounded-[4px] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 sm:bg-transparent sm:dark:bg-transparent sm:h-auto sm:px-0"
                         >
                           View profile &rarr;
                         </Link>
