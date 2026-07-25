@@ -91,7 +91,7 @@ Before applying or sharing any recruitment link on social media:
 3. **Audit the Endpoint:** Check our live [Public Audit Log](/audit-log) to confirm if our automated nodes detected an active change on the portal.
 
 Stay vigilant, protect your hard-earned money, and share this guide with fellow job seekers.
-\`
+`
   },
   {
     slug: "official-gov-ng-recruitment-portals-2026-list",
