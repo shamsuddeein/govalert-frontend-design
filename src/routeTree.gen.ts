@@ -43,6 +43,7 @@ import { Route as AdminPortalsRouteImport } from './routes/admin.portals'
 import { Route as AdminMonitorViewerRouteImport } from './routes/admin.monitor-viewer'
 import { Route as AdminLoginRouteImport } from './routes/admin.login'
 import { Route as AdminJobsCreateRouteImport } from './routes/admin.jobs-create'
+import { Route as AdminBlogRouteImport } from './routes/admin.blog'
 import { Route as AdminAlertsRouteImport } from './routes/admin.alerts'
 import { Route as AdminAgenciesRouteImport } from './routes/admin.agencies'
 
@@ -216,6 +217,11 @@ const AdminJobsCreateRoute = AdminJobsCreateRouteImport.update({
   path: '/jobs-create',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBlogRoute = AdminBlogRouteImport.update({
+  id: '/blog',
+  path: '/blog',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAlertsRoute = AdminAlertsRouteImport.update({
   id: '/alerts',
   path: '/alerts',
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/jobs-create': typeof AdminJobsCreateRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
@@ -284,6 +291,7 @@ export interface FileRoutesByTo {
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/jobs-create': typeof AdminJobsCreateRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
@@ -323,6 +331,7 @@ export interface FileRoutesById {
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
+  '/admin/blog': typeof AdminBlogRoute
   '/admin/jobs-create': typeof AdminJobsCreateRoute
   '/admin/login': typeof AdminLoginRoute
   '/admin/monitor-viewer': typeof AdminMonitorViewerRoute
@@ -363,6 +372,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
+    | '/admin/blog'
     | '/admin/jobs-create'
     | '/admin/login'
     | '/admin/monitor-viewer'
@@ -398,6 +408,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
+    | '/admin/blog'
     | '/admin/jobs-create'
     | '/admin/login'
     | '/admin/monitor-viewer'
@@ -436,6 +447,7 @@ export interface FileRouteTypes {
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
+    | '/admin/blog'
     | '/admin/jobs-create'
     | '/admin/login'
     | '/admin/monitor-viewer'
@@ -719,6 +731,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminJobsCreateRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/blog': {
+      id: '/admin/blog'
+      path: '/blog'
+      fullPath: '/admin/blog'
+      preLoaderRoute: typeof AdminBlogRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/alerts': {
       id: '/admin/alerts'
       path: '/alerts'
@@ -739,6 +758,7 @@ declare module '@tanstack/react-router' {
 interface AdminRouteChildren {
   AdminAgenciesRoute: typeof AdminAgenciesRoute
   AdminAlertsRoute: typeof AdminAlertsRoute
+  AdminBlogRoute: typeof AdminBlogRoute
   AdminJobsCreateRoute: typeof AdminJobsCreateRoute
   AdminLoginRoute: typeof AdminLoginRoute
   AdminMonitorViewerRoute: typeof AdminMonitorViewerRoute
@@ -751,6 +771,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAgenciesRoute: AdminAgenciesRoute,
   AdminAlertsRoute: AdminAlertsRoute,
+  AdminBlogRoute: AdminBlogRoute,
   AdminJobsCreateRoute: AdminJobsCreateRoute,
   AdminLoginRoute: AdminLoginRoute,
   AdminMonitorViewerRoute: AdminMonitorViewerRoute,

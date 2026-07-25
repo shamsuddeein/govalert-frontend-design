@@ -39,6 +39,20 @@ export interface AdminUserRecord {
   last_login: string | null;
 }
 
+export interface AdminBlogPostRecord {
+  id: number;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  category: string;
+  author: string;
+  read_time: string;
+  is_published: boolean;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface VisitorStats {
   active_online_visitors: number;
   visitors_today: number;
@@ -635,5 +649,41 @@ export const adminApi = {
       recent_failed_snapshots: [],
       daily_trend_7_days: [],
     };
+  },
+
+  // Blog Post Management
+  getBlogPosts: async (): Promise<{ results: AdminBlogPostRecord[]; count: number }> => {
+    const res = await adminRequest<{ results: AdminBlogPostRecord[]; count: number }>("/blog/");
+    return res || { results: [], count: 0 };
+  },
+
+  createBlogPost: async (data: {
+    title: string;
+    slug?: string;
+    excerpt?: string;
+    content: string;
+    category?: string;
+    author?: string;
+    read_time?: string;
+    is_published?: boolean;
+  }): Promise<AdminBlogPostRecord> => {
+    return adminRequest<AdminBlogPostRecord>("/blog/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
+
+  updateBlogPost: async (
+    id: number,
+    data: Partial<AdminBlogPostRecord>
+  ): Promise<AdminBlogPostRecord> => {
+    return adminRequest<AdminBlogPostRecord>(`/blog/${id}/`, {
+      method: "PUT",
+      body: JSON.stringify(data),
+    });
+  },
+
+  deleteBlogPost: async (id: number): Promise<void> => {
+    await adminRequest(`/blog/${id}/`, { method: "DELETE" });
   },
 };

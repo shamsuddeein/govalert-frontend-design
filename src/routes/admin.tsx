@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Radio,
   PlusCircle,
+  FileText,
 } from "lucide-react";
 import {
   adminApi,
@@ -113,6 +114,11 @@ function AdminLayout() {
       label: "System Health",
       to: "/admin/system-health",
       icon: Activity,
+    },
+    {
+      label: "Blog Posts",
+      to: "/admin/blog",
+      icon: FileText,
     },
     {
       label: "Users",

@@ -1,6 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { blogPosts } from "../lib/blogData";
+import { blogPosts, BlogPost } from "../lib/blogData";
+import { api } from "../lib/api";
 import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/blog/$slug")({
@@ -72,7 +74,31 @@ function renderMarkdownContent(content: string) {
 
 function BlogPostDetailPage() {
   const { slug } = Route.useParams();
-  const post = blogPosts.find((p) => p.slug === slug) || blogPosts[0];
+  const fallback = blogPosts.find((p) => p.slug === slug) || blogPosts[0];
+  const [post, setPost] = useState<BlogPost>(fallback);
+
+  useEffect(() => {
+    async function loadDetail() {
+      try {
+        const res = await api.getBlogPostDetail(slug);
+        if (res && res.title) {
+          setPost({
+            slug: res.slug || slug,
+            title: res.title,
+            excerpt: res.excerpt || "",
+            date: "24 July 2026",
+            readTime: res.read_time || "5 min read",
+            author: res.author || "Shamsuddeen Yusuf",
+            category: res.category || "Scam Prevention",
+            content: res.content || "",
+          });
+        }
+      } catch (e) {
+        // Fallback to static post
+      }
+    }
+    loadDetail();
+  }, [slug]);
 
   const blogArticleSchema = {
     "@context": "https://schema.org",

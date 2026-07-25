@@ -1,6 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { blogPosts } from "../lib/blogData";
+import { blogPosts as fallbackPosts, BlogPost } from "../lib/blogData";
+import { api } from "../lib/api";
+import { safeFormatDateTime } from "../lib/formatDate";
 import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/blog/")({
@@ -8,6 +11,35 @@ export const Route = createFileRoute("/blog/")({
 });
 
 function BlogIndexPage() {
+  const [posts, setPosts] = useState<BlogPost[]>(fallbackPosts);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadPosts() {
+      try {
+        const res = await api.getBlogPosts();
+        if (res && res.results && res.results.length > 0) {
+          const mapped: BlogPost[] = res.results.map((p: any) => ({
+            slug: p.slug,
+            title: p.title,
+            excerpt: p.excerpt,
+            date: safeFormatDateTime(p.created_at, "24 July 2026"),
+            readTime: p.read_time || "5 min read",
+            author: p.author || "Shamsuddeen Yusuf",
+            category: p.category || "Scam Prevention",
+            content: p.content,
+          }));
+          setPosts(mapped);
+        }
+      } catch (e) {
+        // Fallback to static articles
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadPosts();
+  }, []);
+
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -41,7 +73,7 @@ function BlogIndexPage() {
         {/* Header */}
         <div className="border-b border-border pb-8 space-y-3 text-left">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-3 py-1 text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] font-mono">
-            EDUCATIONAL GUIDES & anti-scam INTELLIGENCE
+            EDUCATIONAL GUIDES & ANTI-SCAM INTELLIGENCE
           </div>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-primary">
             Recruitment Scam Awareness Blog
@@ -53,7 +85,7 @@ function BlogIndexPage() {
 
         {/* Articles List */}
         <div className="grid gap-8 md:grid-cols-3 items-stretch">
-          {blogPosts.map((post) => (
+          {posts.map((post) => (
             <article
               key={post.slug}
               className="group flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 interactive-card hover:border-[#0a5c38]/50 dark:hover:border-[#3fb68e]/50"

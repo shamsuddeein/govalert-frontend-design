@@ -428,6 +428,16 @@ export const api = {
     return request<ApiLiveFeedItem[]>("/status/live-feed/");
   },
 
+  getBlogPosts: async (): Promise<{ results: any[]; count: number } | null> => {
+    const res = await request<any>("/blog/");
+    if (!res || !Array.isArray(res.results)) return null;
+    return { results: res.results, count: res.count || res.results.length };
+  },
+
+  getBlogPostDetail: async (slug: string): Promise<any | null> => {
+    return request<any>(`/blog/${slug}/`);
+  },
+
   // Auth
   register: async (name: string, email: string, password: string): Promise<{ tokens?: ApiAuthTokens; error?: string }> => {
     try {
