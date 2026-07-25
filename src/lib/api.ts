@@ -448,10 +448,17 @@ export const api = {
       });
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 429) {
+          return { error: "Too many sign-up attempts. Please wait a minute before trying again." };
+        }
         const firstErr = typeof data === "object" && data !== null
           ? Object.values(data).flat()[0]
           : null;
-        return { error: (firstErr as string) || "Failed to create account." };
+        let finalError = (firstErr as string) || "Failed to create account.";
+        if (typeof finalError === "string" && finalError.toLowerCase().includes("throttled")) {
+          finalError = "Too many sign-up attempts. Please wait a minute before trying again.";
+        }
+        return { error: finalError };
       }
       setAuthTokens(data);
       return { tokens: data };
@@ -469,8 +476,15 @@ export const api = {
       });
       const data = await res.json();
       if (!res.ok) {
+        if (res.status === 429) {
+          return { error: "Too many sign-in attempts. Please wait a minute before trying again." };
+        }
         const errorMsg = data?.detail || (typeof data === "object" && data !== null ? Object.values(data).flat()[0] : null);
-        return { error: (errorMsg as string) || "Invalid email or password." };
+        let finalError = (errorMsg as string) || "Invalid email or password.";
+        if (typeof finalError === "string" && finalError.toLowerCase().includes("throttled")) {
+          finalError = "Too many sign-in attempts. Please wait a minute before trying again.";
+        }
+        return { error: finalError };
       }
       setAuthTokens(data);
       return { tokens: data };

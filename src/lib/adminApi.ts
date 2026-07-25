@@ -349,7 +349,14 @@ export const adminApi = {
 
     const data = await res.json();
     if (!res.ok) {
-      throw new Error(data?.detail || "Invalid credentials or non-staff user.");
+      if (res.status === 429) {
+        throw new Error("Too many login attempts. Please wait a minute before trying again.");
+      }
+      let errDetail = data?.detail || "Invalid credentials or non-staff user.";
+      if (typeof errDetail === "string" && errDetail.toLowerCase().includes("throttled")) {
+        errDetail = "Too many login attempts. Please wait a minute before trying again.";
+      }
+      throw new Error(errDetail);
     }
 
     setAdminTokens(data.access, data.refresh);
