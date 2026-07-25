@@ -58,9 +58,7 @@ export function AgencyLogo({ short, url, size = 40, className = "", rounded = "r
   })();
 
   const sources = [
-    `https://logo.clearbit.com/${domain}?size=128`,
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-    `https://icons.duckduckgo.com/ip3/${domain}.ico`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=32`,
   ];
   const src = !failedAll && srcIdx < sources.length ? sources[srcIdx] : null;
 

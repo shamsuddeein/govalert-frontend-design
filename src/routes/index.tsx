@@ -403,7 +403,7 @@ function Hero({
                 key={tag}
                 type="button"
                 onClick={() => onTagClick(tag)}
-                className="shrink-0 bg-muted/60 text-foreground hover:bg-muted text-[12px] font-medium rounded-[6px] px-[10px] py-[4px] transition-colors cursor-pointer border border-border font-sans"
+                className="shrink-0 bg-muted/60 text-foreground hover:bg-muted text-[12px] font-medium rounded-[6px] px-[12px] py-[10px] min-h-[44px] min-w-[44px] inline-flex items-center justify-center transition-colors cursor-pointer border border-border font-sans"
               >
                 {tag}
               </button>
@@ -590,7 +590,7 @@ function LatestJobs({
                         </div>
                         <div>
                           <span className="block text-muted-foreground text-[12px]">Verification</span>
-                          <OfficialSourceLink url={portalUrl} />
+                          <OfficialSourceLink url={portalUrl} agencyShort={job.agencyShort || job.agency} />
                         </div>
                       </div>
                     </div>

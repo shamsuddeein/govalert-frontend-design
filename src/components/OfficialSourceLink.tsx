@@ -45,7 +45,15 @@ export function OfficialSourceLink({
     );
   }
 
-  const accessibleLabel = `${label}${agencyShort ? ` for ${agencyShort}` : ""} (opens in a new tab)`;
+  const hostname = (() => {
+    try {
+      return new URL(url.trim()).hostname.replace(/^www\./, "");
+    } catch {
+      return "";
+    }
+  })();
+  const targetName = agencyShort || hostname || "portal";
+  const accessibleLabel = `${label} for ${targetName}`;
 
   return (
     <a

@@ -253,7 +253,7 @@ function StatusPage() {
             <path d="M10 6v4l2.5 2.5" />
           </svg>
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold text-primary font-sans">About this status page</h4>
+            <h2 className="text-sm font-semibold text-primary font-sans">About this status page</h2>
             <p className="text-xs text-muted-foreground leading-relaxed font-sans">
               This page displays reachability status of official Nigerian government recruitment portals. A portal marked "Offline" indicates connection timeouts or DNS resolution issues detected during recent automated checks.
             </p>

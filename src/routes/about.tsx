@@ -95,42 +95,42 @@ function AboutPage() {
           </div>
 
           {/* No boxes, no cards. Just type and negative space. */}
-          <div className="grid gap-8 sm:grid-cols-3">
-            <div className="space-y-3">
-              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">01</span>
-              <h4 className="font-bold text-[16px] text-foreground">Digital DNS & SSL Vetting</h4>
-              <p className="text-[14px] text-muted-foreground leading-relaxed">
-                We verify domain name servers and enterprise EV SSL encryption schemas to ensure the registration link is a legitimate .gov.ng site, not a phishing clone.
-              </p>
-            </div>
+            <div className="grid gap-8 sm:grid-cols-3">
+              <div className="space-y-3">
+                <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">01</span>
+                <h3 className="font-bold text-[16px] text-foreground">Digital DNS & SSL Vetting</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">
+                  We verify domain name servers and enterprise EV SSL encryption schemas to ensure the registration link is a legitimate .gov.ng site, not a phishing clone.
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">02</span>
-              <h4 className="font-bold text-[16px] text-foreground">Gazette Cross-Referencing</h4>
-              <p className="text-[14px] text-muted-foreground leading-relaxed">
-                Our intelligence officers cross-reference recruitment announcements with federal gazettes, official agency directives, or verified public authorities.
-              </p>
-            </div>
+              <div className="space-y-3">
+                <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">02</span>
+                <h3 className="font-bold text-[16px] text-foreground">Gazette Cross-Referencing</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">
+                  Our intelligence officers cross-reference recruitment announcements with federal gazettes, official agency directives, or verified public authorities.
+                </p>
+              </div>
 
-            <div className="space-y-3">
-              <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">03</span>
-              <h4 className="font-bold text-[16px] text-foreground">Signed & Timestamped Pushes</h4>
-              <p className="text-[14px] text-muted-foreground leading-relaxed">
-                Once vetted, the alert is logged, timestamped, and immediately transmitted to dashboard subscribers and Telegram channels.
-              </p>
+              <div className="space-y-3">
+                <span className="font-mono text-[36px] font-bold text-[#0a5c38] dark:text-[#3fb68e] opacity-40 block leading-none">03</span>
+                <h3 className="font-bold text-[16px] text-foreground">Signed & Timestamped Pushes</h3>
+                <p className="text-[14px] text-muted-foreground leading-relaxed">
+                  Once vetted, the alert is logged, timestamped, and immediately transmitted to dashboard subscribers and Telegram channels.
+                </p>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* Anti-Scam Commitment */}
-        <div className="rounded-[8px] border border-border bg-muted/20 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-xl text-left">
-            <div className="flex items-center gap-2 text-[#0a5c38] dark:text-[#3fb68e]">
-              <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-              <h4 className="font-bold text-sm">Anti-Scam Commitment</h4>
-            </div>
+          {/* Anti-Scam Commitment */}
+          <div className="rounded-[8px] border border-border bg-muted/20 p-8 flex flex-col md:flex-row md:items-center justify-between gap-6">
+            <div className="space-y-2 max-w-xl text-left">
+              <div className="flex items-center gap-2 text-[#0a5c38] dark:text-[#3fb68e]">
+                <svg className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                <h3 className="font-bold text-sm">Anti-Scam Commitment</h3>
+              </div>
             <p className="text-[13px] text-muted-foreground leading-relaxed">
               RecruitmentAlert is entirely independent. We have zero affiliations with the Federal Government, nor do we run, process, or sell employment spots. We provide pure public intelligence.
             </p>

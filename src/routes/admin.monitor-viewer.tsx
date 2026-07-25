@@ -456,7 +456,7 @@ function AdminMonitorViewerComponent() {
                           {p.agency_acronym || p.name}
                         </span>
                       </div>
-                      <span className={cn("text-[9px] font-mono px-1.5 py-0.2 rounded border font-semibold", state.color)}>
+                      <span className={cn("text-[12px] font-mono px-1.5 py-0.2 rounded border font-semibold", state.color)}>
                         {state.label}
                       </span>
                     </div>
@@ -491,7 +491,7 @@ function AdminMonitorViewerComponent() {
                     <span className="font-mono text-muted-foreground font-semibold">{item.time}</span>
                     <span
                       className={cn(
-                        "text-[9px] font-semibold px-1.5 py-0.2 rounded font-mono uppercase",
+                        "text-[12px] font-semibold px-1.5 py-0.2 rounded font-mono uppercase",
                         item.type === "change"
                           ? "bg-amber-500/10 text-amber-500 border border-amber-500/30"
                           : item.type === "approved"
