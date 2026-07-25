@@ -211,7 +211,7 @@ function AdminLayout() {
             </nav>
           </div>
 
-          {/* Sidebar Footer — User Info & Logout */}
+          {/* Sidebar Footer : User Info & Logout */}
           <div className="p-3 border-t border-border bg-muted/30">
             <div className="flex items-center justify-between px-3 py-2 rounded-[6px] bg-card border border-border">
               <div className="overflow-hidden pr-2">

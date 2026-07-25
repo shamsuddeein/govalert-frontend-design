@@ -172,7 +172,7 @@ async function request<T>(
     });
     clearTimeout(timeoutId);
 
-    // 401 Unauthorized handling — attempt token refresh once
+    // 401 Unauthorized handling : attempt token refresh once
     if (res.status === 401 && !isRetry && !endpoint.includes("/token/") && !endpoint.includes("/logout/")) {
       if (!isRefreshing) {
         isRefreshing = true;

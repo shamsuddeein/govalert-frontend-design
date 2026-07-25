@@ -176,7 +176,7 @@ function AdminMonitorViewerComponent() {
               id: `portal-${p.id}`,
               time: timeStr,
               portalName: p.name || p.agency_acronym,
-              event: state.label === "Content Changed" ? "Content change detected" : `Scanned — ${state.label}`,
+              event: state.label === "Content Changed" ? "Content change detected" : `Scanned : ${state.label}`,
               type: state.label === "Content Changed" ? "change" : "scan_ok",
             });
           });
@@ -189,7 +189,7 @@ function AdminMonitorViewerComponent() {
           id: `portal-${p.id}`,
           time: p.last_checked_at ? new Date(p.last_checked_at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Live",
           portalName: p.name || p.agency_acronym,
-          event: `Scanned — ${getPortalState(p).label}`,
+          event: `Scanned : ${getPortalState(p).label}`,
           type: getPortalState(p).label === "Content Changed" ? "change" : "scan_ok",
         }));
         setActivityFeed(portalEvents);
@@ -271,7 +271,7 @@ function AdminMonitorViewerComponent() {
             id: String(Date.now()),
             time: nowStr,
             portalName: targetPortal?.name || "Portal",
-            event: "Content Changed — Alert Queued",
+            event: "Content Changed : Alert Queued",
             type: "change",
           },
           ...prev,
@@ -283,7 +283,7 @@ function AdminMonitorViewerComponent() {
             id: String(Date.now()),
             time: nowStr,
             portalName: targetPortal?.name || "Portal",
-            event: "Scanned — No changes",
+            event: "Scanned : No changes",
             type: "scan_ok",
           },
           ...prev,

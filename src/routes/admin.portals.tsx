@@ -176,7 +176,7 @@ function AdminPortalsComponent() {
             <option value="">Filter by Agency (All)</option>
             {agencies.map((a) => (
               <option key={a.id} value={a.acronym}>
-                {a.acronym} — {a.name}
+                {a.acronym} : {a.name}
               </option>
             ))}
           </select>
@@ -491,7 +491,7 @@ function PortalDetailFormModal({
           >
             {agencies.map((a) => (
               <option key={a.id} value={a.id}>
-                {a.acronym} — {a.name}
+                {a.acronym} : {a.name}
               </option>
             ))}
           </select>

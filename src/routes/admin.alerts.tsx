@@ -135,7 +135,7 @@ function AdminAlertsComponent() {
             <Clock className="h-4 w-4 text-[color:var(--warning)]" />
           </div>
           <div className="text-2xl font-bold font-sans text-foreground">
-            {stats ? stats.pending_count : "—"}
+            {stats ? stats.pending_count : ":"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Awaiting human decision</div>
         </div>
@@ -146,7 +146,7 @@ function AdminAlertsComponent() {
             <CheckCircle2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
           <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
-            {stats ? stats.approved_today : "—"}
+            {stats ? stats.approved_today : ":"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Verified & dispatched</div>
         </div>
@@ -157,7 +157,7 @@ function AdminAlertsComponent() {
             <XCircle className="h-4 w-4 text-destructive" />
           </div>
           <div className="text-2xl font-bold font-sans text-destructive">
-            {stats ? stats.rejected_today : "—"}
+            {stats ? stats.rejected_today : ":"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Flagged false / fake</div>
         </div>
@@ -168,7 +168,7 @@ function AdminAlertsComponent() {
             <Sparkles className="h-4 w-4 text-[color:var(--new)]" />
           </div>
           <div className="text-2xl font-mono font-bold text-[color:var(--new)]">
-            {stats ? formatAgeHours(stats.oldest_pending_age_hours) : "—"}
+            {stats ? formatAgeHours(stats.oldest_pending_age_hours) : ":"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Time in queue</div>
         </div>
@@ -574,15 +574,15 @@ function CompactAlertsTable({
                   <td className="p-3.5 font-mono text-muted-foreground">#{alert.id}</td>
                   <td className="p-3.5 font-medium text-foreground max-w-xs truncate font-sans">{alert.title}</td>
                   <td className="p-3.5 font-mono font-bold text-primary">
-                    {alert.agency_acronym || (alert.agency ? alert.agency.acronym : "—")}
+                    {alert.agency_acronym || (alert.agency ? alert.agency.acronym : ":")}
                   </td>
                   <td className="p-3.5 font-sans font-medium text-[12px] text-[#4B5563] dark:text-muted-foreground">
                     {alert.ai_classification} ({alert.ai_confidence}%)
                   </td>
                   <td className="p-3.5 font-mono font-bold">{alert.trust_score}/100</td>
-                  <td className="p-3.5 font-sans text-muted-foreground">{alert.verified_by || "—"}</td>
+                  <td className="p-3.5 font-sans text-muted-foreground">{alert.verified_by || "N/A"}</td>
                   <td className="p-3.5 font-mono text-muted-foreground">
-                    {alert.verified_at ? timeAgo(alert.verified_at) : "—"}
+                    {alert.verified_at ? timeAgo(alert.verified_at) : ":"}
                   </td>
                   <td className="p-3.5 text-right">
                     <div className="flex items-center justify-end gap-1.5">

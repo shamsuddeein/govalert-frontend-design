@@ -37,11 +37,11 @@ function renderFormattedDescription(rawText: string | undefined | null) {
   };
 
   lines.forEach((line, idx) => {
-    const bulletMatch = line.match(/^([•\*\-\–\—\◦\▪]|\d+[\.\)])\s*(.+)/);
+    const bulletMatch = line.match(/^([•\*\-\–\:\◦\▪]|\d+[\.\)])\s*(.+)/);
     if (bulletMatch) {
       currentBulletGroup.push(bulletMatch[2]);
-    } else if (/^[•\*\-\–\—\◦\▪]\s*/.test(line)) {
-      currentBulletGroup.push(line.replace(/^[•\*\-\–\—\◦\▪]\s*/, ""));
+    } else if (/^[•\*\-\–\:\◦\▪]\s*/.test(line)) {
+      currentBulletGroup.push(line.replace(/^[•\*\-\–\:\◦\▪]\s*/, ""));
     } else {
       flushBullets(idx);
       elements.push(
@@ -486,7 +486,7 @@ function JobDetailsPage() {
                 className="inline-flex h-[44px] w-full sm:w-auto items-center justify-center gap-2 rounded-[6px] bg-[#15803D] hover:bg-[#15803D]/90 text-[#FFFFFF] px-[20px] text-[14px] font-semibold transition-colors cursor-pointer"
               >
                 <span>Apply on Official Portal</span>
-                {/* Diagonal arrow — external */}
+                {/* Diagonal arrow : external */}
                 <svg className="size-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <path d="M3 13 L13 3" />
                   <path d="M6 3h7v7" />

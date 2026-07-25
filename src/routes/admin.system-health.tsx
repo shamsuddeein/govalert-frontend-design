@@ -381,7 +381,7 @@ function AdminSystemHealthComponent() {
             <CheckCircle2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
           </div>
           <div className="text-2xl font-bold font-sans text-[#0a5c38] dark:text-[#3fb68e]">
-            {sys.agencies_online ?? "—"} <span className="text-sm font-normal text-muted-foreground">/ {sys.total_agencies ?? "—"}</span>
+            {sys.agencies_online ?? "N/A"} <span className="text-sm font-normal text-muted-foreground">/ {sys.total_agencies ?? "N/A"}</span>
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Agencies online & monitored</div>
         </div>
@@ -393,7 +393,7 @@ function AdminSystemHealthComponent() {
             <XCircle className="h-4 w-4 text-destructive" />
           </div>
           <div className="text-2xl font-bold font-sans text-destructive">
-            {sys.agencies_offline ?? "—"}
+            {sys.agencies_offline ?? "N/A"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Portals failing checks</div>
         </div>
@@ -405,7 +405,7 @@ function AdminSystemHealthComponent() {
             <Wrench className="h-4 w-4 text-[color:var(--warning)]" />
           </div>
           <div className="text-2xl font-bold font-sans text-[color:var(--warning)]">
-            {sys.agencies_maintenance ?? "—"}
+            {sys.agencies_maintenance ?? "N/A"}
           </div>
           <div className="text-[11px] text-muted-foreground font-sans">Under scheduled work</div>
         </div>
@@ -630,7 +630,7 @@ function AdminSystemHealthComponent() {
                 {failedSnaps.map((snap) => (
                   <tr key={snap.id} className="hover:bg-muted/40 transition-colors font-sans">
                     <td className="p-3.5 font-mono font-bold text-primary">
-                      {snap.agency_acronym || "—"}
+                      {snap.agency_acronym || "N/A"}
                     </td>
                     <td className="p-3.5 font-semibold text-foreground max-w-xs truncate font-sans">{snap.portal_name}</td>
                     <td className="p-3.5 font-sans">

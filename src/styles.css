@@ -211,7 +211,7 @@ img, svg, video, canvas {
   }
 }
 
-/* Custom Micro-Interactions & Animations — GPU Composited (transform & opacity) */
+/* Custom Micro-Interactions & Animations : GPU Composited (transform & opacity) */
 @keyframes pulse-live {
   0% {
     transform: scale(0.95);
@@ -232,7 +232,7 @@ img, svg, video, canvas {
   will-change: transform, opacity;
 }
 
-/* Card hover: measured 3-layer shadow — eliminates box shadow guesswork */
+/* Card hover: measured 3-layer shadow : eliminates box shadow guesswork */
 .interactive-card {
   transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
@@ -279,7 +279,7 @@ img, svg, video, canvas {
   font-family: var(--font-mono);
 }
 
-/* Scrollbar suppression — used in horizontal tag rows */
+/* Scrollbar suppression : used in horizontal tag rows */
 .no-scrollbar {
   scrollbar-width: none;
   -ms-overflow-style: none;

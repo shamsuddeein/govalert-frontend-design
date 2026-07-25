@@ -21,7 +21,7 @@ export const Route = createFileRoute("/admin/agencies")({
 });
 
 function formatDate(dateStr?: string): string {
-  if (!dateStr) return "—";
+  if (!dateStr) return ":";
   try {
     return new Date(dateStr).toLocaleDateString("en-NG", {
       day: "numeric",
@@ -427,7 +427,7 @@ function AgencyFormModal({
         {/* Official Domains Multi-Tag Input */}
         <div className="space-y-1.5">
           <label className="block font-sans text-muted-foreground font-semibold">
-            Official Whitelisted Domains (Tag Input — Press Enter or Comma):
+            Official Whitelisted Domains (Tag Input : Press Enter or Comma):
           </label>
           <div className="p-2.5 bg-background border border-border rounded-[6px] flex flex-wrap gap-2 items-center min-h-12 font-sans">
             {domains.map((domain, index) => (

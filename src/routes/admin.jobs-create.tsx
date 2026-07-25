@@ -255,7 +255,7 @@ function AdminJobsCreate() {
                     </option>
                     {agencies.map((agency) => (
                       <option key={agency.id} value={agency.id}>
-                        {agency.acronym} — {agency.name}
+                        {agency.acronym} : {agency.name}
                       </option>
                     ))}
                   </select>

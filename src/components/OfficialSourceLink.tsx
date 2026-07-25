@@ -25,7 +25,7 @@ export function OfficialSourceLink({
         title="Official direct portal URL is not provided in source notice"
         className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-muted-foreground/50 cursor-not-allowed select-none tracking-wide ${className}`}
       >
-        {/* Broken link — two chain links separated */}
+        {/* Broken link : two chain links separated */}
         <svg
           className="size-3 shrink-0 opacity-50"
           fill="none"
@@ -64,7 +64,7 @@ export function OfficialSourceLink({
       className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline underline-offset-2 transition-colors tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] rounded-[2px] ${className}`}
     >
       <span>{label}</span>
-      {/* Diagonal arrow — external link */}
+      {/* Diagonal arrow : external link */}
       <svg
         className="size-3 shrink-0"
         fill="none"

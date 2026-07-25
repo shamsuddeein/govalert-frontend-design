@@ -192,7 +192,7 @@ function StatusPage() {
 
         {/* Operational Guidelines Disclaimer */}
         <div className="rounded-[8px] border border-border bg-muted/20 p-5 space-y-2 flex items-start gap-4">
-          {/* Clock icon — drawn */}
+          {/* Clock icon : drawn */}
           <svg className="size-5 text-muted-foreground shrink-0 mt-0.5" fill="none" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <circle cx="10" cy="10" r="8" />
             <path d="M10 6v4l2.5 2.5" />
