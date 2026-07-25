@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link } from "@tanstack/react-router";
 import { isAuthenticated, api } from "../lib/api";
+import { requestAndSubscribeWebPush } from "../lib/pushManager";
 
 export function Logo() {
   return (
@@ -66,8 +67,8 @@ export function ThemeToggle({ storageKey }: ThemeToggleProps) {
   return (
     <button
       onClick={toggleTheme}
-      className="inline-flex w-[36px] h-[36px] items-center justify-center rounded-full bg-transparent text-muted-foreground hover:bg-[#F3F4F6] dark:hover:bg-[#1f2937] hover:text-foreground transition-colors cursor-pointer focus:outline-none border-0 shrink-0"
-      aria-label="Toggle theme"
+      className="inline-flex w-[36px] h-[36px] items-center justify-center rounded-full bg-transparent text-muted-foreground hover:bg-[#F3F4F6] dark:hover:bg-[#1f2937] hover:text-foreground transition-colors cursor-pointer border-0 shrink-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e]"
+      aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} theme`}
     >
       {theme === "light" ? (
         <svg
@@ -209,6 +210,7 @@ export function Nav() {
               href="https://t.me/govalerts_bot?start=general"
               target="_blank"
               rel="noreferrer"
+              onClick={() => requestAndSubscribeWebPush()}
               className="hidden xs:inline-flex items-center gap-1.5 sm:gap-2 rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-[14px] font-semibold transition-transform active:scale-[0.98] cursor-pointer shrink-0"
             >
               <svg className="size-[12px] sm:size-[14px] fill-current" viewBox="0 0 24 24">
@@ -220,15 +222,17 @@ export function Nav() {
             {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="inline-flex size-[36px] sm:size-[40px] items-center justify-center rounded-[8px] border border-border md:hidden cursor-pointer shrink-0"
-              aria-label="Toggle mobile menu"
+              className="inline-flex size-[36px] sm:size-[40px] items-center justify-center rounded-[8px] border border-border md:hidden cursor-pointer shrink-0 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e]"
+              aria-label="Toggle mobile navigation menu"
+              aria-expanded={mobileMenuOpen}
+              aria-controls="mobile-nav-drawer"
             >
               {mobileMenuOpen ? (
-                <svg className="size-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="size-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                 </svg>
               ) : (
-                <svg className="size-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                <svg className="size-5 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
                 </svg>
               )}
@@ -238,7 +242,11 @@ export function Nav() {
 
         {/* Mobile Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="absolute top-[60px] left-0 w-full bg-background border-b border-border z-40 flex flex-col p-6 md:hidden shadow-lg animate-in slide-in-from-top-4 duration-200">
+          <div
+            id="mobile-nav-drawer"
+            aria-label="Mobile Navigation Menu"
+            className="absolute top-[60px] left-0 w-full bg-background border-b border-border z-40 flex flex-col p-6 md:hidden shadow-lg animate-in slide-in-from-top-4 duration-200"
+          >
             {/* Section 1: Navigation */}
             <div className="flex flex-col space-y-1">
               <Link
@@ -448,7 +456,7 @@ export function Footer() {
               <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#22C55E] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#22C55E]"></span>
             </span>
-            <span className="font-mono text-[12px] font-semibold uppercase tracking-wider text-[#166534]">
+            <span className="font-mono text-[12px] font-semibold uppercase tracking-wider text-[#166534] dark:text-[#3fb68e]">
               SYSTEMS OPERATIONAL
             </span>
           </div>

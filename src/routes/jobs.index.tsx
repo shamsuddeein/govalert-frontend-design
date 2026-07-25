@@ -186,7 +186,7 @@ function JobsPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main className="mx-auto max-w-[1184px] px-6 py-12">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1184px] px-6 py-12 outline-none">
         {/* Header */}
         <div className="mb-10 text-left space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
@@ -254,10 +254,11 @@ function JobsPage() {
 
         <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor="filter-agency-select" className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
               Agency
             </label>
             <select
+              id="filter-agency-select"
               value={agency}
               onChange={(e) => {
                 setAgency(e.target.value);
@@ -279,10 +280,11 @@ function JobsPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor="filter-category-select" className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
               Category
             </label>
             <select
+              id="filter-category-select"
               value={category}
               onChange={(e) => {
                 setCategory(e.target.value);
@@ -300,10 +302,11 @@ function JobsPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor="filter-location-select" className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
               Location
             </label>
             <select
+              id="filter-location-select"
               value={state}
               onChange={(e) => {
                 setState(e.target.value);
@@ -321,10 +324,11 @@ function JobsPage() {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
+            <label htmlFor="filter-status-select" className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground">
               Status
             </label>
             <select
+              id="filter-status-select"
               value={status}
               onChange={(e) => {
                 setStatus(e.target.value);
@@ -448,6 +452,7 @@ function JobsPage() {
                       <div className="mt-6 pt-3 flex items-center justify-between gap-3 border-t border-border/40">
                         <button
                           onClick={(e) => handleToggleBookmark(job.id, e)}
+                          aria-label={`${savedRefMap[job.id] ? "Unsave" : "Save"} ${job.title}`}
                           className={`inline-flex items-center gap-1.5 h-[44px] px-3 rounded-[6px] text-[13px] font-semibold transition-colors cursor-pointer font-sans shrink-0 ${
                             savedRefMap[job.id]
                               ? "bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e]"
@@ -472,6 +477,7 @@ function JobsPage() {
                         <Link
                           to="/jobs/$jobId"
                           params={{ jobId: job.id }}
+                          aria-label={`View details for ${job.title} (${job.agencyShort})`}
                           className="inline-flex items-center justify-center h-[44px] px-4 rounded-[6px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] hover:bg-[#0a5c38] hover:text-white dark:hover:bg-[#3fb68e] dark:hover:text-[#0c1015] text-[13px] font-semibold transition-colors font-sans"
                         >
                           View details &rarr;

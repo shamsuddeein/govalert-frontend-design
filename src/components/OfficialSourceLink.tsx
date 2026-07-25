@@ -45,12 +45,15 @@ export function OfficialSourceLink({
     );
   }
 
+  const accessibleLabel = `${label}${agencyShort ? ` for ${agencyShort}` : ""} (opens in a new tab)`;
+
   return (
     <a
       href={url.trim()}
       target="_blank"
       rel="noreferrer"
-      className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline underline-offset-2 transition-colors tracking-wide ${className}`}
+      aria-label={accessibleLabel}
+      className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline underline-offset-2 transition-colors tracking-wide focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#0a5c38] dark:focus-visible:ring-[#3fb68e] rounded-[2px] ${className}`}
     >
       <span>{label}</span>
       {/* Diagonal arrow — external link */}

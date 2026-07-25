@@ -1312,7 +1312,7 @@ function Index() {
         jsonLd={[websiteSchema, orgSchema]}
       />
       <Nav />
-      <main>
+      <main id="main-content" tabIndex={-1} className="outline-none">
         <Hero
           searchQuery={searchQuery}
           setSearchQuery={setSearchQuery}

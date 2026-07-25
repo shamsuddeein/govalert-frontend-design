@@ -514,6 +514,30 @@ export const api = {
     return data;
   },
 
+  fetchVapidKey: async (): Promise<{ public_key: string } | null> => {
+    try {
+      const response = await fetch(`${API_BASE}/push/vapid-key/`);
+      if (!response.ok) return null;
+      return await response.json();
+    } catch {
+      return null;
+    }
+  },
+
+  subscribePush: async (payload: { endpoint?: string; keys?: Record<string, any> }): Promise<any> => {
+    try {
+      const response = await fetch(`${API_BASE}/push/subscribe/`, {
+        method: "POST",
+        headers: getAuthHeaders(),
+        body: JSON.stringify(payload),
+      });
+      return await response.json();
+    } catch (e) {
+      console.warn("Failed to register Web Push payload:", e);
+      return null;
+    }
+  },
+
   // Polling utility
   pollEndpoint: <T>(
     fetchFn: () => Promise<T | null>,

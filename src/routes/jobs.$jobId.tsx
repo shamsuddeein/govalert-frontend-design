@@ -128,6 +128,10 @@ function JobDetailsPage() {
   };
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentViews = parseInt(sessionStorage.getItem("listing_views_count") || "0", 10);
+      sessionStorage.setItem("listing_views_count", (currentViews + 1).toString());
+    }
     fetchJobDetails();
   }, [jobId]);
 
@@ -281,7 +285,7 @@ function JobDetailsPage() {
         jsonLd={[jobPostingSchema, breadcrumbSchema]}
       />
       <Nav />
-      <main className="mx-auto max-w-[720px] px-4 sm:px-6 py-8 sm:py-12">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[720px] px-4 sm:px-6 py-8 sm:py-12 outline-none">
         {/* Breadcrumb */}
         <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground truncate">
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → REF: {job.ref}

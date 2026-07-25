@@ -54,7 +54,7 @@ function RegisterPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
       <Nav />
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
+      <main id="main-content" tabIndex={-1} className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16 outline-none">
         <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative">
           <div className="text-center mb-8">
             <div className="flex items-center justify-center gap-2 mb-4">
@@ -70,10 +70,11 @@ function RegisterPage() {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Full Name</label>
+              <label htmlFor="register-name" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Full Name</label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden="true" />
                 <input
+                  id="register-name"
                   type="text"
                   required
                   placeholder="Shamsuddeein Alao"
@@ -85,10 +86,11 @@ function RegisterPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Email Address</label>
+              <label htmlFor="register-email" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Email Address</label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden="true" />
                 <input
+                  id="register-email"
                   type="email"
                   required
                   placeholder="name@example.com"
@@ -100,10 +102,11 @@ function RegisterPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Password</label>
+              <label htmlFor="register-password" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Password</label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden="true" />
                 <input
+                  id="register-password"
                   type={showPassword ? "text" : "password"}
                   required
                   placeholder="••••••••"
@@ -114,6 +117,7 @@ function RegisterPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? "Hide password" : "Show password"}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -121,16 +125,17 @@ function RegisterPage() {
               </div>
 
               {/* Live Password Requirement Checklist */}
-              <div className="mt-1 rounded-[6px] border border-border/60 bg-muted/20 p-2.5 space-y-1.5 font-sans">
+              <div aria-live="polite" className="mt-1 rounded-[6px] border border-border/60 bg-muted/20 p-2.5 space-y-1.5 font-sans">
                 <div className="flex items-center gap-2">
                   <CheckCircle2
                     className={cn(
                       "size-3.5 shrink-0 transition-colors",
                       hasMinLength ? "text-[#166534]" : "text-[#9CA3AF]"
                     )}
+                    aria-hidden="true"
                   />
                   <span className={cn("text-[11px] font-medium transition-colors", hasMinLength ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
-                    Minimum 8 characters
+                    Minimum 8 characters {hasMinLength ? "✓" : ""}
                   </span>
                 </div>
 
@@ -140,9 +145,10 @@ function RegisterPage() {
                       "size-3.5 shrink-0 transition-colors",
                       hasNumber ? "text-[#166534]" : "text-[#9CA3AF]"
                     )}
+                    aria-hidden="true"
                   />
                   <span className={cn("text-[11px] font-medium transition-colors", hasNumber ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
-                    At least one number
+                    At least one number {hasNumber ? "✓" : ""}
                   </span>
                 </div>
 
@@ -152,21 +158,23 @@ function RegisterPage() {
                       "size-3.5 shrink-0 transition-colors",
                       passwordsMatch ? "text-[#166534]" : "text-[#9CA3AF]"
                     )}
+                    aria-hidden="true"
                   />
                   <span className={cn("text-[11px] font-medium transition-colors", passwordsMatch ? "text-[#166534] dark:text-[#3fb68e]" : "text-muted-foreground")}>
-                    Passwords match
+                    Passwords match {passwordsMatch ? "✓" : ""}
                   </span>
                 </div>
               </div>
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+              <label htmlFor="register-confirm-password" className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                 Confirm Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" aria-hidden="true" />
                 <input
+                  id="register-confirm-password"
                   type="password"
                   required
                   placeholder="••••••••"
@@ -208,7 +216,7 @@ function RegisterPage() {
               className="mt-6 w-full inline-flex items-center justify-center gap-2 rounded bg-primary py-2 text-xs font-semibold text-primary-foreground hover:bg-primary/95 disabled:opacity-50 transition-colors cursor-pointer"
             >
               {loading ? "Creating..." : "Create Account"}
-              {!loading && <ArrowRight className="size-4" />}
+              {!loading && <ArrowRight className="size-4" aria-hidden="true" />}
             </button>
           </form>
 

@@ -118,8 +118,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:title", content: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert" },
       { name: "twitter:description", content: "Real-time monitoring of 42 Nigerian federal recruitment portals. Verified civil service job alerts." },
       { name: "twitter:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
+      { name: "theme-color", content: "#0a5c38" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-capable", content: "yes" },
+      { name: "apple-mobile-web-app-status-bar-style", content: "black-translucent" },
+      { name: "apple-mobile-web-app-title", content: "RecruitmentAlert" },
     ],
     links: [
+      { rel: "manifest", href: "/manifest.json" },
       { rel: "canonical", href: "https://www.recruitmentalert.com.ng" },
       { rel: "alternate", hrefLang: "en-NG", href: "https://www.recruitmentalert.com.ng" },
       { rel: "alternate", hrefLang: "x-default", href: "https://www.recruitmentalert.com.ng" },
@@ -128,7 +134,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         href: appCss,
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
-      { rel: "apple-touch-icon", href: "/favicon.svg" },
+      { rel: "apple-touch-icon", href: "/icon-192x192.png" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
@@ -150,6 +156,12 @@ function RootShell({ children }: { children: ReactNode }) {
         <HeadContent />
       </head>
       <body className="overflow-x-hidden">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:px-4 focus:py-2.5 focus:bg-[#0a5c38] focus:text-white focus:font-semibold focus:rounded-[6px] focus:shadow-xl focus:outline-none focus:ring-2 focus:ring-white"
+        >
+          Skip to main content
+        </a>
         {children}
         <Scripts />
       </body>
@@ -157,14 +169,32 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+import { PwaInstallPrompt } from "../components/PwaInstallPrompt";
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && "serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("/service-worker.js", { scope: "/" })
+          .then((reg) => {
+            console.log("PWA Service Worker registered with scope:", reg.scope);
+          })
+          .catch((err) => {
+            console.warn("PWA Service Worker registration failed:", err);
+          });
+      });
+    }
+  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
       <Toaster />
+      <PwaInstallPrompt />
     </QueryClientProvider>
   );
 }

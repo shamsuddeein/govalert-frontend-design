@@ -46,8 +46,15 @@ function StatusPage() {
       if (offset < 0) return "grey";
       return checks[offset] ? "green" : "red";
     });
+    const successfulCount = checks ? checks.filter(Boolean).length : 0;
+    const totalCount = checks ? checks.length : 0;
+
     return (
-      <div className="flex gap-[2px] w-full">
+      <div
+        className="flex gap-[2px] w-full"
+        role="img"
+        aria-label={`Portal check history: ${successfulCount} of ${totalCount} checks successful`}
+      >
         {slots.map((color, i) => (
           <div
             key={i}
@@ -144,7 +151,7 @@ function StatusPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main className="flex-1 mx-auto max-w-4xl w-full px-6 py-12 space-y-8">
+      <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-4xl w-full px-6 py-12 space-y-8 outline-none">
         {/* Page Header */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-border pb-6">
           <div>
