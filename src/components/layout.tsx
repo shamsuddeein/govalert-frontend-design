@@ -5,28 +5,33 @@ import { requestAndSubscribeWebPush } from "../lib/pushManager";
 
 export function Logo() {
   return (
-    <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 shrink-0">
-      <svg
-        className="size-[20px] sm:size-[24px] text-[#0a5c38] dark:text-[#3fb68e] shrink-0"
-        viewBox="0 0 24 28"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.75"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        aria-hidden="true"
-      >
-        {/* Document outline */}
-        <path d="M4 3h11l5 5v17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
-        <path d="M15 3v5h5" />
-        {/* Checkmark */}
-        <path d="M8 16.5l3 3 6-7" />
-      </svg>
-      <span className="text-sm xs:text-base sm:text-lg tracking-tight text-foreground font-sans truncate">
-        <span className="font-bold">Recruitment</span>
-        <span className="font-normal">Alert</span>
+    <div className="flex items-center gap-2 shrink-0">
+      <Link to="/" className="flex items-center gap-1.5 sm:gap-2 hover:opacity-90 shrink-0">
+        <svg
+          className="size-[20px] sm:size-[24px] text-[#0a5c38] dark:text-[#3fb68e] shrink-0"
+          viewBox="0 0 24 28"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          {/* Document outline */}
+          <path d="M4 3h11l5 5v17a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z" />
+          <path d="M15 3v5h5" />
+          {/* Checkmark */}
+          <path d="M8 16.5l3 3 6-7" />
+        </svg>
+        <span className="text-sm xs:text-base sm:text-lg tracking-tight text-foreground font-sans truncate">
+          <span className="font-bold">Recruitment</span>
+          <span className="font-normal">Alert</span>
+        </span>
+      </Link>
+      <span className="hidden xs:inline-flex items-center rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/15 border border-[#0a5c38]/30 dark:border-[#3fb68e]/30 px-2 py-0.5 text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] shrink-0 font-mono">
+        Launched July 2026
       </span>
-    </Link>
+    </div>
   );
 }
 
@@ -378,24 +383,27 @@ export function Nav() {
 export function Footer() {
   const cols = [
     {
-      heading: "Resources",
+      heading: "Directory & Audit",
       links: [
-        { label: "Verification FAQ", to: "/verification" },
+        { label: "Monitored Portals (42)", to: "/portals" },
+        { label: "Public Audit Log", to: "/audit-log" },
         { label: "Monitored Agencies", to: "/agencies" },
         { label: "System Status", to: "/status" },
       ],
     },
     {
-      heading: "Platform",
+      heading: "Guides & Safety",
       links: [
-        { label: "Telegram Bot Guide", to: "/telegram" },
-        { label: "Official Telegram Bot", to: "https://t.me/govalerts_bot?start=general", external: true },
-        { label: "Contact Us", to: "/contact" },
+        { label: "Scam Prevention Blog", to: "/blog" },
+        { label: "Telegram Verification", to: "/telegram" },
+        { label: "Verification FAQs", to: "/verification" },
+        { label: "Contact Developer", to: "/contact" },
       ],
     },
     {
-      heading: "Legal",
+      heading: "Platform & Legal",
       links: [
+        { label: "About Founder", to: "/about" },
         { label: "Privacy Policy", to: "/privacy" },
         { label: "Terms of Service", to: "/terms" },
       ],
@@ -403,24 +411,24 @@ export function Footer() {
   ];
 
   return (
-    <footer className="border-t border-gray-200 dark:border-gray-800 bg-[#F9FAFB] dark:bg-[#0F172A] text-foreground py-10 sm:py-16">
+    <footer className="border-t border-gray-200 dark:border-gray-800 bg-[#F9FAFB] dark:bg-[#0F172A] text-foreground py-10 sm:py-16 font-sans">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-8 pb-8 sm:pb-12">
           {/* Brand Logo Column (Span 2) */}
           <div className="md:col-span-2 space-y-3 sm:space-y-4">
             <Logo />
-            <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed">
-              Verified recruitment intelligence.
+            <p className="text-[13px] sm:text-[14px] text-muted-foreground max-w-sm leading-relaxed font-sans">
+              Built by Shamsuddeen Yusuf, a backend developer in Kaduna, Nigeria. Protecting Nigerian job seekers from recruitment scams.
             </p>
           </div>
 
-          {/* Navigation Columns (1 column each for Resources, Platform, Legal) */}
+          {/* Navigation Columns (1 column each for Directory, Guides, Platform) */}
           {cols.map((c) => (
             <div key={c.heading} className="md:col-span-1">
-              <h5 className="font-mono text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">
+              <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
                 {c.heading}
-              </h5>
-              <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] text-foreground">
+              </h3>
+              <ul className="mt-3 space-y-2 text-[13px] sm:text-[14px] text-foreground font-sans">
                 {c.links.map((l) => (
                   <li key={l.label}>
                     {l.external ? (
@@ -447,9 +455,9 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 gap-4">
+        <div className="flex flex-col md:flex-row justify-between items-center mt-12 pt-6 border-t border-gray-200 dark:border-gray-800 gap-4 font-sans">
           <p className="font-sans text-[11px] text-muted-foreground max-w-xl leading-relaxed">
-            © {new Date().getFullYear()} RecruitmentAlert. Independent monitoring. Not affiliated with the Federal Government.
+            © {new Date().getFullYear()} RecruitmentAlert. Built by Shamsuddeen Yusuf in Kaduna, Nigeria. Independent monitoring, not affiliated with the Federal Government.
           </p>
           <div className="flex items-center shrink-0">
             <span className="relative flex h-2 w-2 mr-[6px]">

@@ -340,7 +340,7 @@ function Hero({
           </h1>
 
           <p className="text-[15px] sm:text-[17px] leading-relaxed text-muted-foreground max-w-2xl font-sans">
-            We monitor official Nigerian government portals in real-time to bring you verified job openings, official deadlines, and direct application links — protected against fake recruitment scams.
+            Built by a Nigerian developer, launched July 2026, monitoring federal recruitment portals in real time. We audit official Nigerian government portals to bring you verified job openings, official deadlines, and direct application links — protected against fake recruitment scams.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -417,19 +417,27 @@ function Hero({
 }
 
 function Stats({ status }: { status: ApiSystemStatus | null }) {
-  const onlineCount = status?.agencies_online ?? 41;
+  const onlineCount = status?.agencies_online ?? 0;
+  const isScanning = !status || onlineCount === 0;
 
   return (
     <div className="border-y border-border bg-card py-3 w-full max-w-full overflow-hidden font-sans">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-muted-foreground font-medium w-full min-w-0">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 min-w-0">
-          <div className="flex items-center gap-2">
-            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
-            <span className="text-foreground font-semibold">{onlineCount} Monitored MDA Portals Active</span>
-          </div>
+          {isScanning ? (
+            <div className="flex items-center gap-2 text-foreground font-semibold">
+              <span className="pulsing-dot size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] inline-block shrink-0" />
+              <span>System audit in progress — first full scan across 42 federal portals completing shortly.</span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-2">
+              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
+              <span className="text-foreground font-semibold">{onlineCount} Monitored MDA Portals Reachable</span>
+            </div>
+          )}
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <span>&middot;</span>
-            <span>Verified Official Sources Only</span>
+            <span>Verified Official .gov.ng Endpoints Only</span>
           </div>
         </div>
         <div className="text-[11px] sm:text-xs text-[#0a5c38] dark:text-[#3fb68e] font-semibold flex items-center gap-1">

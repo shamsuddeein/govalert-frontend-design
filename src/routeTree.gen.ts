@@ -16,22 +16,26 @@ import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as PortalsRouteImport } from './routes/portals'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as JobsRouteImport } from './routes/jobs'
 import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as FaqRouteImport } from './routes/faq'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ContactRouteImport } from './routes/contact'
+import { Route as AuditLogRouteImport } from './routes/audit-log'
 import { Route as AgenciesRouteImport } from './routes/agencies'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as VerificationIndexRouteImport } from './routes/verification.index'
 import { Route as JobsIndexRouteImport } from './routes/jobs.index'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as AgenciesIndexRouteImport } from './routes/agencies.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as VerificationJobIdRouteImport } from './routes/verification.$jobId'
 import { Route as JobsJobIdRouteImport } from './routes/jobs.$jobId'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as AgenciesAgencyShortRouteImport } from './routes/agencies.$agencyShort'
 import { Route as AdminUsersRouteImport } from './routes/admin.users'
 import { Route as AdminSystemHealthRouteImport } from './routes/admin.system-health'
@@ -77,6 +81,11 @@ const PrivacyRoute = PrivacyRouteImport.update({
   path: '/privacy',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PortalsRoute = PortalsRouteImport.update({
+  id: '/portals',
+  path: '/portals',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -105,6 +114,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const ContactRoute = ContactRouteImport.update({
   id: '/contact',
   path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuditLogRoute = AuditLogRouteImport.update({
+  id: '/audit-log',
+  path: '/audit-log',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AgenciesRoute = AgenciesRouteImport.update({
@@ -137,6 +151,11 @@ const JobsIndexRoute = JobsIndexRouteImport.update({
   path: '/',
   getParentRoute: () => JobsRoute,
 } as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AgenciesIndexRoute = AgenciesIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -156,6 +175,11 @@ const JobsJobIdRoute = JobsJobIdRouteImport.update({
   id: '/$jobId',
   path: '/$jobId',
   getParentRoute: () => JobsRoute,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AgenciesAgencyShortRoute = AgenciesAgencyShortRouteImport.update({
   id: '/$agencyShort',
@@ -208,12 +232,14 @@ export interface FileRoutesByFullPath {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/agencies': typeof AgenciesRouteWithChildren
+  '/audit-log': typeof AuditLogRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
+  '/portals': typeof PortalsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
@@ -230,21 +256,25 @@ export interface FileRoutesByFullPath {
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
   '/admin/': typeof AdminIndexRoute
   '/agencies/': typeof AgenciesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/verification/': typeof VerificationIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
+  '/audit-log': typeof AuditLogRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/login': typeof LoginRoute
+  '/portals': typeof PortalsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
@@ -261,10 +291,12 @@ export interface FileRoutesByTo {
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
   '/admin': typeof AdminIndexRoute
   '/agencies': typeof AgenciesIndexRoute
+  '/blog': typeof BlogIndexRoute
   '/jobs': typeof JobsIndexRoute
   '/verification': typeof VerificationIndexRoute
 }
@@ -274,12 +306,14 @@ export interface FileRoutesById {
   '/about': typeof AboutRoute
   '/admin': typeof AdminRouteWithChildren
   '/agencies': typeof AgenciesRouteWithChildren
+  '/audit-log': typeof AuditLogRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
   '/forgot-password': typeof ForgotPasswordRoute
   '/jobs': typeof JobsRouteWithChildren
   '/login': typeof LoginRoute
+  '/portals': typeof PortalsRoute
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
@@ -296,10 +330,12 @@ export interface FileRoutesById {
   '/admin/system-health': typeof AdminSystemHealthRoute
   '/admin/users': typeof AdminUsersRoute
   '/agencies/$agencyShort': typeof AgenciesAgencyShortRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/jobs/$jobId': typeof JobsJobIdRoute
   '/verification/$jobId': typeof VerificationJobIdRoute
   '/admin/': typeof AdminIndexRoute
   '/agencies/': typeof AgenciesIndexRoute
+  '/blog/': typeof BlogIndexRoute
   '/jobs/': typeof JobsIndexRoute
   '/verification/': typeof VerificationIndexRoute
 }
@@ -310,12 +346,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/agencies'
+    | '/audit-log'
     | '/contact'
     | '/dashboard'
     | '/faq'
     | '/forgot-password'
     | '/jobs'
     | '/login'
+    | '/portals'
     | '/privacy'
     | '/register'
     | '/search'
@@ -332,21 +370,25 @@ export interface FileRouteTypes {
     | '/admin/system-health'
     | '/admin/users'
     | '/agencies/$agencyShort'
+    | '/blog/$slug'
     | '/jobs/$jobId'
     | '/verification/$jobId'
     | '/admin/'
     | '/agencies/'
+    | '/blog/'
     | '/jobs/'
     | '/verification/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
+    | '/audit-log'
     | '/contact'
     | '/dashboard'
     | '/faq'
     | '/forgot-password'
     | '/login'
+    | '/portals'
     | '/privacy'
     | '/register'
     | '/search'
@@ -363,10 +405,12 @@ export interface FileRouteTypes {
     | '/admin/system-health'
     | '/admin/users'
     | '/agencies/$agencyShort'
+    | '/blog/$slug'
     | '/jobs/$jobId'
     | '/verification/$jobId'
     | '/admin'
     | '/agencies'
+    | '/blog'
     | '/jobs'
     | '/verification'
   id:
@@ -375,12 +419,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/admin'
     | '/agencies'
+    | '/audit-log'
     | '/contact'
     | '/dashboard'
     | '/faq'
     | '/forgot-password'
     | '/jobs'
     | '/login'
+    | '/portals'
     | '/privacy'
     | '/register'
     | '/search'
@@ -397,10 +443,12 @@ export interface FileRouteTypes {
     | '/admin/system-health'
     | '/admin/users'
     | '/agencies/$agencyShort'
+    | '/blog/$slug'
     | '/jobs/$jobId'
     | '/verification/$jobId'
     | '/admin/'
     | '/agencies/'
+    | '/blog/'
     | '/jobs/'
     | '/verification/'
   fileRoutesById: FileRoutesById
@@ -410,12 +458,14 @@ export interface RootRouteChildren {
   AboutRoute: typeof AboutRoute
   AdminRoute: typeof AdminRouteWithChildren
   AgenciesRoute: typeof AgenciesRouteWithChildren
+  AuditLogRoute: typeof AuditLogRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
   ForgotPasswordRoute: typeof ForgotPasswordRoute
   JobsRoute: typeof JobsRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PortalsRoute: typeof PortalsRoute
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
@@ -423,7 +473,9 @@ export interface RootRouteChildren {
   StatusRoute: typeof StatusRoute
   TelegramRoute: typeof TelegramRoute
   TermsRoute: typeof TermsRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   VerificationJobIdRoute: typeof VerificationJobIdRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   VerificationIndexRoute: typeof VerificationIndexRoute
 }
 
@@ -478,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PrivacyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/portals': {
+      id: '/portals'
+      path: '/portals'
+      fullPath: '/portals'
+      preLoaderRoute: typeof PortalsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -518,6 +577,13 @@ declare module '@tanstack/react-router' {
       path: '/contact'
       fullPath: '/contact'
       preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/audit-log': {
+      id: '/audit-log'
+      path: '/audit-log'
+      fullPath: '/audit-log'
+      preLoaderRoute: typeof AuditLogRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/agencies': {
@@ -562,6 +628,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JobsIndexRouteImport
       parentRoute: typeof JobsRoute
     }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/agencies/': {
       id: '/agencies/'
       path: '/'
@@ -589,6 +662,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/jobs/$jobId'
       preLoaderRoute: typeof JobsJobIdRouteImport
       parentRoute: typeof JobsRoute
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/agencies/$agencyShort': {
       id: '/agencies/$agencyShort'
@@ -713,12 +793,14 @@ const rootRouteChildren: RootRouteChildren = {
   AboutRoute: AboutRoute,
   AdminRoute: AdminRouteWithChildren,
   AgenciesRoute: AgenciesRouteWithChildren,
+  AuditLogRoute: AuditLogRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
   ForgotPasswordRoute: ForgotPasswordRoute,
   JobsRoute: JobsRouteWithChildren,
   LoginRoute: LoginRoute,
+  PortalsRoute: PortalsRoute,
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
@@ -726,7 +808,9 @@ const rootRouteChildren: RootRouteChildren = {
   StatusRoute: StatusRoute,
   TelegramRoute: TelegramRoute,
   TermsRoute: TermsRoute,
+  BlogSlugRoute: BlogSlugRoute,
   VerificationJobIdRoute: VerificationJobIdRoute,
+  BlogIndexRoute: BlogIndexRoute,
   VerificationIndexRoute: VerificationIndexRoute,
 }
 export const routeTree = rootRouteImport

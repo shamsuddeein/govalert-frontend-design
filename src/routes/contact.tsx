@@ -166,18 +166,18 @@ function ContactPage() {
               </div>
             </section>
 
-            <section className="rounded border border-border bg-card p-6 shadow-sm space-y-4">
-              <h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-1">
-                Contact Desk
+            <section className="rounded border border-border bg-card p-6 shadow-sm space-y-4 font-sans">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-1">
+                Direct Contact
               </h3>
               <div className="space-y-3 text-xs text-muted-foreground">
                 <div className="flex items-center gap-2">
-                  <Mail className="size-4 text-primary" />
-                  <span>ops@recruitmentalert.com.ng</span>
+                  <Mail className="size-4 text-primary shrink-0" />
+                  <span className="font-semibold text-foreground">shamsuddeen@recruitmentalert.com.ng</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="size-4 text-primary" />
-                  <span>Central Business District, Abuja, Nigeria</span>
+                  <MapPin className="size-4 text-primary shrink-0" />
+                  <span>Kaduna, Nigeria (Shamsuddeen Yusuf)</span>
                 </div>
               </div>
             </section>

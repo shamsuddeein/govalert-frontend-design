@@ -409,7 +409,19 @@ export const api = {
   // System status
   getSystemStatus: async (): Promise<ApiSystemStatus | null> => {
     const res = await request<any>("/status/");
-    return validateAndSanitizeSystemStatus(res);
+    return res ? validateAndSanitizeSystemStatus(res) : null;
+  },
+
+  getAuditLog: async (page = 1, pageSize = 100): Promise<{ results: any[]; count: number; total_pages: number } | null> => {
+    const res = await request<any>(`/audit-log/?page=${page}&page_size=${pageSize}`);
+    if (!res || !Array.isArray(res.results)) {
+      return null;
+    }
+    return {
+      results: res.results,
+      count: res.count || res.results.length,
+      total_pages: res.total_pages || 1,
+    };
   },
 
   getLiveFeed: async (): Promise<ApiLiveFeedItem[] | null> => {
