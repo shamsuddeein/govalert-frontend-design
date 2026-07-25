@@ -1,5 +1,5 @@
 /**
- * RecruitmentAlert — Progressive Web App Service Worker
+ * RecruitmentAlert: Progressive Web App Service Worker
  * Designed for low/mid-range Android devices, slow 3G networks, and high data efficiency.
  *
  * Strategies:
@@ -141,7 +141,7 @@ self.addEventListener("fetch", (event) => {
         try {
           return await networkFetch;
         } catch (err) {
-          // Network failed or timed out > 3s — serve cached copy or offline page
+          // Network failed or timed out > 3s: serve cached copy or offline page
           const cachedPage = await caches.match(request);
           if (cachedPage) return cachedPage;
 
