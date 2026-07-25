@@ -338,12 +338,12 @@ function Hero({
   };
 
   return (
-    <section className="py-6 sm:py-12 bg-background">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
-        <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1fr_380px] lg:items-center">
+    <section className="py-6 sm:py-12 bg-background w-full max-w-full overflow-hidden">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 w-full min-w-0">
+        <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1fr_380px] lg:items-center w-full min-w-0">
           
           {/* Left Side Info */}
-          <div className="space-y-4 sm:space-y-6 text-left">
+          <div className="space-y-4 sm:space-y-6 text-left w-full min-w-0">
             <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
               <span className="relative flex h-2 w-2">
                 <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
@@ -382,9 +382,9 @@ function Hero({
             </div>
 
             {/* Search console with attached button */}
-            <div className="pt-4 max-w-[560px]">
+            <div className="pt-4 w-full max-w-full sm:max-w-[560px]">
               <form
-                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[8px] sm:border sm:border-border sm:bg-card sm:p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[8px] sm:border sm:border-border sm:bg-card sm:p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow w-full"
                 onSubmit={handleSubmit}
               >
                 <div className="relative w-full sm:flex-1 rounded-[8px] border sm:border-none border-border bg-card sm:bg-transparent">
@@ -417,7 +417,7 @@ function Hero({
               </form>
             </div>
 
-            <div className="flex flex-row items-center gap-[8px] overflow-x-auto pt-2 pb-1 max-w-full no-scrollbar">
+            <div className="flex flex-row items-center gap-[8px] overflow-x-auto pt-2 pb-1 w-full max-w-full min-w-0 no-scrollbar">
               <span className="shrink-0 text-[12px] font-medium text-muted-foreground">Quick tags:</span>
               {["NNPC", "Customs", "EFCC", "NAF", "CBN", "FIRS"].map((tag) => (
                 <button
@@ -497,9 +497,9 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
   const offlineCount = status?.agencies_offline ?? 0;
 
   return (
-    <div className="border-y border-border bg-card py-2.5">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-wrap items-center justify-between gap-3 text-xs font-sans text-muted-foreground font-medium">
-        <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5">
+    <div className="border-y border-border bg-card py-2.5 w-full max-w-full overflow-hidden">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs font-sans text-muted-foreground font-medium w-full min-w-0">
+        <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5 min-w-0">
           <div className="flex items-center gap-1.5">
             <span className="size-2 rounded-full bg-[#0a5c38] shrink-0" />
             <span>{onlineCount} Online</span>
@@ -513,7 +513,7 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
             <span>{offlineCount} Down</span>
           </div>
         </div>
-        <div className="font-mono text-[10px] sm:text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-3 sm:gap-x-4">
+        <div className="font-mono text-[10px] sm:text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-2 sm:gap-x-4 gap-y-1 min-w-0">
           <span>{status?.active_campaigns ?? 0} campaigns</span>
           <span>&middot;</span>
           <span>{status?.monitoring_interval_minutes ?? 15}m cycle</span>
