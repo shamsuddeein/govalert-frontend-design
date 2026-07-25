@@ -1,87 +1,142 @@
+import React from "react";
+import { ShieldCheck, Mail, Lock, CheckCircle, HelpCircle } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
-import { Nav, Footer } from "../components/layout";
-import { ShieldCheck, Calendar } from "lucide-react";
 
 export const Route = createFileRoute("/privacy")({
-  component: PrivacyPage,
+  component: PrivacyPolicyPage,
 });
 
-function PrivacyPage() {
+export function PrivacyPolicyPage() {
   return (
-    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
-      <Nav />
-      <main className="flex-1 mx-auto max-w-3xl w-full px-6 py-12">
-        <div className="border-b border-border pb-6 mb-8">
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-            <Calendar className="size-3.5" />
-            Last Updated: July 12, 2026
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight text-primary md:text-4xl">
-            Privacy Policy
-          </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
-            How RecruitmentAlert collects, uses, and safeguards user data.
-          </p>
+    <div className="container mx-auto px-4 py-8 max-w-4xl font-sans text-foreground">
+      {/* Header */}
+      <div className="border-b border-border pb-6 mb-8">
+        <div className="flex items-center gap-2 text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider mb-2">
+          <ShieldCheck className="size-4" />
+          <span>NDPR & NDPA 2023 Compliance</span>
         </div>
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Privacy Policy</h1>
+        <p className="text-sm text-muted-foreground mt-2">
+          Last Updated: July 25, 2026 • Compliant with the Nigeria Data Protection Act (NDPA 2023) & NDPR 2019.
+        </p>
+      </div>
 
-        <article className="prose prose-sm dark:prose-invert max-w-none space-y-6 text-xs text-muted-foreground leading-relaxed">
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">1. Information We Collect</h3>
-            <p>We collect minimal information to deliver our verification services:</p>
-            <ul className="list-disc pl-5 space-y-1">
-              <li>
-                <strong>Account Details</strong>: Full Name, email address, phone number,
-                qualification, and field of study provided when setting up an applicant profile.
-              </li>
-              <li>
-                <strong>Telegram Handle</strong>: Provided voluntarily if you choose to receive
-                alerts directly to your Telegram chat.
-              </li>
-              <li>
-                <strong>Technical Data</strong>: IP address, browser type, and access logs to
-                prevent malicious scraping or spam reports.
-              </li>
-            </ul>
-          </section>
+      <div className="space-y-8 text-sm leading-relaxed">
+        {/* Intro */}
+        <section className="space-y-3 bg-muted/30 p-4 rounded-[8px] border border-border">
+          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+            <Lock className="size-4 text-[#0a5c38] dark:text-[#3fb68e]" />
+            1. Our Commitment to Your Privacy
+          </h2>
+          <p>
+            RecruitmentAlert.com.ng ("we", "our", or "us") operates a real-time job monitoring service for Nigerian federal recruitment portals. 
+            We respect the privacy of every Nigerian job seeker who visits our site, subscribes to alerts, or interacts with our Telegram bot.
+          </p>
+          <p>
+            This Privacy Policy explains what personal data we collect, why we collect it, how long we retain it, and how you can exercise your legal rights under the <strong>Nigeria Data Protection Regulation (NDPR 2019)</strong> and the <strong>Nigeria Data Protection Act of 2023 (NDPA 2023)</strong>.
+          </p>
+        </section>
 
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">
-              2. How We Use Your Information
-            </h3>
-            <p>
-              Your data is solely used to verify profile configurations and process custom
-              notifications. We do not sell, license, or distribute your email addresses or
-              telephone numbers to government recruitment agencies or private placement boards.
-            </p>
-          </section>
+        {/* Data Inventory */}
+        <section className="space-y-3">
+          <h2 className="text-base font-bold text-foreground">2. Personal Data We Collect & Lawful Basis</h2>
+          <p>We collect only the minimum data necessary to provide you with verified job alerts. We do not sell your personal data to anyone.</p>
+          
+          <div className="overflow-x-auto my-4">
+            <table className="w-full text-xs text-left border-collapse border border-border">
+              <thead>
+                <tr className="bg-muted text-foreground font-semibold">
+                  <th className="p-2.5 border border-border">Data Collected</th>
+                  <th className="p-2.5 border border-border">Purpose</th>
+                  <th className="p-2.5 border border-border">Lawful Basis (NDPR Art. 2.2)</th>
+                  <th className="p-2.5 border border-border">Retention Period</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td className="p-2.5 border border-border font-medium">Email Address</td>
+                  <td className="p-2.5 border border-border">Account creation & keyword job alerts</td>
+                  <td className="p-2.5 border border-border font-medium">Contract (Service fulfillment)</td>
+                  <td className="p-2.5 border border-border">Until account closure + 30 days</td>
+                </tr>
+                <tr>
+                  <td className="p-2.5 border border-border font-medium">Telegram User ID & Name</td>
+                  <td className="p-2.5 border border-border">Telegram bot recruitment alert delivery</td>
+                  <td className="p-2.5 border border-border font-medium">Contract (Service fulfillment)</td>
+                  <td className="p-2.5 border border-border">Until /stop command (Immediate deletion)</td>
+                </tr>
+                <tr>
+                  <td className="p-2.5 border border-border font-medium">Web Push Endpoint Keys</td>
+                  <td className="p-2.5 border border-border">Instant PWA browser push notifications</td>
+                  <td className="p-2.5 border border-border font-medium">Consent (Opt-in permission)</td>
+                  <td className="p-2.5 border border-border">Until browser unsubscribe or 404/410 response</td>
+                </tr>
+                <tr>
+                  <td className="p-2.5 border border-border font-medium">IP Address & Security Logs</td>
+                  <td className="p-2.5 border border-border">DDoS prevention, rate-limiting & security</td>
+                  <td className="p-2.5 border border-border font-medium">Legitimate Interest (Platform safety)</td>
+                  <td className="p-2.5 border border-border">90 days (automatic log rotation)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
 
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">3. Anti-Scam Reporting Data</h3>
-            <p>
-              Any recruitment portal URLs or WhatsApp broadcast contents reported through our Scam
-              Desk are aggregated anonymously to flag fraud vectors. We may share audited scam
-              domains publicly with security agencies or host networks to secure takedowns.
-            </p>
-          </section>
+        {/* Data Subject Rights */}
+        <section className="space-y-3">
+          <h2 className="text-base font-bold text-foreground">3. Your Rights as a Data Subject</h2>
+          <p>Under Part IV of the Nigeria Data Protection Act 2023, you have the following rights regarding your personal data:</p>
+          <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+            <li><strong className="text-foreground">Right to Access (Information):</strong> You can request a copy of all data we hold about you.</li>
+            <li><strong className="text-foreground">Right to Rectification:</strong> You can request that inaccurate or incomplete data be corrected.</li>
+            <li><strong className="text-foreground">Right to Erasure (Deletion):</strong> You can request complete deletion of your personal data from our systems.</li>
+            <li><strong className="text-foreground">Right to Withdraw Consent:</strong> You can stop receiving alerts at any time with one click or command.</li>
+            <li><strong className="text-foreground">Right to Object:</strong> You can object to processing based on legitimate interests.</li>
+          </ul>
+        </section>
 
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">4. Cookies and Logs</h3>
-            <p>
-              We use necessary local storage cookies to remember your visual theme preference (Light
-              or Dark Mode) and maintain active dashboard sessions.
-            </p>
-          </section>
+        {/* How to Exercise Rights */}
+        <section className="space-y-3 bg-muted/20 p-4 rounded-[8px] border border-border">
+          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+            <CheckCircle className="size-4 text-[#0a5c38] dark:text-[#3fb68e]" />
+            4. How to Exercise Your Rights (Instant Options)
+          </h2>
+          <div className="space-y-2">
+            <p><strong>Telegram Users:</strong> Send <code>/stop</code> to <a href="https://t.me/govalerts_bot" target="_blank" rel="noreferrer" className="text-[#0a5c38] dark:text-[#3fb68e] underline">@govalerts_bot</a> at any time. Your Telegram ID and preferences will be permanently erased immediately.</p>
+            <p><strong>Browser Push Subscribers:</strong> Click "Get Alerts" or manage your browser notification settings to unsubscribe anytime.</p>
+            <p><strong>Data Access / Erasure Request Email:</strong> Email our Data Protection Officer at <a href="mailto:dpo@recruitmentalert.com.ng" className="text-[#0a5c38] dark:text-[#3fb68e] underline">dpo@recruitmentalert.com.ng</a>. We will fulfill all data requests within <strong>72 hours</strong> as required by law.</p>
+          </div>
+        </section>
 
-          <section className="space-y-2">
-            <h3 className="text-sm font-semibold text-foreground">5. Contact Information</h3>
-            <p>
-              For questions regarding our privacy operations or data erasure requests, please
-              contact us at <strong className="text-primary">privacy@recruitmentalert.com.ng</strong>.
-            </p>
-          </section>
-        </article>
-      </main>
-      <Footer />
+        {/* Third Party & Hosting */}
+        <section className="space-y-3">
+          <h2 className="text-base font-bold text-foreground">5. Third-Party Services & Security</h2>
+          <p>
+            We do not share, rent, or sell your personal data with third-party marketers. We process data strictly using encrypted infrastructure:
+          </p>
+          <ul className="list-disc pl-5 space-y-1 text-muted-foreground">
+            <li><strong>HTTPS Encryption:</strong> All data transmitted between your browser/device and our servers is protected using 256-bit TLS encryption.</li>
+            <li><strong>Sentry Error Monitoring:</strong> Configured with automated Data Scrubbing rules to filter out email addresses, user IDs, and auth tokens before error logs are stored.</li>
+          </ul>
+        </section>
+
+        {/* DPO Contact */}
+        <section className="space-y-2 pt-4 border-t border-border">
+          <h2 className="text-base font-bold text-foreground flex items-center gap-2">
+            <Mail className="size-4 text-[#0a5c38] dark:text-[#3fb68e]" />
+            6. Contact Our Data Protection Officer
+          </h2>
+          <p className="text-muted-foreground">
+            For any questions, data deletion requests, or data protection concerns:
+          </p>
+          <div className="bg-card p-3 rounded-[6px] border border-border text-xs">
+            <p className="font-semibold text-foreground">Data Protection Officer (DPO)</p>
+            <p>RecruitmentAlert.com.ng Data Compliance Team</p>
+            <p>Email: <a href="mailto:dpo@recruitmentalert.com.ng" className="text-[#0a5c38] dark:text-[#3fb68e] underline font-medium">dpo@recruitmentalert.com.ng</a></p>
+            <p>SLA Response Time: Under 72 Hours</p>
+          </div>
+        </section>
+      </div>
     </div>
   );
 }
