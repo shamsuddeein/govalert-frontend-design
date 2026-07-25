@@ -53,7 +53,7 @@ function AdminLoginComponent() {
             </div>
             <div>
               <h1 className="text-xl font-bold tracking-tight text-foreground font-sans">
-                Admin Console <span className="text-xs font-semibold bg-muted text-primary border border-border px-2 py-0.5 rounded-[6px] ml-1">Internal</span>
+                Admin Console
               </h1>
               <p className="text-xs text-muted-foreground mt-1 font-sans">
                 Authenticated Operations Portal. Staff Credentials Required.
@@ -121,12 +121,6 @@ function AdminLoginComponent() {
               )}
             </button>
           </form>
-
-          <div className="text-center pt-2 border-t border-border">
-            <p className="text-[11px] text-muted-foreground font-sans">
-              Requires Django User account with <code className="text-primary font-mono font-semibold">is_staff=True</code>
-            </p>
-          </div>
         </div>
       </div>
     </div>

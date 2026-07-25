@@ -157,12 +157,9 @@ function StatusPage() {
           <div>
             <h1 className="text-2xl font-bold tracking-tight text-primary md:text-3xl">System Status</h1>
             <p className="mt-1 text-sm text-muted-foreground font-sans">
-              Real-time monitoring health and latencies of Nigerian government recruitment subdomains.
+              Real-time reachability status of Nigerian government recruitment portals.
             </p>
           </div>
-          <span className="font-mono text-xs text-muted-foreground shrink-0">
-            Scanning interval: {status.monitoring_interval_minutes}m
-          </span>
         </div>
 
         {/* Global Operational Status Banner */}
@@ -188,17 +185,17 @@ function StatusPage() {
           )}
           <div>
             <p className="text-sm font-semibold text-primary">
-              {systemOperational ? "All systems operational" : "Some portals are offline"}
+              {systemOperational ? "All portals reachable" : "Some portals are offline"}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              {status.agencies_online} portals checked online, {status.agencies_maintenance} under maintenance, {status.agencies_offline} offline.
+              {status.agencies_online} portals reachable online, {status.agencies_maintenance} under maintenance, {status.agencies_offline} offline.
             </p>
           </div>
         </div>
 
         {/* Portals List Table */}
         <div className="space-y-4">
-          <h2 className="text-lg font-semibold text-primary">Agency portal metrics</h2>
+          <h2 className="text-lg font-semibold text-primary">Agency Portal Status</h2>
           <div className="rounded-[8px] border border-border bg-card overflow-hidden">
             <div className="divide-y divide-border font-sans">
               {agencies.map((a) => {
@@ -213,7 +210,6 @@ function StatusPage() {
                         <p className="text-xs text-muted-foreground font-mono truncate min-w-0">{a.portal_url.replace("https://", "").replace("http://", "")}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-mono shrink-0 min-w-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-border/40">
-                        <SpeedDots ms={a.response_time_ms} showLabel />
                         <span className="text-muted-foreground text-[11px] sm:text-xs shrink-0">Checked {timeAgo(a.last_checked)}</span>
                         <span
                           className={`inline-flex items-center gap-1 font-semibold truncate max-w-[130px] sm:max-w-none shrink-0 ${
@@ -238,7 +234,7 @@ function StatusPage() {
                     <div className="space-y-1">
                       {renderUptimeBar(a.last_10_checks)}
                       <div className="flex justify-between text-[10px] text-muted-foreground">
-                        <span>Recent checks</span>
+                        <span>Check history</span>
                         <span>Uptime {a.uptime_percent != null ? `${a.uptime_percent}%` : "—"}</span>
                         <span>Latest</span>
                       </div>
@@ -258,9 +254,9 @@ function StatusPage() {
             <path d="M10 6v4l2.5 2.5" />
           </svg>
           <div className="space-y-1">
-            <h4 className="text-sm font-semibold text-primary font-sans">About this status dashboard</h4>
+            <h4 className="text-sm font-semibold text-primary font-sans">About this status page</h4>
             <p className="text-xs text-muted-foreground leading-relaxed font-sans">
-              This page displays automated health checks conducted by RecruitmentAlert monitoring nodes. Latencies are computed from our monitoring endpoint located in Lagos, Nigeria. A portal marked "Offline" indicates connection timeouts or DNS resolution issues detected during three consecutive scanning cycles.
+              This page displays reachability status of official Nigerian government recruitment portals. A portal marked "Offline" indicates connection timeouts or DNS resolution issues detected during recent automated checks.
             </p>
           </div>
         </div>

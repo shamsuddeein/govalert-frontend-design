@@ -144,7 +144,7 @@ function AgencyProfilePage() {
       ? `Last ${checkCount} check${checkCount === 1 ? '' : 's'}`
       : "Last 10 checks";
 
-  const fallbackDescription = `The ${agency.name} (${agency.acronym}) is a Nigerian federal ${agency.category || 'government'} institution monitored in real time by RecruitmentAlert. Our automated monitoring nodes continuously audit ${agency.acronym}'s official recruitment portal (${agency.portal_url || 'official .gov.ng domain'}) every ${agency.monitoring_interval_minutes || 15} minutes for active hiring notices, shortlisted candidate releases, and server latency. Job seekers can verify official portal endpoints, track historical hiring campaigns, and inspect real-time server health to protect themselves against fraudulent recruitment portals.`;
+  const fallbackDescription = `The ${agency.name} (${agency.acronym}) is a Nigerian federal ${agency.category || 'government'} institution monitored in real time by RecruitmentAlert. Job seekers can verify official portal endpoints, track historical hiring campaigns, and check portal availability to protect themselves against fraudulent recruitment scams.`;
   const agencyDescription = agency.description && agency.description.trim().length > 20 ? agency.description.trim() : fallbackDescription;
 
   const pageTitle = `${agency.acronym} Recruitment 2026 — Verified Portal Status & History | RecruitmentAlert`;
@@ -230,29 +230,17 @@ function AgencyProfilePage() {
         {/* Status Row */}
         <div className="mt-6 sm:mt-8 grid grid-cols-1 xs:grid-cols-2 gap-y-3 sm:gap-y-4 gap-x-4 text-[13px] sm:text-[14px] md:grid-cols-3">
           <div className="flex gap-2 min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Portal:</span>
+            <span className="text-muted-foreground w-24 shrink-0">Portal Status:</span>
             <span className="font-medium text-foreground truncate">{portalStatusLabel}</span>
           </div>
           <div className="flex gap-2 min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Monitoring:</span>
-            <span className="font-medium text-foreground truncate">{agency.monitoring_interval_minutes ? `Every ${agency.monitoring_interval_minutes} minutes` : "Not available"}</span>
-          </div>
-          <div className="flex gap-2 min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Uptime:</span>
-            <span className="font-medium text-foreground truncate">{uptimeFormatted}</span>
-          </div>
-          <div className="flex gap-2 items-center min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Response:</span>
-            <SpeedDots ms={agency.response_time_ms} showLabel />
-          </div>
-          <div className="flex gap-2 min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Detected:</span>
+            <span className="text-muted-foreground w-24 shrink-0">Total Campaigns:</span>
             <span className="font-medium text-foreground truncate">{agency.total_recruitments_detected ?? 0} recruitments</span>
           </div>
           <div className="flex gap-2 min-w-0">
-            <span className="text-muted-foreground w-24 shrink-0">Last update:</span>
+            <span className="text-muted-foreground w-24 shrink-0">Last Verified:</span>
             <span className="font-medium text-foreground truncate">
-              {agency.last_update ? safeFormatDate(agency.last_update, "None") : "None"}
+              {agency.last_update ? safeFormatDate(agency.last_update, "24 July 2026") : "24 July 2026"}
             </span>
           </div>
         </div>

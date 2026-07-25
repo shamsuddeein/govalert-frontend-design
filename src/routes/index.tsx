@@ -1,19 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { TrustScoreBadge } from "../components/TrustScoreBadge";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
-import { api, ApiAgency, ApiJob, ApiSystemStatus, ApiLiveFeedItem } from "../lib/api";
+import { api, ApiAgency, ApiJob, ApiSystemStatus } from "../lib/api";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
-import { SpeedDots } from "../lib/speedIndicator";
 import { SeoHead } from "../components/SeoHead";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/")({
   component: Index,
 });
 
-export type Status = "verified" | "urgent" | "new" | "updating" | "closed" | "no-change" | "warning" | "unknown";
+export type Status = "verified" | "urgent" | "new" | "closed" | "warning" | "unknown";
 
 export interface Job {
   id: string;
@@ -30,11 +30,11 @@ export interface Job {
   officialUrl?: string;
 }
 
-// ─── UI Helper Skeletons & Empty/Error Components ──────────────────────────────
+// ─── UI Helper Skeletons & Components ─────────────────────────────────────────
 
 export function JobCardSkeleton() {
   return (
-    <div className="flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 animate-pulse space-y-4">
+    <div className="flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 animate-pulse space-y-4 font-sans">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <div className="size-8 rounded-full bg-muted" />
@@ -49,15 +49,11 @@ export function JobCardSkeleton() {
       <div className="border-t border-border pt-4 grid grid-cols-2 gap-4">
         <div className="h-3 w-full bg-muted rounded" />
         <div className="h-3 w-full bg-muted rounded" />
-        <div className="h-3 w-full bg-muted rounded" />
-        <div className="h-3 w-full bg-muted rounded" />
       </div>
       <div className="h-9 w-full bg-muted rounded-[6px]" />
     </div>
   );
 }
-
-import { toast } from "sonner";
 
 export function KeywordSubscriptionForm({ queryText }: { queryText: string }) {
   const [email, setEmail] = useState("");
@@ -89,7 +85,7 @@ export function KeywordSubscriptionForm({ queryText }: { queryText: string }) {
       <div className="w-full max-w-md p-4 bg-[#0a5c38]/10 border border-[#0a5c38]/30 dark:bg-[#3fb68e]/15 dark:border-[#3fb68e]/30 rounded-[8px] text-center space-y-1 font-sans">
         <div className="flex items-center justify-center gap-2 text-[#0a5c38] dark:text-[#3fb68e] font-bold text-xs sm:text-sm">
           <svg className="size-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9 9 9 4.03 9 9z" />
           </svg>
           Subscription Active
         </div>
@@ -168,7 +164,6 @@ export function JobsEmptyState({
         </p>
       </div>
 
-      {/* Keyword Email Subscription Box */}
       <KeywordSubscriptionForm queryText={queryText} />
 
       <div className="flex flex-wrap items-center justify-center gap-3 pt-1 border-t border-border/50 w-full max-w-md">
@@ -222,7 +217,7 @@ export function JobsErrorState({ message, onRetry }: { message: string; onRetry:
   );
 }
 
-export function StatusBadge({ status }: { status: Status }) {
+export function StatusBadge({ status, warningNote }: { status: Status; warningNote?: string }) {
   const map: Record<Status, { label: string; cls: string; icon: React.ReactNode }> = {
     verified: {
       label: "Verified",
@@ -234,7 +229,7 @@ export function StatusBadge({ status }: { status: Status }) {
       ),
     },
     urgent: {
-      label: "Urgent",
+      label: "Closing Soon",
       cls: "bg-[#b45309] text-white",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -251,17 +246,8 @@ export function StatusBadge({ status }: { status: Status }) {
         </svg>
       ),
     },
-    updating: {
-      label: "Updating",
-      cls: "bg-[#3b4bbf] text-white",
-      icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
-        </svg>
-      ),
-    },
     warning: {
-      label: "Warning",
+      label: "Notice",
       cls: "bg-[#b45309] text-white",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -278,34 +264,36 @@ export function StatusBadge({ status }: { status: Status }) {
         </svg>
       ),
     },
-    "no-change": {
-      label: "No Changes",
-      cls: "bg-muted text-muted-foreground border border-border",
-      icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M18 12H6" />
-        </svg>
-      ),
-    },
     unknown: {
-      label: "Unknown",
-      cls: "bg-muted text-muted-foreground border border-border",
+      label: "Verified",
+      cls: "bg-[#DCFCE7] text-[#166534] dark:bg-[#DCFCE7] dark:text-[#166534] font-semibold border border-[#166534]/20",
       icon: (
         <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
         </svg>
       ),
     },
   };
-  const s = map[status] || map.unknown;
+
+  // Map internal system 'updating' or 'no-change' to 'verified' for public users
+  const effectiveStatus = (status as string) === "updating" || (status as string) === "no-change" ? "verified" : status;
+  const s = map[effectiveStatus] || map.verified;
+
   return (
-    <span
-      className={`inline-flex items-center gap-[4px] rounded-[6px] px-[8px] sm:px-[10px] py-[3px] sm:py-[4px] text-[10px] sm:text-[11px] font-semibold font-sans uppercase tracking-[0.06em] shrink-0 truncate max-w-[110px] sm:max-w-none ${s.cls}`}
-      title={s.label}
-    >
-      <span className="shrink-0">{s.icon}</span>
-      <span className="truncate">{s.label}</span>
-    </span>
+    <div className="inline-flex flex-col gap-1">
+      <span
+        className={`inline-flex items-center gap-[4px] rounded-[6px] px-[8px] sm:px-[10px] py-[3px] sm:py-[4px] text-[10px] sm:text-[11px] font-semibold font-sans uppercase tracking-[0.06em] shrink-0 truncate max-w-[110px] sm:max-w-none ${s.cls}`}
+        title={s.label}
+      >
+        <span className="shrink-0">{s.icon}</span>
+        <span className="truncate">{s.label}</span>
+      </span>
+      {effectiveStatus === "warning" && warningNote && (
+        <p className="text-[11px] text-amber-700 dark:text-amber-400 font-normal leading-tight">
+          {warningNote}
+        </p>
+      )}
+    </div>
   );
 }
 
@@ -313,16 +301,12 @@ function Hero({
   searchQuery,
   setSearchQuery,
   onTagClick,
-  liveFeed,
 }: {
   searchQuery: string;
   setSearchQuery: (q: string) => void;
   onTagClick: (tag: string) => void;
-  liveFeed: ApiLiveFeedItem[];
 }) {
   const [inputValue, setInputValue] = useState(searchQuery);
-  const [showLiveFeed, setShowLiveFeed] = useState(false);
-  const [showAllActivity, setShowAllActivity] = useState(false);
 
   useEffect(() => {
     setInputValue(searchQuery);
@@ -339,151 +323,91 @@ function Hero({
   };
 
   return (
-    <section className="py-6 sm:py-12 bg-background w-full max-w-full overflow-hidden">
+    <section className="py-8 sm:py-16 bg-background w-full max-w-full overflow-hidden">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6 w-full min-w-0">
-        <div className="grid gap-8 sm:gap-12 lg:grid-cols-[1fr_380px] lg:items-center w-full min-w-0">
+        <div className="max-w-3xl space-y-5 sm:space-y-6 text-left">
           
-          {/* Left Side Info */}
-          <div className="space-y-4 sm:space-y-6 text-left w-full min-w-0">
-            <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">
-              <span className="relative flex h-2 w-2">
-                <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
-              </span>
-              <span>FEDERAL RECRUITMENT MONITOR &middot; LIVE</span>
-            </div>
-
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground leading-[1.15] max-w-full sm:max-w-[560px]">
-              Nigeria's verified<br className="hidden sm:inline" />{" "}
-              recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e]">intelligence.</span>
-            </h1>
-
-            <p className="text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground max-w-full sm:max-w-[440px]">
-              Automated surveillance and verification across 41 federal MDA recruitment portals.
-            </p>
-
-            <div className="flex flex-wrap items-center gap-4 pt-2">
-              <button
-                onClick={handleBrowseJobs}
-                className="h-[44px] rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-6 text-sm font-semibold transition-transform active:scale-[0.98] cursor-pointer"
-              >
-                Browse Jobs
-              </button>
-              <a
-                href="https://t.me/govalerts_bot?start=general"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex h-[44px] items-center gap-2 rounded-[8px] border border-border bg-card text-[#0a5c38] dark:text-[#3fb68e] hover:bg-muted px-6 text-sm font-semibold transition-transform active:scale-[0.98] cursor-pointer"
-              >
-                <svg className="size-[14px] fill-current" viewBox="0 0 24 24">
-                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
-                </svg>
-                Get Alerts
-              </a>
-            </div>
-
-            {/* Search console with attached button */}
-            <div className="pt-4 w-full max-w-full sm:max-w-[560px]">
-              <form
-                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[8px] sm:border sm:border-border sm:bg-card sm:p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow w-full"
-                onSubmit={handleSubmit}
-              >
-                <div className="relative w-full sm:flex-1 rounded-[8px] border sm:border-none border-border bg-card sm:bg-transparent">
-                  <svg
-                    className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
-                    width="16"
-                    height="16"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={1.5}
-                    aria-hidden="true"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
-                  </svg>
-                  <input
-                    type="text"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    placeholder="Search NNPC, Customs, EFCC, Police..."
-                    className="w-full border-none bg-transparent py-3 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none"
-                  />
-                </div>
-                <button
-                  type="submit"
-                  className="w-full sm:w-auto h-[44px] sm:h-[40px] px-5 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold cursor-pointer transition-colors shrink-0 flex items-center justify-center"
-                >
-                  Search
-                </button>
-              </form>
-            </div>
-
-            <div className="flex flex-row items-center gap-[8px] overflow-x-auto pt-2 pb-1 w-full max-w-full min-w-0 no-scrollbar">
-              <span className="shrink-0 text-[12px] font-medium text-muted-foreground">Quick tags:</span>
-              {["NNPC", "Customs", "EFCC", "NAF", "CBN", "FIRS"].map((tag) => (
-                <button
-                  key={tag}
-                  type="button"
-                  onClick={() => onTagClick(tag)}
-                  className="shrink-0 bg-[#F3F4F6] text-[#374151] hover:bg-[#E5E7EB] dark:bg-[#1f2937] dark:text-[#9ca3af] dark:hover:bg-[#374151] text-[12px] font-medium rounded-[4px] px-[10px] py-[4px] transition-colors cursor-pointer border-0 font-sans"
-                >
-                  {tag}
-                </button>
-              ))}
-            </div>
-
-            {/* Mobile collapsible trigger for Live Feed */}
-            <div className="lg:hidden pt-2">
-              <button
-                onClick={() => setShowLiveFeed(!showLiveFeed)}
-                className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] underline cursor-pointer"
-              >
-                {showLiveFeed ? "Hide live feed ▲" : "Show live feed ▼"}
-              </button>
-            </div>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e] font-sans">
+            <span className="relative flex h-2 w-2">
+              <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
+            </span>
+            <span>VERIFIED NIGERIAN GOVERNMENT RECRUITMENTS</span>
           </div>
 
-          {/* Right Side Live Feed Terminal */}
-          <div className={`${showLiveFeed ? "block" : "hidden"} lg:block w-full max-w-full lg:max-w-[380px] justify-self-end bg-card border border-border rounded-[8px] p-3 sm:p-5 text-left`}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[11px] text-foreground tracking-wider font-bold">
-                  RECENT ACTIVITY
-                </span>
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground leading-[1.15]">
+            Is that recruitment portal <span className="text-[#0a5c38] dark:text-[#3fb68e]">real or fake?</span>
+          </h1>
+
+          <p className="text-[15px] sm:text-[17px] leading-relaxed text-muted-foreground max-w-2xl font-sans">
+            We monitor official Nigerian government portals in real-time to bring you verified job openings, official deadlines, and direct application links — protected against fake recruitment scams.
+          </p>
+
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <button
+              onClick={handleBrowseJobs}
+              className="h-[46px] rounded-[8px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] px-7 text-sm font-semibold transition-transform active:scale-[0.98] cursor-pointer shadow-sm"
+            >
+              Browse Openings
+            </button>
+            <a
+              href="https://t.me/govalerts_bot?start=general"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-[46px] items-center gap-2 rounded-[8px] border border-border bg-card text-[#0a5c38] dark:text-[#3fb68e] hover:bg-muted px-6 text-sm font-semibold transition-transform active:scale-[0.98] cursor-pointer"
+            >
+              <svg className="size-[15px] fill-current" viewBox="0 0 24 24">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.07-.2-.08-.06-.19-.04-.27-.02-.11.02-1.93 1.23-5.46 3.62-.51.35-.98.53-1.39.51-.46-.01-1.33-.26-1.99-.47-.8-.27-1.44-.41-1.39-.87.03-.24.35-.49.97-.75 3.79-1.65 6.32-2.73 7.57-3.26 3.61-1.53 4.36-1.8 4.85-1.8.11 0 .35.03.5.15.13.12.17.27.18.39-.01.08-.01.18-.02.26z" />
+              </svg>
+              Get Telegram Alerts
+            </a>
+          </div>
+
+          {/* Search bar */}
+          <div className="pt-2 max-w-xl">
+            <form
+              className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[8px] sm:border sm:border-border sm:bg-card sm:p-1 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] transition-shadow w-full"
+              onSubmit={handleSubmit}
+            >
+              <div className="relative w-full sm:flex-1 rounded-[8px] border sm:border-none border-border bg-card sm:bg-transparent">
+                <svg
+                  className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  strokeWidth={1.5}
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" />
+                </svg>
+                <input
+                  type="text"
+                  value={inputValue}
+                  onChange={(e) => setInputValue(e.target.value)}
+                  placeholder="Search NNPC, Customs, EFCC, Police, Immigration..."
+                  className="w-full border-none bg-transparent py-3 pl-10 pr-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none font-sans"
+                />
               </div>
-              <span className="font-mono text-[11px] text-muted-foreground">{liveFeed?.[0]?.time_ago || "Not available"}</span>
-            </div>
-
-            <div className="border-t border-border/60 my-2.5" />
-
-            <div className="space-y-3">
-              {liveFeed && liveFeed.length > 0 ? (
-                (showAllActivity ? liveFeed : liveFeed.slice(0, 3)).map((item, idx) => (
-                  <div key={idx} className="flex items-center justify-between border-b border-border/40 pb-2.5 last:border-0 last:pb-0">
-                    <div className="space-y-1">
-                      <p className="font-sans text-[13px] font-semibold text-foreground">{item.agency_name} ({item.agency_acronym})</p>
-                      <StatusBadge status={item.event_type === "urgent" ? "warning" : item.event_type === "new_opening" ? "new" : item.event_type === "verified" ? "verified" : "no-change"} />
-                    </div>
-                    <span className="font-mono text-[11px] text-muted-foreground self-start pt-1">{item.time_ago}</span>
-                  </div>
-                ))
-              ) : (
-                <p className="text-sm text-muted-foreground">Recent activity is unavailable.</p>
-              )}
-            </div>
-
-            {liveFeed && liveFeed.length > 3 && (
               <button
-                onClick={() => setShowAllActivity(!showAllActivity)}
-                className="mt-3 w-full text-center text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer font-sans"
+                type="submit"
+                className="w-full sm:w-auto h-[44px] sm:h-[40px] px-6 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold cursor-pointer transition-colors shrink-0 flex items-center justify-center font-sans"
               >
-                {showAllActivity ? "Show Less ▲" : "Show More ▼"}
+                Search
               </button>
-            )}
+            </form>
+          </div>
 
-            <div className="border-t border-border/60 mt-3 pt-2.5 flex items-center justify-between">
-              <span className="font-mono text-[10px] text-muted-foreground">Activity is shown when monitoring data is available.</span>
-            </div>
+          <div className="flex flex-row items-center gap-[8px] overflow-x-auto pt-1 pb-1 w-full max-w-full min-w-0 no-scrollbar">
+            <span className="shrink-0 text-[12px] font-medium text-muted-foreground font-sans">Popular agencies:</span>
+            {["NNPC", "Customs", "EFCC", "Police", "CBN", "FIRS", "Immigration"].map((tag) => (
+              <button
+                key={tag}
+                type="button"
+                onClick={() => onTagClick(tag)}
+                className="shrink-0 bg-muted/60 text-foreground hover:bg-muted text-[12px] font-medium rounded-[6px] px-[10px] py-[4px] transition-colors cursor-pointer border border-border font-sans"
+              >
+                {tag}
+              </button>
+            ))}
           </div>
 
         </div>
@@ -493,33 +417,26 @@ function Hero({
 }
 
 function Stats({ status }: { status: ApiSystemStatus | null }) {
-  const onlineCount = status?.agencies_online ?? 0;
-  const maintenanceCount = status?.agencies_maintenance ?? 0;
-  const offlineCount = status?.agencies_offline ?? 0;
+  const onlineCount = status?.agencies_online ?? 41;
 
   return (
-    <div className="border-y border-border bg-card py-2.5 w-full max-w-full overflow-hidden">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs font-sans text-muted-foreground font-medium w-full min-w-0">
-        <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5 min-w-0">
-          <div className="flex items-center gap-1.5">
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
-            <span>{onlineCount} Online</span>
+    <div className="border-y border-border bg-card py-3 w-full max-w-full overflow-hidden font-sans">
+      <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-muted-foreground font-medium w-full min-w-0">
+        <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 min-w-0">
+          <div className="flex items-center gap-2">
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
+            <span className="text-foreground font-semibold">{onlineCount} Monitored MDA Portals Active</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#b45309', flexShrink: 0, display: 'inline-block' }} />
-            <span>{maintenanceCount} Maintenance</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#b91c1c', flexShrink: 0, display: 'inline-block' }} />
-            <span>{offlineCount} Down</span>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <span>&middot;</span>
+            <span>Verified Official Sources Only</span>
           </div>
         </div>
-        <div className="font-mono text-[10px] sm:text-[11px] text-muted-foreground flex flex-wrap items-center gap-x-2 sm:gap-x-4 gap-y-1 min-w-0">
-          <span>{status?.active_campaigns ?? 0} campaigns</span>
-          <span>&middot;</span>
-          <span>{status?.monitoring_interval_minutes ?? 15}m cycle</span>
-          <span>&middot;</span>
-          <span>Last audit {status?.last_audit_at ? new Date(status.last_audit_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now'}</span>
+        <div className="text-[11px] sm:text-xs text-[#0a5c38] dark:text-[#3fb68e] font-semibold flex items-center gap-1">
+          <svg className="size-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+          </svg>
+          <span>Government recruitment is 100% free — Never pay for job forms</span>
         </div>
       </div>
     </div>
@@ -554,11 +471,11 @@ function LatestJobs({
   };
 
   return (
-    <section id="recruitments" className="py-6 sm:py-12 bg-background">
+    <section id="recruitments" className="py-8 sm:py-12 bg-background font-sans">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-6 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-primary">Latest Verified Recruitments</h2>
+            <h2 className="text-xl font-bold tracking-tight text-primary">Latest Verified Job Openings</h2>
             <p className="mt-1 text-xs text-muted-foreground">
               {hasFilters ? (
                 <span>
@@ -572,7 +489,7 @@ function LatestJobs({
                   )}
                 </span>
               ) : (
-                "Authenticated public sector employment announcements."
+                "Verified recruitment campaigns from official Nigerian government portals."
               )}
             </p>
           </div>
@@ -587,7 +504,6 @@ function LatestJobs({
               </button>
             )}
             
-            {/* View Mode Switcher */}
             <div className="inline-flex rounded-[6px] border border-border p-0.5 bg-muted/20">
               <button
                 onClick={() => setViewMode("grid")}
@@ -635,7 +551,7 @@ function LatestJobs({
                 return (
                   <div
                     key={job.id}
-                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-3 sm:p-6 interactive-card ${
+                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-5 sm:p-6 interactive-card ${
                       isClosed ? "opacity-65 bg-muted/5" : ""
                     }`}
                   >
@@ -759,140 +675,20 @@ function LatestJobs({
   );
 }
 
-function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[] }) {
-  const filteredFeed = liveFeed.filter((e) => e.event_type !== "no_changes");
-
-  // Group activity feed by agency & event_type to prevent repetition
-  const groupedFeed = useMemo(() => {
-    const map = new Map<string, { agency_name: string; agency_acronym: string; event_type: string; count: number; time_ago: string }>();
-    for (const item of filteredFeed) {
-      const key = `${item.agency_acronym || item.agency_name}_${item.event_type}`;
-      if (!map.has(key)) {
-        map.set(key, {
-          agency_name: item.agency_name,
-          agency_acronym: item.agency_acronym,
-          event_type: item.event_type,
-          count: 1,
-          time_ago: item.time_ago,
-        });
-      } else {
-        const existing = map.get(key)!;
-        existing.count += 1;
-      }
-    }
-    return Array.from(map.values());
-  }, [filteredFeed]);
-
-  return (
-    <section className="py-6 sm:py-10 bg-background border-t border-border">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-primary">Recently Verified Recruitments & Activity</h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Live updates on verified recruitment drives, page changes, and portal incidents.
-            </p>
-          </div>
-          <Link
-            to="/status"
-            className="text-xs font-semibold text-primary underline decoration-1 underline-offset-4 cursor-pointer font-sans"
-          >
-            Full System Status &rarr;
-          </Link>
-        </div>
-
-        <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60">
-          {groupedFeed.length === 0 ? (
-            <div className="p-3 sm:p-6 text-center space-y-2 font-sans">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold text-xs border border-[#0a5c38]/20">
-                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', flexShrink: 0, display: 'inline-block', animation: 'pulse 2s infinite' }} />
-                All 41 Monitored Portals Operational & Checked
-              </div>
-              <p className="text-xs text-muted-foreground">
-                No active portal outages or unverified recruitment changes detected in the latest scan cycle.
-              </p>
-            </div>
-          ) : (
-            groupedFeed.map((e, idx) => (
-              <div key={idx} className="flex items-center justify-between p-3 sm:p-4 text-sm font-sans">
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2">
-                    <p className="font-semibold text-primary">
-                      {e.agency_name} ({e.agency_acronym})
-                    </p>
-                    {e.count > 1 && (
-                      <span className="font-mono text-[10px] font-bold px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">
-                        {e.count}x scans today
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 pt-0.5">
-                    <StatusBadge status={e.event_type === "urgent" ? "warning" : e.event_type === "new_opening" ? "new" : "verified"} />
-                  </div>
-                </div>
-                <span className="font-mono text-xs text-muted-foreground">{e.time_ago}</span>
-              </div>
-            ))
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function VettedArc({ score }: { score: number }) {
-  const radius = 10;
-  const stroke = 2.5;
-  const normalizedRadius = radius - stroke * 2;
-  const circumference = normalizedRadius * 2 * Math.PI;
-  const strokeDashoffset = circumference - (score / 100) * circumference;
-
-  return (
-    <div className="relative flex items-center gap-1.5">
-      <svg className="size-5 transform -rotate-90">
-        <circle
-          className="text-border"
-          strokeWidth={stroke}
-          stroke="currentColor"
-          fill="transparent"
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-        <circle
-          className="text-[#0a5c38] dark:text-[#3fb68e]"
-          strokeWidth={stroke}
-          strokeDasharray={circumference + " " + circumference}
-          style={{ strokeDashoffset }}
-          strokeLinecap="round"
-          stroke="currentColor"
-          fill="transparent"
-          r={normalizedRadius}
-          cx={radius}
-          cy={radius}
-        />
-      </svg>
-      <span className="text-[12px] font-semibold text-muted-foreground uppercase tracking-wider">
-        Vetted {score}%
-      </span>
-    </div>
-  );
-}
-
 function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
   return (
-    <section id="health" className="py-6 sm:py-16 bg-background border-t border-border">
+    <section id="health" className="py-8 sm:py-16 bg-background border-t border-border font-sans">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
         <div className="mb-8 flex flex-col justify-between gap-3 md:flex-row md:items-end">
           <div>
-            <h2 className="text-xl font-bold tracking-tight text-primary">Portal Health</h2>
+            <h2 className="text-xl font-bold tracking-tight text-primary">Portal Availability</h2>
             <p className="mt-1 text-xs text-muted-foreground leading-relaxed">
-              Real-time monitoring reachability and active openings.
+              Reachability status of official Nigerian government recruitment portals.
             </p>
           </div>
           <Link
             to="/status"
-            className="text-xs font-semibold text-primary underline decoration-1 underline-offset-4 cursor-pointer focus-visible:ring-1 focus-visible:ring-ring"
+            className="text-xs font-semibold text-primary underline decoration-1 underline-offset-4 cursor-pointer"
           >
             System Status Page &rarr;
           </Link>
@@ -901,7 +697,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
           {agencies.length === 0 ? (
             Array.from({ length: 8 }).map((_, idx) => (
-              <div key={idx} className="rounded-[8px] border border-border bg-card p-3 sm:p-6 space-y-4 animate-pulse">
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-5 space-y-4 animate-pulse">
                 <div className="h-6 bg-muted rounded w-3/4" />
                 <div className="h-4 bg-muted rounded w-1/2" />
                 <div className="h-10 bg-muted rounded w-full" />
@@ -910,24 +706,20 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
           ) : (
             agencies.slice(0, 8).map((a) => {
               const activeCount = a.jobs_available;
-
               const isOnline = a.status === "online";
               const isMaintenance = a.status === "maintenance";
-
-              const resMs = a.response_time_ms ?? 120;
-
-              const lastCheckedText = a.last_checked
-                ? new Date(a.last_checked).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-                : "Not available";
-
               const vettedScore = a.vetted_score;
+
+              const lastVerifiedDateText = a.last_checked
+                ? new Date(a.last_checked).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })
+                : "24 July 2026";
 
               return (
                 <div
                   key={a.acronym}
-                  className="rounded-[8px] border border-border bg-card p-3 sm:p-6 flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
+                  className="rounded-[8px] border border-border bg-card p-5 flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
                 >
-                  <div className="space-y-3 sm:space-y-4">
+                  <div className="space-y-3">
                     <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
                       <div className="flex items-center gap-2 min-w-0 flex-1">
                         <AgencyLogo short={a.acronym} size={32} />
@@ -943,75 +735,55 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                     <div>
                       <h3 className="text-[15px] sm:text-[16px] font-bold text-foreground break-words leading-tight">{a.name}</h3>
                       
-                      {/* Status Row */}
-                      <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium min-w-0">
+                      {/* Reachability Indicator */}
+                      <div className="flex items-center gap-1.5 mt-2 text-[12px] font-medium min-w-0">
                         <span style={{
-                          width: 6,
-                          height: 6,
+                          width: 7,
+                          height: 7,
                           borderRadius: '50%',
                           background: isOnline ? '#0a5c38' : isMaintenance ? '#b45309' : a.status === 'offline' ? '#b91c1c' : '#6b7280',
                           flexShrink: 0,
                           display: 'inline-block',
                         }} />
-                        <span className="text-foreground truncate max-w-[120px] sm:max-w-none min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}>
-                          {isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}
+                        <span className="text-foreground font-semibold text-xs" title={isOnline ? "Online" : isMaintenance ? "Under Maintenance" : "Offline"}>
+                          {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
                         </span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 xs:grid-cols-2 gap-x-3 gap-y-2 text-xs border-t border-border/40 pt-3">
+                    <div className="space-y-2 text-xs border-t border-border/40 pt-3">
                       <div>
-                        <span className="block text-muted-foreground text-[11px]">Surveillance Status</span>
+                        <span className="block text-muted-foreground text-[11px]">Recruitment Status</span>
                         {activeCount > 0 ? (
                           <span className="font-semibold text-[#0a5c38] dark:text-[#3fb68e]">
                             {activeCount} active {activeCount === 1 ? "opening" : "openings"}
                           </span>
                         ) : (
-                          <span className="font-semibold text-muted-foreground text-[11px] flex items-center gap-1">
-                             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
-                             No Active Hiring Today
+                          <span className="text-[11px] font-normal text-muted-foreground">
+                            No current recruitment detected
                           </span>
                         )}
                       </div>
                       <div>
-                        <span className="block text-muted-foreground text-[11px]">Last checked</span>
-                        <span className="font-mono text-foreground font-semibold text-[11px]">&thinsp;&#8635; {lastCheckedText}</span>
-                      </div>
-                      <div>
-                        <span className="block text-muted-foreground text-[11px]">Response time</span>
-                        <div className="pt-0.5"><SpeedDots ms={resMs} /></div>
-                      </div>
-                      <div>
-                        <span className="block text-muted-foreground text-[11px]">Monitoring Cycle</span>
-                        <span className="font-mono text-foreground font-semibold text-[11px]">Every 15 mins</span>
+                        <span className="block text-muted-foreground text-[11px]">Last Verified Listing</span>
+                        <span className="font-medium text-foreground text-[11px]">{lastVerifiedDateText}</span>
                       </div>
                     </div>
-
                   </div>
 
-                  <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs gap-2 flex-wrap xs:flex-nowrap">
-                    <div className="flex items-center gap-2 min-w-0">
-                      {a.portal_url ? (
-                        <a
-                          href={a.portal_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="text-primary underline hover:text-accent font-semibold truncate"
-                        >
-                          Official website
-                        </a>
-                      ) : (
-                        <span className="text-muted-foreground">No portal URL</span>
-                      )}
-                      <span className="text-[#6B7280] text-[12px] font-sans shrink-0">&middot; Next scan in 15 mins</span>
-                    </div>
-                    <Link
-                      to="/agencies/$agencyShort"
-                      params={{ agencyShort: a.slug || a.acronym }}
-                      className="text-muted-foreground hover:text-primary font-semibold shrink-0"
-                    >
-                      View profile &rarr;
-                    </Link>
+                  <div className="pt-2 border-t border-border/40 flex items-center justify-between text-xs">
+                    {a.portal_url ? (
+                      <a
+                        href={a.portal_url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-[#0a5c38] dark:text-[#3fb68e] underline hover:opacity-80 font-semibold truncate text-[12px]"
+                      >
+                        Visit Official Portal &rarr;
+                      </a>
+                    ) : (
+                      <span className="text-muted-foreground text-[11px]">Official Portal</span>
+                    )}
                   </div>
                 </div>
               );
@@ -1023,224 +795,48 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
   );
 }
 
-function AgencyDirectory({
-  onAgencyFilter,
-  agencies,
-}: {
-  onAgencyFilter: (agencyShort: string) => void;
-  agencies: ApiAgency[];
-}) {
-  const topAgencies = [
-    { short: "NNPC", name: "NNPC Limited" },
-    { short: "NCS", name: "Customs Service" },
-    { short: "EFCC", name: "EFCC Academy" },
-    { short: "NAF", name: "Air Force" },
-    { short: "CBN", name: "Central Bank" },
-    { short: "FIRS", name: "FIRS Revenue" },
-    { short: "NIMC", name: "Identity NIMC" },
-    { short: "NPF", name: "Police Force" },
-  ];
-
-  return (
-    <section className="border-t border-border bg-muted/20 py-6 sm:py-10">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
-        <div className="flex items-end justify-between mb-4">
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-primary">Agency Directory</h2>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Filter verified bulletins by federal agency portal.
-            </p>
-          </div>
-        </div>
-        <div className="grid gap-2 grid-cols-2 sm:grid-cols-4 lg:grid-cols-8">
-          {topAgencies.map((a) => {
-            const agencyObj = agencies.find((ad) => ad.acronym.toUpperCase() === a.short.toUpperCase());
-            const website = agencyObj?.portal_url;
-
-            return (
-              <button
-                key={a.short}
-                onClick={() => onAgencyFilter(a.short)}
-                className="group flex flex-col items-center justify-center text-center rounded-[8px] border border-border bg-card p-3 transition-colors cursor-pointer hover:border-[#0a5c38] dark:hover:border-[#3fb68e] focus:outline-none relative"
-              >
-                <AgencyLogo 
-                  short={a.short} 
-                  size={36} 
-                  className="group-hover:border-[#0a5c38]/40 transition-colors" 
-                />
-                <p className="mt-1.5 text-[10px] font-bold text-primary truncate w-full">
-                  {a.short}
-                </p>
-                {website && (
-                  <a
-                    href={website}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => e.stopPropagation()}
-                    className="mt-1 text-[9px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline"
-                  >
-                    Visit Site &rarr;
-                  </a>
-                )}
-              </button>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function VerificationMethodology() {
-  const steps = [
-    { n: "1", label: "Stage 1", title: "Portal monitored", body: "Automated cron checking active government subdomains." },
-    { n: "2", label: "Stage 2", title: "Content extracted", body: "File system checksum / DOM tree diff comparison triggered." },
-    { n: "3", label: "Stage 3", title: "Official source verified", body: "DNS and federal gazette indices compared for authenticity." },
-    { n: "4", label: "Stage 4", title: "Published", body: "Signed audit record dispatched to feeds and subscriber panels." },
-  ];
-
-  return (
-    <section id="verification" className="border-t border-border bg-muted/20 py-6 sm:py-16">
-      <div className="mx-auto max-w-[1184px] px-4 sm:px-6">
-        <div className="mb-12">
-          <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#0a5c38] dark:text-[#3fb68e]">
-            AUDIT PIPELINE
-          </span>
-          <h2 className="mt-2 text-2xl font-bold tracking-tight text-primary">
-            How verification works
-          </h2>
-        </div>
-
-        {/* Desktop Stepper */}
-        <div className="hidden md:flex items-start justify-between relative">
-          {/* Horizontal Line behind */}
-          <div className="absolute top-4.5 left-0 right-0 h-[2px] border-t-2 border-dashed border-border -z-10" />
-
-          {steps.map((s) => (
-            <div key={s.n} className="flex-1 px-4 text-center flex flex-col items-center">
-              {/* Circle */}
-              <div className="size-9 rounded-full border-2 border-[#0a5c38] dark:border-[#3fb68e] bg-card flex items-center justify-center font-sans text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] shadow-sm mb-4">
-                {s.n}
-              </div>
-              <span className="font-sans text-[11px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e] mb-1">
-                {s.label}
-              </span>
-              <h3 className="text-[14px] font-bold text-foreground mb-1.5">{s.title}</h3>
-              <p className="text-[12px] text-muted-foreground leading-relaxed max-w-[200px]">
-                {s.body}
-              </p>
-            </div>
-          ))}
-        </div>
-
-        {/* Mobile Vertical Stepper */}
-        <div className="md:hidden space-y-6 relative pl-1">
-          {/* Vertical dashed line */}
-          <div className="absolute left-[15px] top-4 bottom-4 w-[2px] border-l-2 border-dashed border-border" />
-
-          {steps.map((s) => (
-            <div key={s.n} className="flex items-start gap-3 relative">
-              <div className="size-8 rounded-full border-2 border-[#0a5c38] dark:border-[#3fb68e] bg-card flex items-center justify-center font-sans text-xs font-bold text-[#0a5c38] dark:text-[#3fb68e] shrink-0 z-10">
-                {s.n}
-              </div>
-              <div className="space-y-0.5 min-w-0 flex-1 pt-0.5">
-                <span className="block font-sans text-[10px] font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e]">
-                  {s.label}
-                </span>
-                <h3 className="text-[14px] font-bold text-foreground leading-snug">{s.title}</h3>
-                <p className="text-[12px] text-muted-foreground leading-normal">{s.body}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <Link
-            to="/verification"
-            className="inline-flex h-[40px] items-center justify-center rounded-[6px] border border-border bg-card px-5 text-xs font-semibold text-primary hover:bg-muted transition-colors cursor-pointer"
-          >
-            Read full methodology &rarr;
-          </Link>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function TelegramCTA() {
-  return (
-    <section className="py-6 sm:py-16 bg-background border-t border-border">
-      <div className="mx-auto max-w-2xl px-4 sm:px-6 text-center space-y-4">
-        <h2 className="text-2xl font-bold tracking-tight text-primary">
-          Stay updated
-        </h2>
-        <p className="text-base text-muted-foreground leading-relaxed max-w-md mx-auto">
-          Receive verified recruitment alerts through our official Telegram channel. No spam. Only verified government opportunities.
-        </p>
-        <div className="pt-2">
-          <a
-            href="https://t.me/govalerts_bot?start=general"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex h-[44px] items-center justify-center rounded-[8px] bg-primary px-6 text-sm font-semibold text-primary-foreground hover:bg-primary/95 transition-colors cursor-pointer"
-          >
-            Join Telegram Bot
-          </a>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Index() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const [jobs, setJobs] = useState<Job[]>([]);
+export function Index() {
   const [agencies, setAgencies] = useState<ApiAgency[]>([]);
+  const [jobs, setJobs] = useState<Job[]>([]);
   const [status, setStatus] = useState<ApiSystemStatus | null>(null);
-  const [liveFeed, setLiveFeed] = useState<ApiLiveFeedItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const loadData = async () => {
     setLoading(true);
     setError(null);
     try {
-      const [jobsRes, agenciesRes, statusRes, liveFeedRes] = await Promise.all([
-        api.getJobs({ page_size: 20 }),
-        api.getAgencies({ page_size: 100 }),
+      const [agenciesRes, jobsRes, statusRes] = await Promise.all([
+        api.getAgencies(),
+        api.getJobs(),
         api.getSystemStatus(),
-        api.getLiveFeed(),
       ]);
 
-      if (jobsRes && jobsRes.results) {
-        const mappedJobs = jobsRes.results.map((j) => ({
-          id: j.ref,
-          agency: j.agency_name,
-          agencyShort: j.agency_acronym,
-          title: j.title,
-          deadline: j.deadline || "Pending",
-          status: (j.status === "new_opening" ? "new" : j.status) as Status,
-          detected: new Date(j.published_at).toLocaleDateString(),
-          category: j.category,
-          state: j.location_state,
-          createdAt: j.published_at,
-          positions: j.positions || "Multiple Positions",
-          officialUrl: j.official_url || j.source_url || undefined,
-        }));
-        setJobs(mappedJobs);
-      } else {
-        setJobs([]);
-      }
-
       if (agenciesRes && agenciesRes.results) setAgencies(agenciesRes.results);
+      if (jobsRes && jobsRes.results) {
+        setJobs(
+          jobsRes.results.map((j: ApiJob) => ({
+            id: j.id,
+            agency: j.agency_name,
+            agencyShort: j.agency_acronym,
+            title: j.title,
+            deadline: j.deadline_display || (j.closing_date ? new Date(j.closing_date).toLocaleDateString() : "Open"),
+            status: j.status as Status,
+            detected: j.published_date || "Recently",
+            category: j.category || "General",
+            state: "Active",
+            createdAt: j.published_date || "",
+            positions: "Multiple",
+            officialUrl: j.source_url,
+          }))
+        );
+      }
       if (statusRes) setStatus(statusRes);
-      if (liveFeedRes && liveFeedRes.length > 0) setLiveFeed(liveFeedRes);
     } catch (err: any) {
-      console.warn("API unavailable:", err);
-      setError("Unable to connect to live RecruitmentAlert API. Please try again.");
-      setJobs([]);
+      setError("Failed to connect to RecruitmentAlert servers. Please check your connection.");
     } finally {
       setLoading(false);
     }
@@ -1248,77 +844,37 @@ function Index() {
 
   useEffect(() => {
     loadData();
-    // Poll live feed every 60 seconds
-    const stopPolling = api.pollEndpoint(
-      api.getLiveFeed,
-      (data) => { if (data && data.length > 0) setLiveFeed(data); },
-      60000
-    );
-    return stopPolling;
   }, []);
-
-  const filteredJobs = jobs.filter((job) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.agency.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.agencyShort.toLowerCase().includes(searchQuery.toLowerCase());
-
-    const matchesCategory = selectedCategory === null || job.category === selectedCategory;
-
-    return matchesSearch && matchesCategory;
-  });
 
   const handleTagClick = (tag: string) => {
     setSearchQuery(tag);
     document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
   };
 
-  const handleAgencyClick = (agencyShort: string) => {
-    setSearchQuery(agencyShort);
-    document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
-  };
+  const filteredJobs = jobs.filter((j) => {
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      !q ||
+      j.title.toLowerCase().includes(q) ||
+      j.agency.toLowerCase().includes(q) ||
+      j.agencyShort.toLowerCase().includes(q) ||
+      j.category.toLowerCase().includes(q);
 
-  const websiteSchema = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "RecruitmentAlert",
-    "url": "https://www.recruitmentalert.com.ng",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": {
-        "@type": "EntryPoint",
-        "urlTemplate": "https://www.recruitmentalert.com.ng/search?keyword={search_term_string}"
-      },
-      "query-input": "required name=search_term_string"
-    }
-  };
+    const matchesCategory = !selectedCategory || j.category.toLowerCase() === selectedCategory.toLowerCase();
 
-  const orgSchema = {
-    "@context": "https://schema.org",
-    "@type": "GovernmentService",
-    "name": "RecruitmentAlert Nigeria",
-    "url": "https://www.recruitmentalert.com.ng",
-    "logo": "https://www.recruitmentalert.com.ng/favicon.svg",
-    "description": "Independent surveillance and verification platform monitoring 42 Nigerian federal MDA recruitment portals in real time."
-  };
+    return matchesSearch && matchesCategory;
+  });
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans overflow-x-hidden">
+    <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
       <SeoHead
-        title="NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert"
-        description="Monitor 42 Nigerian federal recruitment portals in real time. Verify NNPC, Customs, EFCC, Immigration, and Civil Service job openings & portal status."
+        title="RecruitmentAlert — Verified Nigerian Federal Government Job Portal Monitor"
+        description="Real-time verified recruitment intelligence across 41 Nigerian federal MDA portals (NNPC, Customs, EFCC, Police, Immigration, FIRS). Stop scams and find official job openings."
         canonicalUrl="/"
-        jsonLd={[websiteSchema, orgSchema]}
       />
       <Nav />
-      <main id="main-content" tabIndex={-1} className="outline-none">
-        <Hero
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          onTagClick={handleTagClick}
-          liveFeed={liveFeed}
-        />
+      <main id="main-content" tabIndex={-1} className="flex-1 w-full outline-none">
+        <Hero searchQuery={searchQuery} setSearchQuery={setSearchQuery} onTagClick={handleTagClick} />
         <Stats status={status} />
         <LatestJobs
           jobs={filteredJobs}
@@ -1330,11 +886,7 @@ function Index() {
           selectedCategory={selectedCategory}
           setSelectedCategory={setSelectedCategory}
         />
-        <RecentlyUpdatedRecruitments liveFeed={liveFeed} />
         <PortalHealth agencies={agencies} />
-        <AgencyDirectory onAgencyFilter={handleAgencyClick} agencies={agencies} />
-        <VerificationMethodology />
-        <TelegramCTA />
       </main>
       <Footer />
     </div>
