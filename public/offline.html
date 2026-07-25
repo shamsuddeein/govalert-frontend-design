@@ -8,8 +8,20 @@
   <meta name="description" content="You are currently viewing RecruitmentAlert in offline mode. Cached recruitment listings and portal health updates remain available." />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <script>
+    (function(){try{var t=localStorage.getItem("theme");if(t==="dark"){document.documentElement.classList.add("dark");}else{document.documentElement.classList.remove("dark");}}catch(e){document.documentElement.classList.remove("dark");}})();
+  </script>
   <style>
     :root {
+      --bg: #fafafa;
+      --surface: #ffffff;
+      --text: #141414;
+      --muted: #5a6370;
+      --border: #e5e7eb;
+      --green: #0a5c38;
+      --green-deep: #0f7a4a;
+    }
+    .dark {
       --bg: #0c1015;
       --surface: #141a20;
       --text: #e8edf2;
@@ -17,17 +29,6 @@
       --border: #242c38;
       --green: #3fb68e;
       --green-deep: #0a5c38;
-    }
-    @media (prefers-color-scheme: light) {
-      :root {
-        --bg: #fafafa;
-        --surface: #ffffff;
-        --text: #141414;
-        --muted: #5a6370;
-        --border: #e5e7eb;
-        --green: #0a5c38;
-        --green-deep: #0f7a4a;
-      }
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {

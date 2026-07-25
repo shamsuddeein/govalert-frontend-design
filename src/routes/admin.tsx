@@ -66,10 +66,10 @@ function AdminLayout() {
   // Sync user state & theme preference on navigation
   useEffect(() => {
     setUser(getAdminUser());
-    const savedAdminTheme = localStorage.getItem("admin_theme");
-    if (savedAdminTheme === "dark") {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
       document.documentElement.classList.add("dark");
-    } else if (savedAdminTheme === "light") {
+    } else {
       document.documentElement.classList.remove("dark");
     }
   }, [location.pathname]);
