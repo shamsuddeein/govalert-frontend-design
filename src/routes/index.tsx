@@ -33,7 +33,7 @@ export interface Job {
 
 export function JobCardSkeleton() {
   return (
-    <div className="flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 shadow-sm animate-pulse space-y-4">
+    <div className="flex flex-col justify-between rounded-[8px] border border-border bg-card p-6 animate-pulse space-y-4">
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <div className="size-8 rounded-full bg-muted" />
@@ -151,8 +151,8 @@ export function JobsEmptyState({
   const queryText = searchQuery && searchQuery.trim() ? searchQuery.trim() : "";
 
   return (
-    <div className="flex flex-col items-center justify-center p-6 sm:p-10 text-center bg-card border border-border rounded-[8px] space-y-5 my-6 font-sans shadow-sm">
-      <div className="p-3.5 bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/15 dark:text-[#3fb68e] rounded-full">
+    <div className="flex flex-col items-center justify-center p-6 sm:p-10 text-center bg-card border border-border rounded-[8px] space-y-5 my-6 font-sans">
+      <div className="p-3.5 bg-[#0a5c38]/8 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] rounded-[8px]">
         <svg className="size-8 stroke-current fill-none" strokeWidth="1.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
         </svg>
@@ -199,7 +199,7 @@ export function JobsEmptyState({
 export function JobsErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center p-10 text-center bg-destructive/5 border border-destructive/20 rounded-[8px] space-y-4 my-6 font-sans">
-      <div className="p-3 bg-destructive/10 rounded-full text-destructive">
+      <div className="p-3 bg-destructive/8 rounded-[8px] text-destructive">
         <svg className="size-8 stroke-current fill-none" strokeWidth="1.5" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
         </svg>
@@ -424,7 +424,7 @@ function Hero({
                   key={tag}
                   type="button"
                   onClick={() => onTagClick(tag)}
-                  className="shrink-0 bg-[#F3F4F6] text-[#374151] hover:bg-[#E5E7EB] dark:bg-[#F3F4F6] dark:text-[#374151] dark:hover:bg-[#E5E7EB] text-[12px] font-medium rounded-[16px] px-[12px] py-[4px] transition-colors cursor-pointer border-0"
+                  className="shrink-0 bg-[#F3F4F6] text-[#374151] hover:bg-[#E5E7EB] dark:bg-[#1f2937] dark:text-[#9ca3af] dark:hover:bg-[#374151] text-[12px] font-medium rounded-[4px] px-[10px] py-[4px] transition-colors cursor-pointer border-0 font-sans"
                 >
                   {tag}
                 </button>
@@ -501,15 +501,15 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 sm:gap-3 text-xs font-sans text-muted-foreground font-medium w-full min-w-0">
         <div className="flex flex-wrap items-center gap-x-4 sm:gap-x-6 gap-y-1.5 min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#0a5c38] shrink-0" />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
             <span>{onlineCount} Online</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#b45309] shrink-0" />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#b45309', flexShrink: 0, display: 'inline-block' }} />
             <span>{maintenanceCount} Maintenance</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <span className="size-2 rounded-full bg-[#b91c1c] shrink-0" />
+            <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#b91c1c', flexShrink: 0, display: 'inline-block' }} />
             <span>{offlineCount} Down</span>
           </div>
         </div>
@@ -634,7 +634,7 @@ function LatestJobs({
                 return (
                   <div
                     key={job.id}
-                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm interactive-card ${
+                    className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-3 sm:p-6 interactive-card ${
                       isClosed ? "opacity-65 bg-muted/5" : ""
                     }`}
                   >
@@ -800,11 +800,11 @@ function RecentlyUpdatedRecruitments({ liveFeed }: { liveFeed: ApiLiveFeedItem[]
           </Link>
         </div>
 
-        <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60 shadow-sm">
+        <div className="rounded-[8px] border border-border bg-card divide-y divide-border/60">
           {groupedFeed.length === 0 ? (
             <div className="p-3 sm:p-6 text-center space-y-2 font-sans">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[6px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold text-xs border border-[#0a5c38]/20">
-                <span className="h-2 w-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold text-xs border border-[#0a5c38]/20">
+                <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'currentColor', flexShrink: 0, display: 'inline-block', animation: 'pulse 2s infinite' }} />
                 All 41 Monitored Portals Operational & Checked
               </div>
               <p className="text-xs text-muted-foreground">
@@ -900,7 +900,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-4">
           {agencies.length === 0 ? (
             Array.from({ length: 8 }).map((_, idx) => (
-              <div key={idx} className="rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm space-y-4 animate-pulse">
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-3 sm:p-6 space-y-4 animate-pulse">
                 <div className="h-6 bg-muted rounded w-3/4" />
                 <div className="h-4 bg-muted rounded w-1/2" />
                 <div className="h-10 bg-muted rounded w-full" />
@@ -924,7 +924,7 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
               return (
                 <div
                   key={a.acronym}
-                  className="rounded-[8px] border border-border bg-card p-3 sm:p-6 shadow-sm flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
+                  className="rounded-[8px] border border-border bg-card p-3 sm:p-6 flex flex-col justify-between space-y-4 interactive-card overflow-hidden"
                 >
                   <div className="space-y-3 sm:space-y-4">
                     <div className="flex items-center justify-between border-b border-border/40 pb-3 gap-2">
@@ -944,9 +944,14 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                       
                       {/* Status Row */}
                       <div className="flex items-center gap-1.5 mt-1.5 text-[12px] sm:text-[13px] font-medium min-w-0">
-                        <span className={`size-2 rounded-full shrink-0 ${
-                          isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : a.status === "offline" ? "bg-[#b91c1c]" : "bg-muted-foreground"
-                        }`} />
+                        <span style={{
+                          width: 6,
+                          height: 6,
+                          borderRadius: '50%',
+                          background: isOnline ? '#0a5c38' : isMaintenance ? '#b45309' : a.status === 'offline' ? '#b91c1c' : '#6b7280',
+                          flexShrink: 0,
+                          display: 'inline-block',
+                        }} />
                         <span className="text-foreground truncate max-w-[120px] sm:max-w-none min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}>
                           {isOnline ? "Online" : isMaintenance ? "Maintenance" : a.status === "offline" ? "Offline" : "Unknown"}
                         </span>
@@ -962,8 +967,8 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                           </span>
                         ) : (
                           <span className="font-semibold text-muted-foreground text-[11px] flex items-center gap-1">
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
-                            No Active Hiring Today
+                             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
+                             No Active Hiring Today
                           </span>
                         )}
                       </div>
@@ -1108,7 +1113,7 @@ function VerificationMethodology() {
         {/* Desktop Stepper */}
         <div className="hidden md:flex items-start justify-between relative">
           {/* Horizontal Line behind */}
-          <div className="absolute top-4.5 left-0 right-0 h-[2px] border-t-2 border-dashed border-[#e2ddd6] dark:border-[#242c38] -z-10" />
+          <div className="absolute top-4.5 left-0 right-0 h-[2px] border-t-2 border-dashed border-border -z-10" />
 
           {steps.map((s) => (
             <div key={s.n} className="flex-1 px-4 text-center flex flex-col items-center">
@@ -1130,7 +1135,7 @@ function VerificationMethodology() {
         {/* Mobile Vertical Stepper */}
         <div className="md:hidden space-y-6 relative pl-1">
           {/* Vertical dashed line */}
-          <div className="absolute left-[15px] top-4 bottom-4 w-[2px] border-l-2 border-dashed border-[#e2ddd6] dark:border-[#242c38]" />
+          <div className="absolute left-[15px] top-4 bottom-4 w-[2px] border-l-2 border-dashed border-border" />
 
           {steps.map((s) => (
             <div key={s.n} className="flex items-start gap-3 relative">

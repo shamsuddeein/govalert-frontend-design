@@ -1,5 +1,4 @@
 import React from "react";
-import { ExternalLink, Link2Off } from "lucide-react";
 
 export interface OfficialSourceLinkProps {
   url?: string | null;
@@ -24,9 +23,23 @@ export function OfficialSourceLink({
     return (
       <span
         title="Official direct portal URL is not provided in source notice"
-        className={`inline-flex items-center gap-1 font-sans text-xs font-semibold text-muted-foreground/70 cursor-not-allowed select-none ${className}`}
+        className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-muted-foreground/50 cursor-not-allowed select-none tracking-wide ${className}`}
       >
-        <Link2Off className="size-3.5 opacity-60" />
+        {/* Broken link — two chain links separated */}
+        <svg
+          className="size-3 shrink-0 opacity-50"
+          fill="none"
+          viewBox="0 0 16 16"
+          stroke="currentColor"
+          strokeWidth="1.75"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M6 4.5a2 2 0 0 1 2-2h1a2 2 0 0 1 2 2v.5" />
+          <path d="M10 11.5a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-.5" />
+          <path d="M3.5 3.5l9 9" />
+        </svg>
         <span>NO DIRECT LINK</span>
       </span>
     );
@@ -37,10 +50,23 @@ export function OfficialSourceLink({
       href={url.trim()}
       target="_blank"
       rel="noreferrer"
-      className={`inline-flex items-center gap-1 font-sans text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline transition-colors ${className}`}
+      className={`inline-flex items-center gap-1 font-sans text-[11px] font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline underline-offset-2 transition-colors tracking-wide ${className}`}
     >
       <span>{label}</span>
-      <ExternalLink className="size-3" />
+      {/* Diagonal arrow — external link */}
+      <svg
+        className="size-3 shrink-0"
+        fill="none"
+        viewBox="0 0 16 16"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M3 13 L13 3" />
+        <path d="M6 3h7v7" />
+      </svg>
     </a>
   );
 }

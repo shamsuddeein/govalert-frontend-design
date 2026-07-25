@@ -206,18 +206,19 @@ html, body {
   animation: pulse-live 2s infinite;
 }
 
-/* Card hover animation */
+/* Card hover: measured 3-layer shadow — eliminates box shadow guesswork */
 .interactive-card {
-  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
 }
 
 .interactive-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px rgba(0, 0, 0, 0.06);
+  border-color: var(--color-border);
 }
 
 .dark .interactive-card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 4px 16px rgba(0, 0, 0, 0.25);
 }
 
 /* Nav links left-to-right animation */
@@ -250,4 +251,13 @@ html, body {
 
 @utility font-mono-ui {
   font-family: var(--font-mono);
+}
+
+/* Scrollbar suppression — used in horizontal tag rows */
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }

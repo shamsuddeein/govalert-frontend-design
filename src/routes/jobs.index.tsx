@@ -4,7 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { StatusBadge, JobCardSkeleton, JobsEmptyState, JobsErrorState, type Job, type Status } from "./index";
 import { api, ApiAgency, isAuthenticated } from "../lib/api";
-import { Bookmark, BookmarkCheck } from "lucide-react";
+
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
@@ -373,7 +373,7 @@ function JobsPage() {
                   return (
                     <div
                       key={job.id}
-                      className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-6 shadow-sm interactive-card ${
+                      className={`group flex flex-col justify-between rounded-[8px] border border-border bg-card p-4 sm:p-6 interactive-card ${
                         isClosed ? "opacity-65 bg-muted/5" : ""
                       }`}
                     >
@@ -429,9 +429,16 @@ function JobsPage() {
                           }`}
                         >
                           {savedRefMap[job.id] ? (
-                            <BookmarkCheck className="size-4 fill-current" />
+                            /* Bookmark filled with check mark */
+                            <svg className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                              <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5l-5-3.5-5 3.5V2z" />
+                              <path d="M5.5 7.5l1.5 1.5 3-3" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                            </svg>
                           ) : (
-                            <Bookmark className="size-4" />
+                            /* Bookmark outline */
+                            <svg className="size-4 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5l-5-3.5-5 3.5V2z" />
+                            </svg>
                           )}
                           <span>{savedRefMap[job.id] ? "Saved" : "Save"}</span>
                         </button>
