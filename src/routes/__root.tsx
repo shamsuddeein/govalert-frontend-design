@@ -101,6 +101,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { name: "author", content: "RecruitmentAlert" },
+      { name: "google-site-verification", content: "kR7UcDpncxOJecVqCmw0GrzlmRq77nWrG8Nd_UsTjjk" },
       {
         property: "og:title",
         content: "NNPC, NCS & Federal Government Jobs 2026. RecruitmentAlert",
