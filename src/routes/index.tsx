@@ -819,7 +819,7 @@ export function Index() {
       if (jobsRes && jobsRes.results) {
         setJobs(
           jobsRes.results.map((j: ApiJob) => ({
-            id: j.id,
+            id: j.ref || (j as any).id,
             agency: j.agency_name,
             agencyShort: j.agency_acronym,
             title: j.title,

@@ -40,7 +40,7 @@ function AgencyProfilePage() {
         const jobsData = await api.getJobs({ agency: agencyData.acronym });
         if (jobsData && jobsData.results) {
           const mappedJobs = jobsData.results.map((j) => ({
-            id: j.ref,
+            id: j.ref || (j as any).id,
             agencyShort: j.agency_acronym,
             title: j.title,
             deadline: j.deadline || "Pending",

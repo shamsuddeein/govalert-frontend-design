@@ -96,7 +96,7 @@ function JobsPage() {
 
       if (res && res.results) {
         const mapped = res.results.map((j) => ({
-          id: j.ref,
+          id: j.ref || (j as any).id,
           agency: j.agency_name,
           agencyShort: j.agency_acronym,
           title: j.title,

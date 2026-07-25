@@ -81,7 +81,7 @@ function SearchPage() {
 
       if (res && res.results) {
         const mapped: DisplayJob[] = res.results.map((j: ApiJob) => ({
-          id: j.ref,
+          id: j.ref || (j as any).id,
           agency: j.agency_name,
           agencyShort: j.agency_acronym,
           title: j.title,
