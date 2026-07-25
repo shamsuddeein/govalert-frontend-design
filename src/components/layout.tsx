@@ -122,7 +122,7 @@ export function Nav() {
       <div className="h-[3px] w-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
 
       <nav className="sticky top-0 z-50 border-b border-border bg-background h-[60px]">
-        <div className="mx-auto flex h-full max-w-[1184px] items-center justify-between px-3 sm:px-6">
+        <div className="mx-auto flex h-full max-w-[1184px] items-center justify-between px-4 sm:px-6">
           <div className="flex items-center gap-3 md:gap-8 min-w-0 shrink">
             <Logo />
             <div className="hidden gap-6 md:flex">

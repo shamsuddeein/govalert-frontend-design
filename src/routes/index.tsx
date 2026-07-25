@@ -352,12 +352,12 @@ function Hero({
               <span>FEDERAL RECRUITMENT MONITOR &middot; LIVE</span>
             </div>
 
-            <h1 className="text-[28px] sm:text-[36px] md:text-[44px] font-semibold tracking-tight text-foreground leading-[1.15] max-w-[560px]">
-              Nigeria's verified<br />
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold tracking-tight text-foreground leading-[1.15] max-w-full sm:max-w-[560px]">
+              Nigeria's verified<br className="hidden sm:inline" />{" "}
               recruitment <span className="text-[#0a5c38] dark:text-[#3fb68e]">intelligence.</span>
             </h1>
 
-            <p className="text-[15px] leading-relaxed text-muted-foreground max-w-[440px]">
+            <p className="text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground max-w-full sm:max-w-[440px]">
               Automated surveillance and verification across 41 federal MDA recruitment portals.
             </p>
 
@@ -384,10 +384,10 @@ function Hero({
             {/* Search console with attached button */}
             <div className="pt-4 max-w-[560px]">
               <form
-                className="flex items-center rounded-[8px] border border-border bg-card p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
+                className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-0 rounded-[8px] sm:border sm:border-border sm:bg-card sm:p-0.5 focus-within:ring-2 focus-within:ring-[#0a5c38] dark:focus-within:ring-[#3fb68e] focus-within:ring-offset-2 transition-shadow"
                 onSubmit={handleSubmit}
               >
-                <div className="relative flex-1">
+                <div className="relative w-full sm:flex-1 rounded-[8px] border sm:border-none border-border bg-card sm:bg-transparent">
                   <svg
                     className="pointer-events-none absolute left-[12px] top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground"
                     width="16"
@@ -410,7 +410,7 @@ function Hero({
                 </div>
                 <button
                   type="submit"
-                  className="h-[40px] px-5 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold cursor-pointer transition-colors"
+                  className="w-full sm:w-auto h-[44px] sm:h-[40px] px-5 rounded-[6px] bg-[#0a5c38] hover:bg-[#0f7a4a] text-white dark:bg-[#3fb68e] dark:hover:bg-[#3fb68e]/90 dark:text-[#0c1015] text-xs font-semibold cursor-pointer transition-colors shrink-0 flex items-center justify-center"
                 >
                   Search
                 </button>
@@ -1274,7 +1274,7 @@ function Index() {
   };
 
   return (
-    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
+    <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans overflow-x-hidden">
       <Nav />
       <main>
         <Hero
