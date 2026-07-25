@@ -161,6 +161,13 @@ export function Nav() {
               >
                 About
               </Link>
+              <Link
+                to="/telegram"
+                className="nav-link-underline text-[14px] font-medium text-muted-foreground transition-colors hover:text-primary py-1"
+                activeProps={{ className: "text-primary font-semibold" }}
+              >
+                Telegram Alerts
+              </Link>
             </div>
           </div>
 
@@ -306,6 +313,7 @@ export function Footer() {
     {
       heading: "Platform",
       links: [
+        { label: "Telegram Bot Guide", to: "/telegram" },
         { label: "Official Telegram Bot", to: "https://t.me/govalerts_bot?start=general", external: true },
         { label: "Contact Us", to: "/contact" },
       ],

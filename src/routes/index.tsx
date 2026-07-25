@@ -7,6 +7,7 @@ import { agenciesData } from "../lib/agenciesData";
 import { api, ApiAgency, ApiJob, ApiSystemStatus, ApiLiveFeedItem } from "../lib/api";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 import { SpeedDots } from "../lib/speedIndicator";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -1278,8 +1279,38 @@ function Index() {
     document.getElementById("recruitments")?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const websiteSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "RecruitmentAlert",
+    "url": "https://www.recruitmentalert.com.ng",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": {
+        "@type": "EntryPoint",
+        "urlTemplate": "https://www.recruitmentalert.com.ng/search?keyword={search_term_string}"
+      },
+      "query-input": "required name=search_term_string"
+    }
+  };
+
+  const orgSchema = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentService",
+    "name": "RecruitmentAlert Nigeria",
+    "url": "https://www.recruitmentalert.com.ng",
+    "logo": "https://www.recruitmentalert.com.ng/favicon.svg",
+    "description": "Independent surveillance and verification platform monitoring 42 Nigerian federal MDA recruitment portals in real time."
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans overflow-x-hidden">
+      <SeoHead
+        title="NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert"
+        description="Monitor 42 Nigerian federal recruitment portals in real time. Verify NNPC, Customs, EFCC, Immigration, and Civil Service job openings & portal status."
+        canonicalUrl="/"
+        jsonLd={[websiteSchema, orgSchema]}
+      />
       <Nav />
       <main>
         <Hero

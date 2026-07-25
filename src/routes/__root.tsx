@@ -93,33 +93,36 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence" },
+      { title: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert" },
       {
         name: "description",
         content:
-          "RecruitmentAlert monitors official Nigerian government portals in real time and delivers verified recruitment intelligence — no rumors, no phishing.",
+          "Monitor 42 Nigerian federal recruitment portals in real time. Verify NNPC, Customs, EFCC, Immigration, and Civil Service job openings & portal status.",
       },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
       { name: "author", content: "RecruitmentAlert" },
       {
         property: "og:title",
-        content: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence",
+        content: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert",
       },
       {
         property: "og:description",
         content:
-          "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk.",
+          "Real-time monitoring of 42 Nigerian federal recruitment portals. Every civil service listing verified from official .gov.ng sources.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://www.recruitmentalert.com.ng" },
       { property: "og:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@RecruitmentAlertNG" },
-      { name: "twitter:title", content: "RecruitmentAlert | Verified Nigerian Government Recruitment Intelligence" },
-      { name: "twitter:description", content: "Real-time monitoring of federal recruitment portals. Every listing verified by our intelligence desk." },
+      { name: "twitter:title", content: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert" },
+      { name: "twitter:description", content: "Real-time monitoring of 42 Nigerian federal recruitment portals. Verified civil service job alerts." },
       { name: "twitter:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
     ],
     links: [
       { rel: "canonical", href: "https://www.recruitmentalert.com.ng" },
+      { rel: "alternate", hrefLang: "en-NG", href: "https://www.recruitmentalert.com.ng" },
+      { rel: "alternate", hrefLang: "x-default", href: "https://www.recruitmentalert.com.ng" },
       {
         rel: "stylesheet",
         href: appCss,

@@ -8,6 +8,7 @@ import { safeFormatDate, safeFormatDateTime, safeFormatTime } from "../lib/forma
 
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
+import { SeoHead } from "../components/SeoHead";
 
 function renderFormattedDescription(rawText: string | undefined | null) {
   if (!rawText || !rawText.trim()) {
@@ -213,8 +214,72 @@ function JobDetailsPage() {
   const isClosed = job.status === "closed";
   const displayStatus = (job.status === "new_opening" ? "new" : job.status) as Status;
 
+  const pageTitle = `${job.title} (${job.agency_acronym || 'MDA'}) — Verified Recruitment 2026 | RecruitmentAlert`;
+  const pageDescription = `Verified recruitment notice: ${job.title} by ${job.agency_name} (${job.agency_acronym}). Official portal status, application deadline (${job.deadline || 'Pending'}), and verified direct apply endpoint.`;
+
+  const jobPostingSchema = {
+    "@context": "https://schema.org",
+    "@type": "JobPosting",
+    "title": job.title,
+    "description": job.description || pageDescription,
+    "datePosted": job.published_at || new Date().toISOString(),
+    "validThrough": job.deadline && job.deadline !== "Pending" ? job.deadline : undefined,
+    "employmentType": "FULL_TIME",
+    "hiringOrganization": {
+      "@type": "GovernmentOrganization",
+      "name": job.agency_name,
+      "alternateName": job.agency_acronym,
+      "sameAs": job.official_url || job.source_url || "https://www.recruitmentalert.com.ng"
+    },
+    "jobLocation": {
+      "@type": "Place",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": job.location_state || "Federal",
+        "addressCountry": "NG"
+      }
+    },
+    "directApply": Boolean(job.official_url && job.official_url.startsWith("http")),
+    "identifier": {
+      "@type": "PropertyValue",
+      "name": job.agency_acronym,
+      "value": job.ref
+    }
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Jobs",
+        "item": "https://www.recruitmentalert.com.ng/jobs"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": job.ref,
+        "item": `https://www.recruitmentalert.com.ng/jobs/${job.ref}`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SeoHead
+        title={pageTitle}
+        description={pageDescription}
+        canonicalUrl={`/jobs/${job.ref}`}
+        jsonLd={[jobPostingSchema, breadcrumbSchema]}
+      />
       <Nav />
       <main className="mx-auto max-w-[720px] px-4 sm:px-6 py-8 sm:py-12">
         {/* Breadcrumb */}

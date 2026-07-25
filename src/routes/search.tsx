@@ -6,6 +6,7 @@ import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiJob } from "../lib/api";
 
 import { toast } from "sonner";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -126,8 +127,33 @@ function SearchPage() {
 
   const hasActiveFilters = keyword || category || location || status;
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Search Jobs",
+        "item": "https://www.recruitmentalert.com.ng/search"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
+      <SeoHead
+        title="Search Nigerian Federal Government Job Listings — RecruitmentAlert"
+        description="Search verified federal government job openings across Nigerian ministries, security agencies, and commissions by keyword, category, and state."
+        canonicalUrl="/search"
+        jsonLd={[breadcrumbSchema]}
+      />
       <Nav />
       <main className="flex-1 mx-auto max-w-7xl w-full px-6 py-12">
         <div className="mb-8">

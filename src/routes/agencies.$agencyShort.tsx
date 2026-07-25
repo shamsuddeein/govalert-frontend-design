@@ -7,6 +7,7 @@ import { SpeedDots } from "../lib/speedIndicator";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
   component: AgencyProfilePage,
@@ -143,8 +144,55 @@ function AgencyProfilePage() {
       ? `Last ${checkCount} check${checkCount === 1 ? '' : 's'}`
       : "Last 10 checks";
 
+  const fallbackDescription = `The ${agency.name} (${agency.acronym}) is a Nigerian federal ${agency.category || 'government'} institution monitored in real time by RecruitmentAlert. Our automated monitoring nodes continuously audit ${agency.acronym}'s official recruitment portal (${agency.portal_url || 'official .gov.ng domain'}) every ${agency.monitoring_interval_minutes || 15} minutes for active hiring notices, shortlisted candidate releases, and server latency. Job seekers can verify official portal endpoints, track historical hiring campaigns, and inspect real-time server health to protect themselves against fraudulent recruitment portals.`;
+  const agencyDescription = agency.description && agency.description.trim().length > 20 ? agency.description.trim() : fallbackDescription;
+
+  const pageTitle = `${agency.acronym} Recruitment 2026 — Verified Portal Status & History | RecruitmentAlert`;
+  const pageMetaDescription = `Official recruitment portal status, uptime, and recruitment history for ${agency.name} (${agency.acronym}). Verify official .gov.ng portal link and active civil service openings.`;
+
+  const govtOrgSchema = {
+    "@context": "https://schema.org",
+    "@type": "GovernmentOrganization",
+    "name": agency.name,
+    "alternateName": agency.acronym,
+    "url": agency.portal_url || `https://www.recruitmentalert.com.ng/agencies/${agency.acronym.toLowerCase()}`,
+    "description": agencyDescription,
+    "sameAs": agency.portal_url || undefined
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Agencies",
+        "item": "https://www.recruitmentalert.com.ng/agencies"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": agency.acronym,
+        "item": `https://www.recruitmentalert.com.ng/agencies/${agency.slug || agency.acronym.toLowerCase()}`
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SeoHead
+        title={pageTitle}
+        description={pageMetaDescription}
+        canonicalUrl={`/agencies/${agency.slug || agency.acronym.toLowerCase()}`}
+        jsonLd={[govtOrgSchema, breadcrumbSchema]}
+      />
       <Nav />
       <main className="mx-auto max-w-[720px] px-6 py-12">
         {/* Breadcrumb */}
@@ -176,7 +224,7 @@ function AgencyProfilePage() {
           {agency.name}
         </h1>
         <p className="mt-2 text-[14px] sm:text-[15px] leading-relaxed text-muted-foreground max-w-[600px]">
-          {agency.description}
+          {agencyDescription}
         </p>
 
         {/* Status Row */}

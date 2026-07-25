@@ -7,6 +7,7 @@ import { api, ApiAgency, isAuthenticated } from "../lib/api";
 
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsPage,
@@ -157,8 +158,33 @@ function JobsPage() {
     setCurrentPage(1);
   };
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Verified Jobs",
+        "item": "https://www.recruitmentalert.com.ng/jobs"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
+      <SeoHead
+        title="Verified Nigerian Government Job Listings & Recruitment Alerts — RecruitmentAlert"
+        description="Browse verified federal government job openings in Nigeria. Real-time monitoring of NNPC, NCS, EFCC, Immigration, and MDA portals with scam prevention."
+        canonicalUrl="/jobs"
+        jsonLd={[breadcrumbSchema]}
+      />
       <Nav />
       <main className="mx-auto max-w-[1184px] px-6 py-12">
         {/* Header */}

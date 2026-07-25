@@ -1,13 +1,39 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav, Footer } from "../components/layout";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
 });
 
 function AboutPage() {
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "About Us",
+        "item": "https://www.recruitmentalert.com.ng/about"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
+      <SeoHead
+        title="About RecruitmentAlert — Independent Civil Service Recruitment Intelligence"
+        description="RecruitmentAlert is an independent verification platform monitoring Nigerian federal recruitment portals to protect job seekers from employment scams."
+        canonicalUrl="/about"
+        jsonLd={[breadcrumbSchema]}
+      />
       <Nav />
       <main className="flex-1 mx-auto max-w-[1184px] w-full px-6 py-12">
         {/* Header Hero */}

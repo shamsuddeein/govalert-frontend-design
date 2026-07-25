@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TermsRouteImport } from './routes/terms'
+import { Route as TelegramRouteImport } from './routes/telegram'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as SearchRouteImport } from './routes/search'
@@ -44,6 +45,11 @@ import { Route as AdminAgenciesRouteImport } from './routes/admin.agencies'
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TelegramRoute = TelegramRouteImport.update({
+  id: '/telegram',
+  path: '/telegram',
   getParentRoute: () => rootRouteImport,
 } as any)
 const StatusRoute = StatusRouteImport.update({
@@ -213,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
+  '/telegram': typeof TelegramRoute
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
@@ -243,6 +250,7 @@ export interface FileRoutesByTo {
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
+  '/telegram': typeof TelegramRoute
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
@@ -277,6 +285,7 @@ export interface FileRoutesById {
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
+  '/telegram': typeof TelegramRoute
   '/terms': typeof TermsRoute
   '/admin/agencies': typeof AdminAgenciesRoute
   '/admin/alerts': typeof AdminAlertsRoute
@@ -312,6 +321,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sign-in'
     | '/status'
+    | '/telegram'
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
@@ -342,6 +352,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sign-in'
     | '/status'
+    | '/telegram'
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
@@ -375,6 +386,7 @@ export interface FileRouteTypes {
     | '/search'
     | '/sign-in'
     | '/status'
+    | '/telegram'
     | '/terms'
     | '/admin/agencies'
     | '/admin/alerts'
@@ -409,6 +421,7 @@ export interface RootRouteChildren {
   SearchRoute: typeof SearchRoute
   SignInRoute: typeof SignInRoute
   StatusRoute: typeof StatusRoute
+  TelegramRoute: typeof TelegramRoute
   TermsRoute: typeof TermsRoute
   VerificationJobIdRoute: typeof VerificationJobIdRoute
   VerificationIndexRoute: typeof VerificationIndexRoute
@@ -421,6 +434,13 @@ declare module '@tanstack/react-router' {
       path: '/terms'
       fullPath: '/terms'
       preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/telegram': {
+      id: '/telegram'
+      path: '/telegram'
+      fullPath: '/telegram'
+      preLoaderRoute: typeof TelegramRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/status': {
@@ -704,6 +724,7 @@ const rootRouteChildren: RootRouteChildren = {
   SearchRoute: SearchRoute,
   SignInRoute: SignInRoute,
   StatusRoute: StatusRoute,
+  TelegramRoute: TelegramRoute,
   TermsRoute: TermsRoute,
   VerificationJobIdRoute: VerificationJobIdRoute,
   VerificationIndexRoute: VerificationIndexRoute,

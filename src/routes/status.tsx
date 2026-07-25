@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 
 import { api, ApiSystemStatus, ApiAgency } from "../lib/api";
 import { SpeedDots } from "../lib/speedIndicator";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/status")({
   component: StatusPage,
@@ -115,8 +116,33 @@ function StatusPage() {
 
   const systemOperational = status.system_operational;
 
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "System Status",
+        "item": "https://www.recruitmentalert.com.ng/status"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
+      <SeoHead
+        title="Federal MDA Portal Status & Real-Time Server Uptime Monitor — RecruitmentAlert"
+        description="Live server status and uptime monitoring of 42 Nigerian federal recruitment portals. Detect downtime, maintenance windows, and server latency."
+        canonicalUrl="/status"
+        jsonLd={[breadcrumbSchema]}
+      />
       <Nav />
       <main className="flex-1 mx-auto max-w-4xl w-full px-6 py-12 space-y-8">
         {/* Page Header */}

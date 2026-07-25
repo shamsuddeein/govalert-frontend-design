@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
+import { SeoHead } from "../components/SeoHead";
 
 
 export const Route = createFileRoute("/verification/")({
@@ -53,8 +54,46 @@ function VerificationPage() {
     { n: "4", label: "Stage 4", title: "Published", body: "Signed audit record dispatched to feeds and subscriber panels." },
   ];
 
+  const faqSchema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": faqList.map((item) => ({
+      "@type": "Question",
+      "name": item.q,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": item.a
+      }
+    }))
+  };
+
+  const breadcrumbSchema = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://www.recruitmentalert.com.ng"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Verification Methodology",
+        "item": "https://www.recruitmentalert.com.ng/verification"
+      }
+    ]
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
+      <SeoHead
+        title="Recruitment Verification Methodology & Scam Defense FAQ — RecruitmentAlert"
+        description="Learn how RecruitmentAlert verifies Nigerian civil service job postings, checks .gov.ng SSL certificates, and neutralizes recruitment scams."
+        canonicalUrl="/verification"
+        jsonLd={[faqSchema, breadcrumbSchema]}
+      />
       <Nav />
       <main className="mx-auto max-w-[800px] w-full px-6 py-16">
         <div className="text-center mb-12">
