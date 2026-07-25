@@ -91,15 +91,6 @@ function PortalsDirectoryPage() {
             </p>
           </div>
 
-          <div className="rounded-[6px] border border-border bg-card p-3 text-xs font-mono text-muted-foreground shrink-0 space-y-1">
-            <div className="flex items-center gap-1.5 text-foreground font-semibold">
-              <span className="pulsing-dot size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] inline-block shrink-0" />
-              <span>Monitoring Cycle: 15 minutes</span>
-            </div>
-            <p className="text-[11px]">
-              Last updated: {lastRefreshedAt ? safeFormatDateTime(lastRefreshedAt, "Just now") : "Loading..."}
-            </p>
-          </div>
         </div>
 
         {/* Directory Table */}
@@ -214,7 +205,7 @@ function PortalsDirectoryPage() {
             &larr; Back to Agency Directory
           </Link>
           <Link to="/about" className="text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-semibold font-sans">
-            Learn About The Founder &rarr;
+            About RecruitmentAlert &rarr;
           </Link>
         </div>
 

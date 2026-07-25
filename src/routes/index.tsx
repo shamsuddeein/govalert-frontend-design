@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { TrustScoreBadge } from "../components/TrustScoreBadge";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { agenciesData } from "../lib/agenciesData";
 import { api, ApiAgency, ApiJob, ApiSystemStatus } from "../lib/api";
@@ -692,10 +691,10 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
             </p>
           </div>
           <Link
-            to="/status"
+            to="/portals"
             className="text-xs font-semibold text-primary underline decoration-1 underline-offset-4 cursor-pointer"
           >
-            System Status Page &rarr;
+            View all 42 portals &rarr;
           </Link>
         </div>
 
@@ -713,7 +712,6 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
               const activeCount = a.jobs_available;
               const isOnline = a.status === "online";
               const isMaintenance = a.status === "maintenance";
-              const vettedScore = a.vetted_score;
 
               const lastVerifiedDateText = a.last_checked
                 ? new Date(a.last_checked).toLocaleDateString("en-GB", { day: 'numeric', month: 'short', year: 'numeric' })
@@ -731,9 +729,6 @@ function PortalHealth({ agencies }: { agencies: ApiAgency[] }) {
                         <span className="font-mono text-[11px] font-semibold uppercase tracking-wider text-muted-foreground truncate">
                           {a.acronym}
                         </span>
-                      </div>
-                      <div className="shrink-0">
-                        <TrustScoreBadge score={vettedScore ?? 85} />
                       </div>
                     </div>
                     

@@ -36,50 +36,6 @@ function StatusPage() {
     loadData();
   }, []);
 
-  // Render uptime bar from real last_10_checks boolean array
-  const renderUptimeBar = (checks?: boolean[]) => {
-    // Pad to 48 slots — use checks for the rightmost N bars, grey for the rest
-    const slots = Array.from({ length: 48 }, (_, i) => {
-      if (!checks || checks.length === 0) return "grey";
-      const offset = i - (48 - checks.length);
-      if (offset < 0) return "grey";
-      return checks[offset] ? "green" : "red";
-    });
-    const successfulCount = checks ? checks.filter(Boolean).length : 0;
-    const totalCount = checks ? checks.length : 0;
-
-    return (
-      <div
-        className="flex gap-[2px] w-full"
-        role="img"
-        aria-label={`Portal check history: ${successfulCount} of ${totalCount} checks successful`}
-      >
-        {slots.map((color, i) => (
-          <div
-            key={i}
-            className={`h-6 flex-1 rounded-[2px] transition-colors ${
-              color === "green"
-                ? "bg-[#15803D]"
-                : color === "red"
-                ? "bg-[#B91C1C]"
-                : "bg-border"
-            }`}
-            title={color === "green" ? "Online" : color === "red" ? "Offline" : "No data"}
-          />
-        ))}
-      </div>
-    );
-  };
-
-  const timeAgo = (iso: string | null | undefined): string => {
-    if (!iso) return "unknown";
-    const diff = Date.now() - new Date(iso).getTime();
-    const s = Math.floor(diff / 1000);
-    if (s < 60) return `${s}s ago`;
-    if (s < 3600) return `${Math.floor(s / 60)}m ago`;
-    if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
-    return `${Math.floor(s / 86400)}d ago`;
-  };
 
   if (loading) {
     return (
@@ -145,7 +101,7 @@ function StatusPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
       <SeoHead
         title="Federal MDA Portal Status & Real-Time Server Uptime Monitor. RecruitmentAlert"
-        description="Live server status and uptime monitoring of 42 Nigerian federal recruitment portals. Detect downtime, maintenance windows, and server latency."
+        description="Live reachability status of 42 Nigerian federal government recruitment portals. Check whether a specific agency portal is online before you visit."
         canonicalUrl="/status"
         jsonLd={[breadcrumbSchema]}
       />
@@ -209,7 +165,6 @@ function StatusPage() {
                         <p className="text-xs text-muted-foreground font-mono truncate min-w-0">{a.portal_url.replace("https://", "").replace("http://", "")}</p>
                       </div>
                       <div className="flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs font-mono shrink-0 min-w-0 pt-1 sm:pt-0 border-t sm:border-t-0 border-border/40">
-                        <span className="text-muted-foreground text-[11px] sm:text-xs shrink-0">Checked {timeAgo(a.last_checked)}</span>
                         <span
                           className={`inline-flex items-center gap-1 font-semibold truncate max-w-[130px] sm:max-w-none shrink-0 ${
                             isOnline ? "text-[#15803D]" : isMaintenance ? "text-[#B45309]" : "text-[#64748B]"
@@ -224,18 +179,8 @@ function StatusPage() {
                             flexShrink: 0,
                             display: 'inline-block',
                           }} />
-                          <span className="truncate">{isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}</span>
+                          <span className="truncate">{isOnline ? "Reachable" : isMaintenance ? "Maintenance" : "Offline"}</span>
                         </span>
-                      </div>
-                    </div>
-
-                    {/* Uptime History Bar Graph */}
-                    <div className="space-y-1">
-                      {renderUptimeBar(a.last_10_checks)}
-                      <div className="flex justify-between text-[10px] text-muted-foreground">
-                        <span>Check history</span>
-                        <span>Uptime {a.uptime_percent != null ? `${a.uptime_percent}%` : "—"}</span>
-                        <span>Latest</span>
                       </div>
                     </div>
                   </div>
