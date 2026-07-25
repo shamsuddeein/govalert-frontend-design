@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
-import { CheckCircle, AlertTriangle, Clock } from "lucide-react";
+
 import { api, ApiSystemStatus, ApiAgency } from "../lib/api";
 import { SpeedDots } from "../lib/speedIndicator";
 
@@ -92,7 +92,7 @@ function StatusPage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
         <main className="flex-1 flex flex-col items-center justify-center py-20 px-6 max-w-md mx-auto text-center space-y-6">
-          <div className="rounded-full bg-red-100 dark:bg-red-950/50 p-4 text-red-600 dark:text-red-400">
+          <div className="rounded-[8px] bg-red-100 dark:bg-red-950/50 p-4 text-red-600 dark:text-red-400">
             <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -141,9 +141,17 @@ function StatusPage() {
           }`}
         >
           {systemOperational ? (
-            <CheckCircle className="size-5 text-[#15803D]" />
+            /* Circled checkmark */
+            <svg className="size-5 text-[#15803D] shrink-0" fill="none" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="10" cy="10" r="8.5" />
+              <path d="M6.5 10.25l2.5 2.5 4.5-5" />
+            </svg>
           ) : (
-            <AlertTriangle className="size-5 text-amber-600 dark:text-amber-400" />
+            /* Triangle warning */
+            <svg className="size-5 text-amber-600 dark:text-amber-400 shrink-0" fill="none" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <path d="M2.5 16.5L10 3.5l7.5 13H2.5z" />
+              <path d="M10 8.5v3M10 13.5h.01" />
+            </svg>
           )}
           <div>
             <p className="text-sm font-semibold text-primary">
@@ -180,9 +188,14 @@ function StatusPage() {
                           }`}
                           title={isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}
                         >
-                          <span className={`size-1.5 rounded-full shrink-0 ${
-                            isOnline ? "bg-[#15803D]" : isMaintenance ? "bg-[#B45309]" : "bg-[#64748B]"
-                          }`} />
+                          <span style={{
+                            width: 5,
+                            height: 5,
+                            borderRadius: '50%',
+                            background: isOnline ? '#15803D' : isMaintenance ? '#B45309' : '#64748B',
+                            flexShrink: 0,
+                            display: 'inline-block',
+                          }} />
                           <span className="truncate">{isOnline ? "Operational" : isMaintenance ? "Maintenance" : "Offline"}</span>
                         </span>
                       </div>
@@ -206,7 +219,11 @@ function StatusPage() {
 
         {/* Operational Guidelines Disclaimer */}
         <div className="rounded-[8px] border border-border bg-muted/20 p-5 space-y-2 flex items-start gap-4">
-          <Clock className="size-5 text-muted-foreground shrink-0 mt-0.5" />
+          {/* Clock icon — drawn */}
+          <svg className="size-5 text-muted-foreground shrink-0 mt-0.5" fill="none" viewBox="0 0 20 20" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <circle cx="10" cy="10" r="8" />
+            <path d="M10 6v4l2.5 2.5" />
+          </svg>
           <div className="space-y-1">
             <h4 className="text-sm font-semibold text-primary font-sans">About this status dashboard</h4>
             <p className="text-xs text-muted-foreground leading-relaxed font-sans">

@@ -135,7 +135,7 @@ function AgenciesIndexPage() {
         </div>
 
         {/* Search & Filter Toolbar */}
-        <div className="mb-8 rounded-[8px] border border-border bg-card p-5 shadow-sm space-y-4">
+        <div className="mb-8 rounded-[8px] border border-border bg-card p-5 space-y-4">
           <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {/* Search input */}
             <div className="relative">
@@ -185,17 +185,17 @@ function AgenciesIndexPage() {
               <div className="flex flex-wrap gap-2">
                 <span className="text-[10px] text-muted-foreground self-center uppercase font-bold font-mono">Active filters:</span>
                 {search && (
-                  <span className="inline-flex items-center gap-1 rounded bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
+                  <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
                     Search: {search}
                   </span>
                 )}
                 {category && (
-                  <span className="inline-flex items-center gap-1 rounded bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
+                  <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
                     Category: {category}
                   </span>
                 )}
                 {status && (
-                  <span className="inline-flex items-center gap-1 rounded bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
+                  <span className="inline-flex items-center gap-1 rounded-[4px] bg-[#0a5c38]/10 text-[#0a5c38] dark:bg-[#3fb68e]/10 dark:text-[#3fb68e] px-2 py-0.5 text-xs font-semibold">
                     Portal: {status}
                   </span>
                 )}
@@ -214,7 +214,7 @@ function AgenciesIndexPage() {
         {loading && (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 my-8">
             {Array.from({ length: 6 }).map((_, idx) => (
-              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 shadow-sm space-y-4 animate-pulse">
+              <div key={idx} className="rounded-[8px] border border-border bg-card p-6 space-y-4 animate-pulse">
                 <div className="flex justify-between items-center">
                   <div className="h-6 bg-muted rounded w-1/3" />
                   <div className="h-4 bg-muted rounded w-1/4" />
@@ -253,7 +253,7 @@ function AgenciesIndexPage() {
                   return (
                     <div
                       key={agency.acronym}
-                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-4 sm:p-5 shadow-sm interactive-card"
+                      className="group flex flex-col justify-between overflow-hidden rounded-[8px] border border-border bg-card p-4 sm:p-5 interactive-card"
                     >
                       <div className="space-y-3 sm:space-y-4">
                         {/* Top Row: Acronym + Status Badge */}
@@ -266,9 +266,14 @@ function AgenciesIndexPage() {
                           </div>
                           
                           <div className="flex items-center gap-1.5 text-[12px] font-medium font-sans shrink-0 min-w-0" title={isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}>
-                            <span className={`size-2 rounded-full shrink-0 ${
-                              isOnline ? "bg-[#0a5c38]" : isMaintenance ? "bg-[#b45309]" : "bg-[#b91c1c]"
-                            }`} />
+                            <span style={{
+                              width: 6,
+                              height: 6,
+                              borderRadius: '50%',
+                              background: isOnline ? '#0a5c38' : isMaintenance ? '#b45309' : '#b91c1c',
+                              flexShrink: 0,
+                              display: 'inline-block',
+                            }} />
                             <span className="text-foreground font-semibold truncate max-w-[100px] xs:max-w-none">
                               {isOnline ? "Online" : isMaintenance ? "Maintenance" : "Offline"}
                             </span>

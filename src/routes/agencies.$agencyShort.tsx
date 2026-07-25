@@ -5,7 +5,7 @@ import { StatusBadge, JobsEmptyState, type Status } from "./index";
 import { api, ApiAgency } from "../lib/api";
 import { SpeedDots } from "../lib/speedIndicator";
 import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
-import { ExternalLink } from "lucide-react";
+
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
@@ -93,7 +93,7 @@ function AgencyProfilePage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
         <main className="flex-1 flex flex-col items-center justify-center py-20 px-6 max-w-md mx-auto text-center space-y-6">
-          <div className="rounded-full bg-red-100 dark:bg-red-950/50 p-4 text-red-600 dark:text-red-400">
+          <div className="rounded-[8px] bg-red-100 dark:bg-red-950/50 p-4 text-red-600 dark:text-red-400">
             <svg className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -160,7 +160,14 @@ function AgencyProfilePage() {
           <span className={`flex items-center gap-1.5 text-[14px] font-medium ${
             isOnline ? "text-[#0a5c38] dark:text-[#3fb68e]" : agency.status === "maintenance" ? "text-[#b45309]" : agency.status === "offline" ? "text-[#b91c1c]" : "text-muted-foreground"
           }`}>
-            <span className="h-2 w-2 rounded-full bg-current" />
+            <span style={{
+              width: 8,
+              height: 8,
+              borderRadius: '50%',
+              background: 'currentColor',
+              display: 'inline-block',
+              flexShrink: 0,
+            }} />
             {portalStatusLabel}
           </span>
         </div>
@@ -275,7 +282,16 @@ function AgencyProfilePage() {
                       {safeFormatDate(hist.date)}
                     </div>
                     <div className="relative pb-4 pl-4 border-l border-border/60">
-                      <div className={`absolute -left-[4.5px] top-1.5 h-2 w-2 rounded-full ${idx === 0 ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted-foreground/50"}`} />
+                      <div style={{
+                        position: 'absolute',
+                        left: -4.5,
+                        top: 6,
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: idx === 0 ? '#0a5c38' : 'rgba(107,114,128,0.5)',
+                        flexShrink: 0,
+                      }} />
                       <div className="text-[14px] text-foreground">{hist.event_description}</div>
                     </div>
                   </div>

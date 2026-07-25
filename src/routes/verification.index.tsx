@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
-import { ChevronDown, ChevronUp } from "lucide-react";
+
 
 export const Route = createFileRoute("/verification/")({
   component: VerificationPage,
@@ -106,9 +106,13 @@ function VerificationPage() {
                       {item.q}
                     </span>
                     {isOpen ? (
-                      <ChevronUp className="size-4 text-muted-foreground shrink-0" />
+                      <svg className="size-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M3.5 10L8 5.5 12.5 10" />
+                      </svg>
                     ) : (
-                      <ChevronDown className="size-4 text-muted-foreground shrink-0" />
+                      <svg className="size-4 text-muted-foreground shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M3.5 6L8 10.5 12.5 6" />
+                      </svg>
                     )}
                   </button>
 

@@ -4,19 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { StatusBadge, JobsEmptyState } from "./index";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiJob } from "../lib/api";
-import {
-  Search as SearchIcon,
-  Building,
-  MapPin,
-  Clock,
-  Briefcase,
-  SlidersHorizontal,
-  BellRing,
-  X,
-  Sliders,
-  Calendar,
-  Loader2,
-} from "lucide-react";
+
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/search")({
@@ -152,12 +140,16 @@ function SearchPage() {
         </div>
 
         {/* Search Panel Card */}
-        <div className="rounded-[8px] border border-border bg-card p-5 shadow-sm mb-8">
+        <div className="rounded-[8px] border border-border bg-card p-5 mb-8">
           <div className="flex flex-col gap-4">
             {/* Primary Search Row */}
             <div className="flex gap-3">
               <div className="relative flex-1">
-                <SearchIcon className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+                {/* Magnifying glass */}
+                <svg className="absolute left-3.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <circle cx="7" cy="7" r="4.5" />
+                  <path d="M10.5 10.5 L14 14" />
+                </svg>
                 <input
                   id="search-keyword"
                   type="text"
@@ -171,7 +163,10 @@ function SearchPage() {
                     onClick={() => setKeyword("")}
                     className="absolute right-3 top-1/2 -translate-y-1/2 rounded p-1 hover:bg-muted"
                   >
-                    <X className="size-3.5" />
+                    {/* X / dismiss */}
+                    <svg className="size-3.5 text-muted-foreground" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+                      <path d="M3 3l10 10M13 3L3 13" />
+                    </svg>
                   </button>
                 )}
               </div>
@@ -180,7 +175,13 @@ function SearchPage() {
                 onClick={() => setShowAdvanced(!showAdvanced)}
                 className="flex items-center gap-2 h-[44px] px-4 text-xs font-semibold rounded-[6px] border border-border hover:bg-muted/50 cursor-pointer"
               >
-                <SlidersHorizontal className="size-4" />
+                {/* Sliders horizontal */}
+                <svg className="size-4" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+                  <path d="M2 4h12M2 8h12M2 12h12" />
+                  <circle cx="5" cy="4" r="1.5" fill="currentColor" stroke="none" />
+                  <circle cx="11" cy="8" r="1.5" fill="currentColor" stroke="none" />
+                  <circle cx="7" cy="12" r="1.5" fill="currentColor" stroke="none" />
+                </svg>
                 Filters
                 {hasActiveFilters && (
                   <span className="ml-1 h-2 w-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
@@ -193,7 +194,13 @@ function SearchPage() {
               <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 border-t border-border pt-4 mt-1">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Briefcase className="size-3" /> Job Category
+                    {/* Briefcase */}
+                    <svg className="size-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <rect x="1.5" y="5.5" width="13" height="9" rx="1" />
+                      <path d="M5.5 5.5V4a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v1.5" />
+                      <path d="M1.5 10h13" />
+                    </svg>
+                    Job Category
                   </label>
                   <select
                     id="search-category"
@@ -212,7 +219,12 @@ function SearchPage() {
 
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <MapPin className="size-3" /> State / Territory
+                    {/* MapPin */}
+                    <svg className="size-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <path d="M8 1.5A4.5 4.5 0 0 1 12.5 6C12.5 9.5 8 14.5 8 14.5S3.5 9.5 3.5 6A4.5 4.5 0 0 1 8 1.5z" />
+                      <circle cx="8" cy="6" r="1.5" />
+                    </svg>
+                    State / Territory
                   </label>
                   <select
                     id="search-location"
@@ -231,7 +243,14 @@ function SearchPage() {
 
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[10px] font-mono font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                    <Sliders className="size-3" /> Status
+                    {/* Sliders vertical */}
+                    <svg className="size-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+                      <path d="M4 2v12M8 2v12M12 2v12" />
+                      <circle cx="4" cy="6" r="1.5" fill="currentColor" stroke="none" />
+                      <circle cx="8" cy="10" r="1.5" fill="currentColor" stroke="none" />
+                      <circle cx="12" cy="5" r="1.5" fill="currentColor" stroke="none" />
+                    </svg>
+                    Status
                   </label>
                   <select
                     id="search-status"
@@ -264,7 +283,10 @@ function SearchPage() {
         <div className="mb-6 flex justify-between items-center min-h-[24px]">
           {loading ? (
             <span className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Loader2 className="size-3.5 animate-spin" />
+              {/* Loader arc */}
+              <svg className="size-3.5 animate-spin" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" aria-hidden="true">
+                <path d="M8 2a6 6 0 1 1-6 6" />
+              </svg>
               Searching live database...
             </span>
           ) : (
@@ -283,7 +305,7 @@ function SearchPage() {
                 key={job.id}
                 to="/jobs/$jobId"
                 params={{ jobId: job.id }}
-                className="group flex flex-col justify-between overflow-hidden rounded border border-border bg-card p-5 shadow-sm transition-colors hover:border-primary/45 cursor-pointer"
+                className="group flex flex-col justify-between overflow-hidden rounded-[6px] border border-border bg-card p-5 transition-colors hover:border-primary/45 cursor-pointer"
               >
                 <div>
                   <div className="flex items-start justify-between gap-4">
@@ -298,11 +320,19 @@ function SearchPage() {
 
                   <div className="mt-6 flex flex-wrap gap-x-4 gap-y-2 border-t border-border pt-4 text-[10px] text-muted-foreground">
                     <span className="flex items-center gap-1">
-                      <MapPin className="size-3.5" />
+                      {/* MapPin inline */}
+                      <svg className="size-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <path d="M8 1.5A4.5 4.5 0 0 1 12.5 6C12.5 9.5 8 14.5 8 14.5S3.5 9.5 3.5 6A4.5 4.5 0 0 1 8 1.5z" />
+                        <circle cx="8" cy="6" r="1.5" />
+                      </svg>
                       {job.state}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Calendar className="size-3.5" />
+                      {/* Calendar */}
+                      <svg className="size-3.5" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <rect x="1.5" y="2.5" width="13" height="12" rx="1" />
+                        <path d="M1.5 6.5h13M5 1v3M11 1v3" />
+                      </svg>
                       Deadline: {job.deadline}
                     </span>
                   </div>
@@ -310,7 +340,11 @@ function SearchPage() {
 
                 <div className="mt-6 flex items-center justify-between text-[10px] text-muted-foreground border-t border-border/60 pt-4">
                   <span className="flex items-center gap-1">
-                    <Clock className="size-3" />
+                    {/* Clock */}
+                    <svg className="size-3" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <circle cx="8" cy="8" r="6" />
+                      <path d="M8 5v3l2 2" />
+                    </svg>
                     Detected {job.detected}
                   </span>
                   <span className="inline-flex items-center gap-1 font-semibold text-primary group-hover:underline">

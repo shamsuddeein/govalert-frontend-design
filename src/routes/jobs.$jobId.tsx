@@ -5,7 +5,7 @@ import { StatusBadge, type Status } from "./index";
 import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiJob, isAuthenticated } from "../lib/api";
 import { safeFormatDate, safeFormatDateTime, safeFormatTime } from "../lib/formatDate";
-import { ExternalLink, Bookmark, BookmarkCheck } from "lucide-react";
+
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 
@@ -139,7 +139,7 @@ function JobDetailsPage() {
           <div className="h-4 w-48 bg-muted rounded animate-pulse" />
           
           {/* Skeleton Header */}
-          <div className="rounded-[8px] border border-border bg-card p-8 shadow-sm animate-pulse space-y-6">
+          <div className="rounded-[8px] border border-border bg-card p-8 animate-pulse space-y-6">
             <div className="flex justify-between items-start">
               <div className="flex items-center gap-4">
                 <div className="size-12 rounded-full bg-muted" />
@@ -179,7 +179,7 @@ function JobDetailsPage() {
       <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans">
         <Nav />
         <main className="flex-1 flex flex-col items-center justify-center py-20 px-6 max-w-md mx-auto text-center space-y-6">
-          <div className="rounded-full bg-destructive/10 p-4 text-destructive">
+          <div className="rounded-[8px] bg-destructive/8 p-4 text-destructive">
             <svg className="h-8 w-8 stroke-current fill-none" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
             </svg>
@@ -240,7 +240,7 @@ function JobDetailsPage() {
             {job.agency_name}
           </Link>
           
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 text-xs font-semibold shrink-0">
+          <div className="inline-flex items-center gap-2 rounded-[6px] border border-border bg-card px-3 py-1 text-xs font-semibold shrink-0">
             <span className="text-muted-foreground">Confidence:</span>
             <span className="font-mono text-foreground font-bold">{job.confidence_score != null ? `${job.confidence_score}%` : "Not available"}</span>
           </div>
@@ -357,7 +357,16 @@ function JobDetailsPage() {
                     {log.time}
                   </div>
                   <div className="relative pb-3 pl-4 border-l-2 border-border/60">
-                    <div className={`absolute -left-[5px] top-1.5 h-2 w-2 rounded-full ${isLast ? "bg-[#0a5c38] dark:bg-[#3fb68e]" : "bg-muted-foreground"}`} />
+                    <div style={{
+                      position: 'absolute',
+                      left: -5,
+                      top: 6,
+                      width: 8,
+                      height: 8,
+                      borderRadius: '50%',
+                      background: isLast ? '#0a5c38' : '#6b7280',
+                      flexShrink: 0,
+                    }} />
                     <div className="text-[13px]">{log.event}</div>
                   </div>
                 </div>
@@ -407,7 +416,12 @@ function JobDetailsPage() {
                 rel="noreferrer"
                 className="inline-flex items-center justify-center gap-2 rounded-[6px] bg-[#15803D] hover:bg-[#15803D]/90 text-[#FFFFFF] px-[20px] py-[10px] text-[14px] font-semibold transition-colors cursor-pointer"
               >
-                Apply on Official Portal <ExternalLink className="size-4" />
+                Apply on Official Portal
+                {/* Diagonal arrow — external */}
+                <svg className="size-4 shrink-0" fill="none" viewBox="0 0 16 16" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M3 13 L13 3" />
+                  <path d="M6 3h7v7" />
+                </svg>
               </a>
             )}
 
@@ -432,7 +446,18 @@ function JobDetailsPage() {
                   : "border-border bg-card text-foreground hover:bg-muted"
               }`}
             >
-              {isSaved ? <BookmarkCheck className="size-4" /> : <Bookmark className="size-4" />}
+              {isSaved ? (
+                /* Bookmark filled with check */
+                <svg className="size-4 shrink-0" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
+                  <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5l-5-3.5-5 3.5V2z" />
+                  <path d="M5.5 7.5l1.5 1.5 3-3" stroke="white" strokeWidth="1.25" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+                </svg>
+              ) : (
+                /* Bookmark outline */
+                <svg className="size-4 shrink-0" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v12.5l-5-3.5-5 3.5V2z" />
+                </svg>
+              )}
               {saving ? "Updating..." : isSaved ? "Bookmarked" : "Save Job"}
             </button>
           </div>
@@ -451,7 +476,14 @@ function JobDetailsPage() {
               <span className={`flex items-center gap-1.5 text-[13px] font-medium ${
                 job.portal_status === "online" ? "text-[#0a5c38] dark:text-[#3fb68e]" : job.portal_status === "maintenance" ? "text-[#b45309]" : job.portal_status === "offline" ? "text-[#b91c1c]" : "text-muted-foreground"
               }`}>
-                <span className="h-2 w-2 rounded-full bg-current" />
+                <span style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  background: 'currentColor',
+                  display: 'inline-block',
+                  flexShrink: 0,
+                }} />
                 {job.portal_status === "online" ? "Online" : job.portal_status === "maintenance" ? "Maintenance" : job.portal_status === "offline" ? "Offline" : "Unknown"}
               </span>
             </div>
