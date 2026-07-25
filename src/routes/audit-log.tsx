@@ -91,7 +91,7 @@ function AuditLogPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title="Public Automated Portal Audit Log — RecruitmentAlert"
+        title="Public Automated Portal Audit Log. RecruitmentAlert"
         description="Transparent record of every automated check performed across 42 Nigerian federal government recruitment portals. Nothing hidden."
         canonicalUrl="/audit-log"
         jsonLd={[breadcrumbSchema]}

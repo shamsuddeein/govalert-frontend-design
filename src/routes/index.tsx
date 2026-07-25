@@ -275,8 +275,12 @@ export function StatusBadge({ status, warningNote }: { status: Status; warningNo
     },
   };
 
-  // Map internal system 'updating' or 'no-change' to 'verified' for public users
-  const effectiveStatus = (status as string) === "updating" || (status as string) === "no-change" ? "verified" : status;
+  // Map internal system 'updating' or 'no-change' to 'verified' for public users.
+  // Hide warning badge unless accompanied by a 1-sentence plain English explanation.
+  let effectiveStatus = (status as string) === "updating" || (status as string) === "no-change" ? "verified" : status;
+  if (effectiveStatus === "warning" && !warningNote) {
+    effectiveStatus = "verified";
+  }
   const s = map[effectiveStatus] || map.verified;
 
   return (
@@ -340,7 +344,7 @@ function Hero({
           </h1>
 
           <p className="text-[15px] sm:text-[17px] leading-relaxed text-muted-foreground max-w-2xl font-sans">
-            Built by a Nigerian developer, launched July 2026, monitoring federal recruitment portals in real time. We audit official Nigerian government portals to bring you verified job openings, official deadlines, and direct application links — protected against fake recruitment scams.
+            Built by a Nigerian developer, launched July 2026, monitoring federal recruitment portals in real time. We audit official Nigerian government portals to bring you verified job openings, official deadlines, and direct application links, protected against fake recruitment scams.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -427,7 +431,7 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
           {isScanning ? (
             <div className="flex items-center gap-2 text-foreground font-semibold">
               <span className="pulsing-dot size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] inline-block shrink-0" />
-              <span>System audit in progress — first full scan across 42 federal portals completing shortly.</span>
+              <span>System audit in progress. First full scan across 42 federal portals completing shortly.</span>
             </div>
           ) : (
             <div className="flex items-center gap-2">
@@ -444,7 +448,7 @@ function Stats({ status }: { status: ApiSystemStatus | null }) {
           <svg className="size-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
           </svg>
-          <span>Government recruitment is 100% free — Never pay for job forms</span>
+          <span>Government recruitment is 100% free. Never pay for job forms</span>
         </div>
       </div>
     </div>

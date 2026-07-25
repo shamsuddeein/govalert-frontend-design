@@ -105,19 +105,19 @@ function VerificationReportPage() {
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → <Link to="/jobs/$jobId" params={{ jobId: report.ref }} className="hover:text-primary">REF: {report.ref}</Link> → Verification Report
         </div>
 
-        {/* AI Classification Badge */}
+        {/* Verification Status Badge */}
         <div className="mb-4">
           {report.ai_classification === "REAL" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/10 text-[#0a5c38] dark:text-[#3fb68e] text-[12px] font-bold uppercase tracking-wide">
-              <CheckCircle2 className="size-4" /> AI: REAL — Verified by RecruitmentAlert Intelligence
+              <CheckCircle2 className="size-4" /> VERIFIED REAL. Official Government Source
             </span>
           ) : report.ai_classification === "FAKE" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400 text-[12px] font-bold uppercase tracking-wide">
-              <XCircle className="size-4" /> AI: FAKE — Suspected fraudulent listing
+              <XCircle className="size-4" /> UNVERIFIED. Suspected fraudulent listing
             </span>
           ) : (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-amber-100 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 text-[12px] font-bold uppercase tracking-wide">
-              <AlertTriangle className="size-4" /> AI: UNCERTAIN — Under review
+              <AlertTriangle className="size-4" /> UNDER REVIEW. Verification in progress
             </span>
           )}
         </div>

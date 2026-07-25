@@ -104,7 +104,7 @@ export function PrivacyPolicyPage() {
           <div className="space-y-2">
             <p><strong>Telegram Users:</strong> Send <code>/stop</code> to <a href="https://t.me/govalerts_bot" target="_blank" rel="noreferrer" className="text-[#0a5c38] dark:text-[#3fb68e] underline">@govalerts_bot</a> at any time. Your Telegram ID and preferences will be permanently erased immediately.</p>
             <p><strong>Browser Push Subscribers:</strong> Click "Get Alerts" or manage your browser notification settings to unsubscribe anytime.</p>
-            <p><strong>Data Access / Erasure Request Email:</strong> Email our Data Protection Officer at <a href="mailto:dpo@recruitmentalert.com.ng" className="text-[#0a5c38] dark:text-[#3fb68e] underline">dpo@recruitmentalert.com.ng</a>. We will fulfill all data requests within <strong>72 hours</strong> as required by law.</p>
+            <p><strong>Data Access / Erasure Request Email:</strong> Email our Data Protection Officer at <a href="mailto:talktoshamsuddeen@gmail.com" className="text-[#0a5c38] dark:text-[#3fb68e] underline">talktoshamsuddeen@gmail.com</a>. We will fulfill all data requests within <strong>72 hours</strong> as required by law.</p>
           </div>
         </section>
 
@@ -132,7 +132,7 @@ export function PrivacyPolicyPage() {
           <div className="bg-card p-3 rounded-[6px] border border-border text-xs">
             <p className="font-semibold text-foreground">Data Protection Officer (DPO)</p>
             <p>RecruitmentAlert.com.ng Data Compliance Team</p>
-            <p>Email: <a href="mailto:dpo@recruitmentalert.com.ng" className="text-[#0a5c38] dark:text-[#3fb68e] underline font-medium">dpo@recruitmentalert.com.ng</a></p>
+            <p>Email: <a href="mailto:talktoshamsuddeen@gmail.com" className="text-[#0a5c38] dark:text-[#3fb68e] underline font-medium">talktoshamsuddeen@gmail.com</a></p>
             <p>SLA Response Time: Under 72 Hours</p>
           </div>
         </section>

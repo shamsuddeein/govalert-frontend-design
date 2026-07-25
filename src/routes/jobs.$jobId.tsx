@@ -218,7 +218,7 @@ function JobDetailsPage() {
   const isClosed = job.status === "closed";
   const displayStatus = (job.status === "new_opening" ? "new" : job.status) as Status;
 
-  const pageTitle = `${job.title} (${job.agency_acronym || 'MDA'}) — Verified Recruitment 2026 | RecruitmentAlert`;
+  const pageTitle = `${job.title} (${job.agency_acronym || 'MDA'}). Verified Recruitment 2026 | RecruitmentAlert`;
   const pageDescription = `Verified recruitment notice: ${job.title} by ${job.agency_name} (${job.agency_acronym}). Official portal status, application deadline (${job.deadline || 'Pending'}), and verified direct apply endpoint.`;
 
   const jobPostingSchema = {

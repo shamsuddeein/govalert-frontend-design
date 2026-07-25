@@ -149,7 +149,7 @@ function SearchPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
       <SeoHead
-        title="Search Nigerian Federal Government Job Listings — RecruitmentAlert"
+        title="Search Nigerian Federal Government Job Listings. RecruitmentAlert"
         description="Search verified federal government job openings across Nigerian ministries, security agencies, and commissions by keyword, category, and state."
         canonicalUrl="/search"
         jsonLd={[breadcrumbSchema]}

@@ -89,7 +89,7 @@ function VerificationPage() {
   return (
     <div className="min-h-screen bg-background text-foreground font-sans">
       <SeoHead
-        title="Recruitment Verification Methodology & Scam Defense FAQ — RecruitmentAlert"
+        title="Recruitment Verification Methodology & Scam Defense FAQ. RecruitmentAlert"
         description="Learn how RecruitmentAlert verifies Nigerian civil service job postings, checks .gov.ng SSL certificates, and neutralizes recruitment scams."
         canonicalUrl="/verification"
         jsonLd={[faqSchema, breadcrumbSchema]}

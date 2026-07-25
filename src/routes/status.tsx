@@ -144,7 +144,7 @@ function StatusPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="Federal MDA Portal Status & Real-Time Server Uptime Monitor — RecruitmentAlert"
+        title="Federal MDA Portal Status & Real-Time Server Uptime Monitor. RecruitmentAlert"
         description="Live server status and uptime monitoring of 42 Nigerian federal recruitment portals. Detect downtime, maintenance windows, and server latency."
         canonicalUrl="/status"
         jsonLd={[breadcrumbSchema]}

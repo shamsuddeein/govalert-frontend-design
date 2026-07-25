@@ -93,7 +93,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert" },
+      { title: "NNPC, NCS & Federal Government Jobs 2026. RecruitmentAlert" },
       {
         name: "description",
         content:
@@ -103,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "author", content: "RecruitmentAlert" },
       {
         property: "og:title",
-        content: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert",
+        content: "NNPC, NCS & Federal Government Jobs 2026. RecruitmentAlert",
       },
       {
         property: "og:description",
@@ -115,7 +115,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@RecruitmentAlertNG" },
-      { name: "twitter:title", content: "NNPC, NCS & Federal Government Jobs 2026 — RecruitmentAlert" },
+      { name: "twitter:title", content: "NNPC, NCS & Federal Government Jobs 2026. RecruitmentAlert" },
       { name: "twitter:description", content: "Real-time monitoring of 42 Nigerian federal recruitment portals. Verified civil service job alerts." },
       { name: "twitter:image", content: "https://www.recruitmentalert.com.ng/favicon.svg" },
       { name: "theme-color", content: "#0a5c38" },

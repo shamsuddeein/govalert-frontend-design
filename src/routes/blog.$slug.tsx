@@ -120,7 +120,7 @@ function BlogPostDetailPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title={`${post.title} — RecruitmentAlert`}
+        title={`${post.title}. RecruitmentAlert`}
         description={post.excerpt}
         canonicalUrl={`/blog/${post.slug}`}
         jsonLd={[blogArticleSchema, breadcrumbSchema]}

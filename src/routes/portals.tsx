@@ -72,7 +72,7 @@ function PortalsDirectoryPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title="Verified Federal Government Recruitment Portals Directory 2026 — RecruitmentAlert"
+        title="Verified Federal Government Recruitment Portals Directory 2026. RecruitmentAlert"
         description="Official list of 42 Nigerian federal MDA recruitment portal addresses, reachability status, and live check timestamps. Updated every 15 minutes."
         canonicalUrl="/portals"
         jsonLd={[breadcrumbSchema]}

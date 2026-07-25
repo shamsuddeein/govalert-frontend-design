@@ -29,7 +29,7 @@ function TelegramVerificationPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title="Official Telegram Bot Verification (@govalerts_bot) — RecruitmentAlert"
+        title="Official Telegram Bot Verification (@govalerts_bot). RecruitmentAlert"
         description="Verify the official RecruitmentAlert Telegram bot username @govalerts_bot to protect yourself from fake clone bots and recruitment scams."
         canonicalUrl="/telegram"
         jsonLd={[breadcrumbSchema]}

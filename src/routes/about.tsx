@@ -29,7 +29,7 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="About RecruitmentAlert — Built by Shamsuddeen Yusuf in Kaduna, Nigeria"
+        title="About RecruitmentAlert. Built by Shamsuddeen Yusuf in Kaduna, Nigeria"
         description="Why RecruitmentAlert was built by Shamsuddeen Yusuf, a developer in Kaduna, Nigeria, to protect Nigerian job seekers against recruitment scams."
         canonicalUrl="/about"
         jsonLd={[breadcrumbSchema]}
@@ -112,10 +112,10 @@ function AboutPage() {
               <p>
                 <strong className="text-foreground">Email:</strong>{" "}
                 <a
-                  href="mailto:shamsuddeen@recruitmentalert.com.ng"
+                  href="mailto:talktoshamsuddeen@gmail.com"
                   className="text-[#0a5c38] dark:text-[#3fb68e] font-semibold underline hover:opacity-80"
                 >
-                  shamsuddeen@recruitmentalert.com.ng
+                  talktoshamsuddeen@gmail.com
                 </a>
               </p>
             </div>
