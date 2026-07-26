@@ -494,12 +494,10 @@ export const api = {
   },
 
   googleAuth: async (idToken: string): Promise<{ tokens?: ApiAuthTokens; user?: any; error?: string }> => {
-    const urls = Array.from(new Set([
-      `${API_BASE}/auth/google/`,
+    const urls = [
       `${AUTH_BASE}/google/`,
-      "/api/v1/auth/google/",
-      "/api/auth/google/",
-    ]));
+      `${API_BASE}/auth/google/`,
+    ];
 
     let lastError = "";
 
@@ -511,7 +509,11 @@ export const api = {
           body: JSON.stringify({ id_token: idToken, credential: idToken, token: idToken }),
         });
 
-        if (res.status === 404) continue;
+        const contentType = res.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          lastError = "Non-JSON response received";
+          continue;
+        }
 
         const data = await res.json();
         if (!res.ok) {
@@ -525,7 +527,7 @@ export const api = {
       }
     }
 
-    return { error: `Connection failed (${lastError}). Please check your connection.` };
+    return { error: "Google authentication failed. Please check your internet connection." };
   },
 
   refreshToken: async (): Promise<string | null> => {
