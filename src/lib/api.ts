@@ -495,10 +495,8 @@ export const api = {
 
   googleAuth: async (idToken: string): Promise<{ tokens?: ApiAuthTokens; user?: any; error?: string }> => {
     const urls = [
-      `${AUTH_BASE}/google/`,
       `${API_BASE}/auth/google/`,
-      "/api/auth/google/",
-      "/api/v1/auth/google/",
+      `${AUTH_BASE}/google/`,
     ];
 
     let lastError = "";
@@ -513,7 +511,7 @@ export const api = {
 
         const contentType = res.headers.get("content-type") || "";
         if (!contentType.includes("application/json")) {
-          lastError = `Endpoint returned non-JSON content`;
+          lastError = "Non-JSON response received from auth server";
           continue;
         }
 
@@ -525,11 +523,11 @@ export const api = {
         setAuthTokens(data);
         return { tokens: data, user: data.user };
       } catch (err: any) {
-        lastError = err?.message || "Network error";
+        lastError = err?.message || "Failed to reach authentication server";
       }
     }
 
-    return { error: lastError ? `Google authentication failed (${lastError}).` : "Google authentication failed. Please try again." };
+    return { error: lastError || "Google authentication failed. Please try again." };
   },
 
   refreshToken: async (): Promise<string | null> => {
