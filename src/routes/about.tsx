@@ -81,21 +81,21 @@ function AboutPage() {
               <p>
                 <strong className="text-foreground">GitHub:</strong>{" "}
                 <a
-                  href="https://github.com/shamsuddeenn"
+                  href="https://github.com/shamsuddeein"
                   target="_blank"
                   rel="noreferrer"
                   className="text-[#0a5c38] dark:text-[#3fb68e] font-semibold underline hover:opacity-80"
                 >
-                  github.com/shamsuddeenn &rarr;
+                  github.com/shamsuddeein &rarr;
                 </a>
               </p>
               <p>
                 <strong className="text-foreground">Email:</strong>{" "}
                 <a
-                  href="mailto:talktoshamsuddeen@gmail.com"
+                  href="mailto:talktoshamsuddeein@gmail.com"
                   className="text-[#0a5c38] dark:text-[#3fb68e] font-semibold underline hover:opacity-80"
                 >
-                  talktoshamsuddeen@gmail.com
+                  talktoshamsuddeein@gmail.com
                 </a>
               </p>
             </div>

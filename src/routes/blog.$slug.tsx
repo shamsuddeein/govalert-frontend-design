@@ -109,7 +109,7 @@ function BlogPostDetailPage() {
     "author": {
       "@type": "Person",
       "name": post.author,
-      "url": "https://github.com/shamsuddeenn"
+      "url": "https://github.com/shamsuddeein"
     },
     "publisher": {
       "@type": "Organization",

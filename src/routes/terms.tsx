@@ -78,7 +78,7 @@ export function TermsOfServicePage() {
         {/* 5. Contact */}
         <section className="border-t border-border pt-4 text-xs text-muted-foreground space-y-1">
           <p className="font-semibold text-foreground">Questions Regarding Terms of Service?</p>
-          <p>Email: <a href="mailto:talktoshamsuddeen@gmail.com" className="text-[#0a5c38] dark:text-[#3fb68e] underline font-medium">talktoshamsuddeen@gmail.com</a></p>
+          <p>Email: <a href="mailto:talktoshamsuddeein@gmail.com" className="text-[#0a5c38] dark:text-[#3fb68e] underline font-medium">talktoshamsuddeein@gmail.com</a></p>
         </section>
       </div>
     </div>

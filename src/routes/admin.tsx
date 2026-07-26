@@ -219,10 +219,10 @@ function AdminLayout() {
                   {user?.username || "Admin User"}
                 </span>
                 <span
-                  title={user?.email || "talktoshamsuddeen@gmail.com"}
+                  title={user?.email || "talktoshamsuddeein@gmail.com"}
                   className="block text-[11px] text-muted-foreground font-sans w-full max-w-[130px] whitespace-nowrap overflow-hidden text-ellipsis"
                 >
-                  {user?.email || "talktoshamsuddeen@gmail.com"}
+                  {user?.email || "talktoshamsuddeein@gmail.com"}
                 </span>
               </div>
               <button
