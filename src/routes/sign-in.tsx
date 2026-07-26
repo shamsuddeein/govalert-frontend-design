@@ -1,9 +1,10 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../lib/api";
+import { initializeGoogleAuth, triggerGoogleSignIn } from "../lib/googleAuth";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignInPage,
@@ -15,7 +16,25 @@ function SignInPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [authError, setAuthError] = useState<string | null>(null);
+
+  const handleGoogleCredential = async (idToken: string) => {
+    setGoogleLoading(true);
+    setAuthError(null);
+    const res = await api.googleAuth(idToken);
+    setGoogleLoading(false);
+    if (res.tokens) {
+      toast.success("Successfully signed in with Google!");
+      navigate({ to: "/dashboard" });
+    } else {
+      setAuthError(res.error || "Google authentication failed. Please try again.");
+    }
+  };
+
+  useEffect(() => {
+    initializeGoogleAuth(handleGoogleCredential);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,12 +52,18 @@ function SignInPage() {
     }
   };
 
+  const handleGoogleSignInClick = () => {
+    setGoogleLoading(true);
+    setAuthError(null);
+    triggerGoogleSignIn(handleGoogleCredential);
+    setTimeout(() => setGoogleLoading(false), 8000);
+  };
+
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
       <Nav />
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
         <div className="w-full max-w-[400px] flex flex-col items-center">
-          {/* Logo - Plain text, no shield, no pin */}
           <div className="flex items-center gap-2 mb-6 focus:outline-none select-none">
             <span className="text-xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
               RecruitmentAlert
@@ -96,7 +121,7 @@ function SignInPage() {
 
             <button
               type="submit"
-              disabled={loading}
+              disabled={loading || googleLoading}
               className="w-full h-[48px] inline-flex items-center justify-center rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] text-[14px] font-semibold text-white hover:opacity-90 disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? "Verifying..." : "Sign in"}
@@ -119,10 +144,12 @@ function SignInPage() {
             </span>
           </div>
 
-          {/* Continue with Google */}
+          {/* Continue with Google (Real Google OAuth Flow) */}
           <button
-            onClick={() => toast.info("Google authentication is currently simulated.")}
-            className="w-full h-[48px] inline-flex items-center justify-center gap-2.5 rounded-[8px] border border-border bg-card text-[14px] font-medium text-foreground hover:bg-muted transition-colors cursor-pointer"
+            type="button"
+            onClick={handleGoogleSignInClick}
+            disabled={googleLoading || loading}
+            className="w-full h-[48px] inline-flex items-center justify-center gap-2.5 rounded-[8px] border border-border bg-card text-[14px] font-medium text-foreground hover:bg-muted disabled:opacity-50 transition-colors cursor-pointer"
           >
             <svg className="size-4 shrink-0" viewBox="0 0 24 24">
               <path
@@ -142,7 +169,7 @@ function SignInPage() {
                 d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
               />
             </svg>
-            Continue with Google
+            <span>{googleLoading ? "Connecting to Google..." : "Continue with Google"}</span>
           </button>
 
           <div className="mt-8 text-center text-[13px] text-muted-foreground">

@@ -27,6 +27,8 @@ export interface AdminUserRecord {
   id: string;
   raw_id: number;
   user_type: "WEB" | "TELEGRAM" | "KEYWORD_SUBSCRIBER";
+  auth_provider?: string;
+  platform?: string;
   email: string | null;
   display_name: string;
   username?: string;

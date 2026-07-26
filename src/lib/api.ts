@@ -493,6 +493,25 @@ export const api = {
     }
   },
 
+  googleAuth: async (idToken: string): Promise<{ tokens?: ApiAuthTokens; user?: any; error?: string }> => {
+    try {
+      const res = await fetch(`${API_BASE}/auth/google/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_token: idToken }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        const errorMsg = data?.detail || (typeof data === "object" && data !== null ? Object.values(data).flat()[0] : null);
+        return { error: (errorMsg as string) || "Google authentication failed." };
+      }
+      setAuthTokens(data);
+      return { tokens: data, user: data.user };
+    } catch (err: any) {
+      return { error: "Network error. Please check your connection." };
+    }
+  },
+
   refreshToken: async (): Promise<string | null> => {
     const refresh = localStorage.getItem("recruitmentalert_refresh_token");
     if (!refresh) return null;
