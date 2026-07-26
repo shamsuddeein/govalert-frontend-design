@@ -13,6 +13,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TelegramRouteImport } from './routes/telegram'
 import { Route as StatusRouteImport } from './routes/status'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as ShamsuddeenRouteImport } from './routes/shamsuddeen'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -65,6 +66,11 @@ const StatusRoute = StatusRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ShamsuddeenRoute = ShamsuddeenRouteImport.update({
+  id: '/shamsuddeen',
+  path: '/shamsuddeen',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -249,6 +255,7 @@ export interface FileRoutesByFullPath {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/shamsuddeen': typeof ShamsuddeenRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/telegram': typeof TelegramRoute
@@ -285,6 +292,7 @@ export interface FileRoutesByTo {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/shamsuddeen': typeof ShamsuddeenRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/telegram': typeof TelegramRoute
@@ -325,6 +333,7 @@ export interface FileRoutesById {
   '/privacy': typeof PrivacyRoute
   '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
+  '/shamsuddeen': typeof ShamsuddeenRoute
   '/sign-in': typeof SignInRoute
   '/status': typeof StatusRoute
   '/telegram': typeof TelegramRoute
@@ -366,6 +375,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/shamsuddeen'
     | '/sign-in'
     | '/status'
     | '/telegram'
@@ -402,6 +412,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/shamsuddeen'
     | '/sign-in'
     | '/status'
     | '/telegram'
@@ -441,6 +452,7 @@ export interface FileRouteTypes {
     | '/privacy'
     | '/register'
     | '/search'
+    | '/shamsuddeen'
     | '/sign-in'
     | '/status'
     | '/telegram'
@@ -481,6 +493,7 @@ export interface RootRouteChildren {
   PrivacyRoute: typeof PrivacyRoute
   RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
+  ShamsuddeenRoute: typeof ShamsuddeenRoute
   SignInRoute: typeof SignInRoute
   StatusRoute: typeof StatusRoute
   TelegramRoute: typeof TelegramRoute
@@ -519,6 +532,13 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/shamsuddeen': {
+      id: '/shamsuddeen'
+      path: '/shamsuddeen'
+      fullPath: '/shamsuddeen'
+      preLoaderRoute: typeof ShamsuddeenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/search': {
@@ -825,6 +845,7 @@ const rootRouteChildren: RootRouteChildren = {
   PrivacyRoute: PrivacyRoute,
   RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
+  ShamsuddeenRoute: ShamsuddeenRoute,
   SignInRoute: SignInRoute,
   StatusRoute: StatusRoute,
   TelegramRoute: TelegramRoute,

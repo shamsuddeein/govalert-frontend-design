@@ -395,7 +395,8 @@ export function Footer() {
     {
       heading: "Platform & Legal",
       links: [
-        { label: "About Founder", to: "/about" },
+        { label: "About RecruitmentAlert", to: "/about" },
+        { label: "Built by Shamsuddeen Yusuf", to: "/shamsuddeen" },
         { label: "Privacy Policy", to: "/privacy" },
         { label: "Terms of Service", to: "/terms" },
       ],
