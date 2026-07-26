@@ -8,7 +8,7 @@ declare global {
 
 export const GOOGLE_CLIENT_ID =
   (typeof import.meta !== "undefined" && import.meta.env?.VITE_GOOGLE_CLIENT_ID) ||
-  "437891256071-recruitmentalert.apps.googleusercontent.com";
+  "161621432417-5tghsaflem2av3tm1njlmt252d04eahr.apps.googleusercontent.com";
 
 export function loadGoogleGsiScript(): Promise<void> {
   return new Promise((resolve) => {
