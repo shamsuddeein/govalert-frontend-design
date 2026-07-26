@@ -495,6 +495,8 @@ export const api = {
 
   googleAuth: async (idToken: string): Promise<{ tokens?: ApiAuthTokens; user?: any; error?: string }> => {
     const urls = [
+      "https://govalert-production.up.railway.app/api/v1/auth/google/",
+      "https://govalert-production.up.railway.app/api/auth/google/",
       `${API_BASE}/auth/google/`,
       `${AUTH_BASE}/google/`,
     ];
@@ -505,13 +507,17 @@ export const api = {
       try {
         const res = await fetch(url, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
           body: JSON.stringify({ id_token: idToken, credential: idToken, token: idToken }),
         });
 
         const contentType = res.headers.get("content-type") || "";
         if (!contentType.includes("application/json")) {
-          lastError = "Non-JSON response received from auth server";
+          const text = await res.text();
+          lastError = `Server returned non-JSON (${res.status}): ${text.slice(0, 80)}`;
           continue;
         }
 
