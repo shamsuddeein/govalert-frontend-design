@@ -494,22 +494,38 @@ export const api = {
   },
 
   googleAuth: async (idToken: string): Promise<{ tokens?: ApiAuthTokens; user?: any; error?: string }> => {
-    try {
-      const res = await fetch(`${API_BASE}/auth/google/`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_token: idToken }),
-      });
-      const data = await res.json();
-      if (!res.ok) {
-        const errorMsg = data?.detail || (typeof data === "object" && data !== null ? Object.values(data).flat()[0] : null);
-        return { error: (errorMsg as string) || "Google authentication failed." };
+    const urls = Array.from(new Set([
+      `${API_BASE}/auth/google/`,
+      `${AUTH_BASE}/google/`,
+      "/api/v1/auth/google/",
+      "/api/auth/google/",
+    ]));
+
+    let lastError = "";
+
+    for (const url of urls) {
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id_token: idToken, credential: idToken, token: idToken }),
+        });
+
+        if (res.status === 404) continue;
+
+        const data = await res.json();
+        if (!res.ok) {
+          const errorMsg = data?.detail || (typeof data === "object" && data !== null ? Object.values(data).flat()[0] : null);
+          return { error: (errorMsg as string) || "Google authentication failed." };
+        }
+        setAuthTokens(data);
+        return { tokens: data, user: data.user };
+      } catch (err: any) {
+        lastError = err?.message || "Network error";
       }
-      setAuthTokens(data);
-      return { tokens: data, user: data.user };
-    } catch (err: any) {
-      return { error: "Network error. Please check your connection." };
     }
+
+    return { error: `Connection failed (${lastError}). Please check your connection.` };
   },
 
   refreshToken: async (): Promise<string | null> => {
