@@ -497,6 +497,8 @@ export const api = {
     const urls = [
       `${AUTH_BASE}/google/`,
       `${API_BASE}/auth/google/`,
+      "/api/auth/google/",
+      "/api/v1/auth/google/",
     ];
 
     let lastError = "";
@@ -511,7 +513,7 @@ export const api = {
 
         const contentType = res.headers.get("content-type") || "";
         if (!contentType.includes("application/json")) {
-          lastError = "Non-JSON response received";
+          lastError = `Endpoint returned non-JSON content`;
           continue;
         }
 
@@ -527,7 +529,7 @@ export const api = {
       }
     }
 
-    return { error: "Google authentication failed. Please check your internet connection." };
+    return { error: lastError ? `Google authentication failed (${lastError}).` : "Google authentication failed. Please try again." };
   },
 
   refreshToken: async (): Promise<string | null> => {
