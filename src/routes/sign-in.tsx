@@ -63,39 +63,39 @@ function SignInPage() {
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
       <Nav />
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
-        <div className="w-full max-w-[400px] flex flex-col items-center">
+        <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative flex flex-col items-center">
           <div className="flex items-center gap-2 mb-6 focus:outline-none select-none">
             <span className="text-xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
               RecruitmentAlert
             </span>
           </div>
 
-          <div className="text-center w-full mb-8">
-            <h1 className="text-[22px] font-semibold text-foreground">Sign in to RecruitmentAlert</h1>
-            <p className="mt-1 text-[14px] text-muted-foreground">
+          <div className="text-center w-full mb-6">
+            <h1 className="text-xl font-bold tracking-tight text-primary">Sign in to RecruitmentAlert</h1>
+            <p className="mt-1.5 text-xs text-muted-foreground">
               Save jobs and receive personalised alerts.
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="w-full space-y-5">
+          <form onSubmit={handleSubmit} className="w-full space-y-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-[12px] font-medium text-foreground">Email</label>
+              <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Email</label>
               <input
                 type="email"
                 required
                 placeholder="name@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full h-[48px] rounded-[8px] border border-border bg-background px-4 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#0a5c38] dark:focus:ring-[#3fb68e] focus:border-transparent transition-all"
+                className="w-full rounded border border-border bg-background py-2 px-3 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-primary transition-all"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
               <div className="flex items-center justify-between">
-                <label className="text-[12px] font-medium text-foreground">Password</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Password</label>
                 <Link
                   to="/forgot-password"
-                  className="text-[13px] text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-medium"
+                  className="text-xs text-[#0a5c38] dark:text-[#3fb68e] hover:underline font-medium"
                 >
                   Forgot password?
                 </Link>
@@ -107,12 +107,12 @@ function SignInPage() {
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full h-[48px] rounded-[8px] border border-border bg-background pl-4 pr-12 text-sm text-foreground outline-none placeholder:text-muted-foreground focus:ring-2 focus:ring-[#0a5c38] dark:focus:ring-[#3fb68e] focus:border-transparent transition-all"
+                  className="w-full rounded border border-border bg-background py-2 pl-3 pr-10 text-xs text-foreground outline-none placeholder:text-muted-foreground focus:border-primary transition-all"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground cursor-pointer focus:outline-none"
                 >
                   {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </button>
@@ -122,13 +122,13 @@ function SignInPage() {
             <button
               type="submit"
               disabled={loading || googleLoading}
-              className="w-full h-[48px] inline-flex items-center justify-center rounded-[8px] bg-[#0a5c38] dark:bg-[#3fb68e] text-[14px] font-semibold text-white hover:opacity-90 disabled:opacity-50 transition-all cursor-pointer"
+              className="w-full h-10 inline-flex items-center justify-center rounded bg-[#0a5c38] dark:bg-[#3fb68e] text-xs font-bold text-white hover:opacity-90 disabled:opacity-50 transition-all cursor-pointer"
             >
               {loading ? "Verifying..." : "Sign in"}
             </button>
 
             {authError && (
-              <div className="rounded-[6px] border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 px-4 py-3 text-[13px] text-red-700 dark:text-red-400 text-center">
+              <div className="rounded border border-red-200 bg-red-50 dark:bg-red-950/30 dark:border-red-900 px-3 py-2 text-xs text-red-700 dark:text-red-400 text-center">
                 {authError}
               </div>
             )}
@@ -139,7 +139,7 @@ function SignInPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border" />
             </div>
-            <span className="relative bg-background px-3 text-xs text-muted-foreground uppercase font-mono tracking-wider">
+            <span className="relative bg-card px-3 text-[10px] text-muted-foreground uppercase font-mono tracking-wider">
               or
             </span>
           </div>

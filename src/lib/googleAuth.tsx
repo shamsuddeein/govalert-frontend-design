@@ -46,7 +46,8 @@ export function GoogleAuthButton({ onCredential, text = "continue_with", disable
 
   useEffect(() => {
     let isMounted = true;
-    loadGoogleGsiScript().then(() => {
+
+    const renderBtn = () => {
       if (!isMounted || !window.google?.accounts?.id || !containerRef.current) return;
 
       try {
@@ -61,6 +62,11 @@ export function GoogleAuthButton({ onCredential, text = "continue_with", disable
           cancel_on_tap_outside: true,
         });
 
+        const parent = containerRef.current.parentElement;
+        const availableWidth = parent ? parent.clientWidth : 320;
+        // Google GIS accepts width integers between 200 and 400
+        const buttonWidth = Math.min(Math.max(availableWidth, 200), 400);
+
         containerRef.current.innerHTML = "";
         window.google.accounts.id.renderButton(containerRef.current, {
           type: "standard",
@@ -69,21 +75,35 @@ export function GoogleAuthButton({ onCredential, text = "continue_with", disable
           text: text,
           shape: "rectangular",
           logo_alignment: "left",
-          width: 360,
+          width: buttonWidth,
         });
       } catch (err) {
         console.error("Google GIS initialization error:", err);
       }
+    };
+
+    loadGoogleGsiScript().then(() => {
+      renderBtn();
     });
+
+    const observerTarget = containerRef.current?.parentElement;
+    const resizeObserver = new ResizeObserver(() => {
+      renderBtn();
+    });
+
+    if (observerTarget) {
+      resizeObserver.observe(observerTarget);
+    }
 
     return () => {
       isMounted = false;
+      resizeObserver.disconnect();
     };
   }, [onCredential, text]);
 
   return (
-    <div className={`w-full flex justify-center my-3 min-h-[44px] ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
-      <div ref={containerRef} className="w-full flex justify-center" />
+    <div className={`w-full flex justify-center my-3 min-h-[44px] max-w-full overflow-hidden ${disabled ? "opacity-50 pointer-events-none" : ""}`}>
+      <div ref={containerRef} className="w-full flex justify-center max-w-full [&_iframe]:!max-w-full [&_iframe]:!box-border" />
     </div>
   );
 }
