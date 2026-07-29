@@ -175,7 +175,7 @@ async function request<T>(
     });
     clearTimeout(timeoutId);
 
-    // 401 Unauthorized handling : attempt token refresh once
+    // 401 Unauthorized handling: attempt token refresh once
     if (res.status === 401 && !isRetry && !endpoint.includes("/token/") && !endpoint.includes("/logout/")) {
       if (!isRefreshing) {
         isRefreshing = true;
@@ -185,6 +185,23 @@ async function request<T>(
           return request<T>(endpoint, options, baseUrl, true);
         } else {
           clearAuthTokens();
+          // For GET/public read requests, retry once without the invalid Authorization header
+          const isGetMethod = !options.method || options.method.toUpperCase() === "GET";
+          if (isGetMethod) {
+            try {
+              const cleanHeaders = { ...headers };
+              delete cleanHeaders["Authorization"];
+              const retryRes = await fetch(url, {
+                ...options,
+                headers: cleanHeaders,
+              });
+              if (retryRes.ok) {
+                return await retryRes.json();
+              }
+            } catch (retryErr) {
+              console.warn(`Retry without token failed for ${endpoint}:`, retryErr);
+            }
+          }
         }
       }
     }
