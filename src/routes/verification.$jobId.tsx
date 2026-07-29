@@ -106,7 +106,7 @@ function VerificationReportPage() {
         </div>
         {/* Breadcrumb */}
         <div className="mb-6 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
-          <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → <Link to="/jobs/$jobId" params={{ jobId: report.ref }} className="hover:text-primary">REF: {report.ref}</Link> → Verification Report
+          <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → <Link to="/jobs/$jobId" params={{ jobId: report.ref }} className="hover:text-primary">{report.agency_acronym || 'Job Details'}</Link> → Verification Report
         </div>
 
         {/* Verification Status Badge */}
@@ -196,19 +196,19 @@ function VerificationReportPage() {
 
         <Divider />
 
-        {/* Confidence Breakdown */}
+        {/* Verification Breakdown */}
         <section>
-          <h2 className="text-[17px] font-semibold text-foreground">Confidence Breakdown</h2>
+          <h2 className="text-[17px] font-semibold text-foreground">Verification Breakdown</h2>
           
           {report.confidence_score != null ? <div className="mt-6">
-            <div className="text-[15px] font-medium">Confidence: {report.confidence_score}%</div>
+            <div className="text-[15px] font-medium">Verification Score: {report.confidence_score}%</div>
             <div className="mt-2 h-2 w-full max-w-[200px] overflow-hidden rounded bg-border">
               <div 
                 className="h-full bg-[#0a5c38] dark:bg-[#3fb68e]" 
                 style={{ width: `${report.confidence_score}%` }}
               />
             </div>
-          </div> : <p className="mt-4 text-sm text-muted-foreground">Confidence unavailable.</p>}
+          </div> : <p className="mt-4 text-sm text-muted-foreground">Verification score unavailable.</p>}
 
           {report.confidence_factors.length > 0 ? <div className="mt-6">
             <div className="text-[15px] text-muted-foreground">Based on:</div>

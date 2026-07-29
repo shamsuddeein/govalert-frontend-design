@@ -292,7 +292,7 @@ function JobDetailPage() {
           </Link>
           
           <div className="inline-flex items-center gap-2 rounded-[6px] border border-border bg-card px-3 py-1 text-xs font-semibold shrink-0">
-            <span className="text-muted-foreground">Confidence:</span>
+            <span className="text-muted-foreground">Verification Score:</span>
             <span className="font-mono text-foreground font-bold">{job.confidence_score != null ? `${job.confidence_score}%` : "Not available"}</span>
           </div>
         </div>

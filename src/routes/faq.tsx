@@ -32,8 +32,8 @@ const faqList: FaqItem[] = [
     a: "Absolutely not. Official government recruitments are free of charge. If any agency portal, recruiter, or third party demands payment for registration, exams, medical checks, or training kits, it is a scam.",
   },
   {
-    q: "What does the confidence score mean?",
-    a: "The confidence score indicates verification certainty. A high score means the portal operates on a verified official government domain with secure HTTPS connections, has no security anomalies, and content matches historical patterns. Scores drop if warning flags like non-standard domains, external redirections, or format deviations are found.",
+    q: "What does the verification score mean?",
+    a: "The verification score indicates portal authenticity certainty. A high score means the portal operates on a verified official government domain with secure HTTPS connections, has no security anomalies, and content matches historical patterns. Scores drop if warning flags like non-standard domains, external redirections, or format deviations are found.",
   },
   {
     q: "How do I get alerts on Telegram?",
