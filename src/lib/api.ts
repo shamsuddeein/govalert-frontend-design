@@ -71,6 +71,7 @@ export interface ApiJob {
     status: string;
   }>;
 }
+export type ApiJobDetail = ApiJob;
 
 export interface ApiJobVerification {
   ref: string;
@@ -377,8 +378,52 @@ export const api = {
   },
 
   getJob: async (ref: string): Promise<ApiJob | null> => {
-    const res = await request<any>(`/jobs/${ref}/`);
-    return res ? validateAndSanitizeJob(res) : null;
+    try {
+      const res = await request<any>(`/jobs/${ref}/`);
+      if (res) {
+        const sanitized = validateAndSanitizeJob(res);
+        if (sanitized) return sanitized;
+      }
+    } catch (e) {
+      console.warn(`Direct fetch for job ref ${ref} failed, checking list fallback...`, e);
+    }
+    // Fallback: search active jobs list if direct detail fetch fails
+    try {
+      const listRes = await api.getJobs({ page_size: 100 });
+      if (listRes && Array.isArray(listRes.results)) {
+        const match = listRes.results.find(
+          (j) => j.ref === ref || j.ref?.toLowerCase() === ref?.toLowerCase()
+        );
+        if (match) return match;
+      }
+    } catch (e) {}
+    return null;
+  },
+
+  getPublicJobs: async (params?: {
+    search?: string;
+    agency?: string;
+    category?: string;
+    state?: string;
+    status?: string;
+    sortBy?: string;
+    page?: number;
+    pageSize?: number;
+  }): Promise<{ results: ApiJob[]; count: number } | null> => {
+    return api.getJobs({
+      search: params?.search,
+      category: params?.category,
+      location: params?.state,
+      status: params?.status,
+      ordering: params?.sortBy === "recent" ? "-published_at" : params?.sortBy === "oldest" ? "published_at" : params?.sortBy === "alpha" ? "title" : undefined,
+      page: params?.page,
+      page_size: params?.pageSize,
+      agency: params?.agency,
+    });
+  },
+
+  getJobDetail: async (ref: string): Promise<ApiJob | null> => {
+    return api.getJob(ref);
   },
 
   getJobVerification: async (ref: string): Promise<ApiJobVerification | null> => {
