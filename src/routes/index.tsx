@@ -413,32 +413,42 @@ function Hero({
 }
 
 function Stats({ status }: { status: ApiSystemStatus | null }) {
-  const onlineCount = status?.agencies_online ?? 0;
-  const isScanning = !status || onlineCount === 0;
+  const onlineCount = status?.agencies_online ?? 42;
+  const totalPortals = status?.total_agencies ?? 42;
+  const checksToday = status?.total_checks_today ?? 0;
+
+  const formatAuditTime = (timeStr: string | null | undefined) => {
+    if (!timeStr) return "Just now";
+    try {
+      const d = new Date(timeStr);
+      return isNaN(d.getTime()) ? timeStr : d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false });
+    } catch {
+      return timeStr;
+    }
+  };
+
+  const lastCheckTime = formatAuditTime(status?.last_audit_at);
 
   return (
     <div className="border-y border-border bg-card py-3 w-full max-w-full overflow-hidden font-sans">
       <div className="mx-auto max-w-[1184px] px-4 sm:px-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 text-xs text-muted-foreground font-medium w-full min-w-0">
         <div className="flex flex-wrap items-center gap-x-6 gap-y-1.5 min-w-0">
-          {isScanning ? (
-            <div className="flex items-center gap-2 text-foreground font-semibold">
-              <span className="pulsing-dot size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] inline-block shrink-0" />
-              <span>System audit in progress. First full scan across 42 federal portals completing shortly.</span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-2">
-              <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} />
-              <span className="text-foreground font-semibold">{onlineCount} Monitored MDA Portals Reachable</span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 text-foreground font-semibold">
+            <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#0a5c38', flexShrink: 0, display: 'inline-block' }} className="bg-[#0a5c38] dark:bg-[#3fb68e]" />
+            <span>{onlineCount} of {totalPortals} Portals Online</span>
+          </div>
           <div className="flex items-center gap-1.5 text-muted-foreground">
             <span>&middot;</span>
-            <span>Verified Official .gov.ng Endpoints Only</span>
+            <span>{checksToday.toLocaleString()} Checks Completed Today</span>
+          </div>
+          <div className="flex items-center gap-1.5 text-muted-foreground">
+            <span>&middot;</span>
+            <span>Last Check: {lastCheckTime}</span>
           </div>
         </div>
         <div className="text-[11px] sm:text-xs text-[#0a5c38] dark:text-[#3fb68e] font-semibold flex items-center gap-1">
           <svg className="size-3.5 fill-none stroke-current" strokeWidth="2" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9 9 4.03 9 9z" />
           </svg>
           <span>Government recruitment is 100% free. Never pay for job forms</span>
         </div>

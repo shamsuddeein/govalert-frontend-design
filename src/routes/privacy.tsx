@@ -1,6 +1,7 @@
 import React from "react";
 import { ShieldCheck, Mail, Lock, CheckCircle, HelpCircle } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyPolicyPage,
@@ -9,6 +10,11 @@ export const Route = createFileRoute("/privacy")({
 export function PrivacyPolicyPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl font-sans text-foreground">
+      <SeoHead
+        title="Privacy Policy — RecruitmentAlert (NDPA 2023 Compliant)"
+        description="Read the official Privacy Policy for RecruitmentAlert. NDPA 2023 and NDPR compliant data privacy guidelines for job seekers."
+        canonicalUrl="/privacy"
+      />
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8">
         <div className="flex items-center gap-2 text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider mb-2">

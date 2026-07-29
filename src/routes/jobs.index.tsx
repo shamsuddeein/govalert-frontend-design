@@ -180,8 +180,8 @@ function JobsPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="Verified Nigerian Government Job Listings & Recruitment Alerts | RecruitmentAlert"
-        description="Browse verified federal government job openings in Nigeria. Real-time monitoring of NNPC, NCS, EFCC, Immigration, and MDA portals with scam prevention."
+        title="Federal Government Job Openings Nigeria 2026 — RecruitmentAlert"
+        description="Browse verified Nigerian federal government recruitment openings from 42 official MDA portals. Updated in real time."
         canonicalUrl="/jobs"
         jsonLd={[breadcrumbSchema]}
       />

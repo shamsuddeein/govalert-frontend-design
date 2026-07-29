@@ -2,14 +2,10 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
-  head: () => ({
-    meta: [
-      { title: "Verification FAQ | RecruitmentAlert" }
-    ]
-  }),
 });
 
 interface FaqItem {
@@ -53,6 +49,11 @@ function FaqPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
+      <SeoHead
+        title="Frequently Asked Questions — RecruitmentAlert"
+        description="Find answers to common questions about RecruitmentAlert, how we monitor 42 Nigerian federal MDA portals, confidence scores, and scam prevention."
+        canonicalUrl="/faq"
+      />
       <Nav />
       <main className="mx-auto max-w-[640px] w-full px-6 py-16">
         <div className="text-center mb-12">

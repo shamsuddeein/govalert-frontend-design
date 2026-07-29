@@ -30,8 +30,8 @@ function ShamsuddeenProfilePage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="Shamsuddeen Yusuf — Full Stack Developer, Kaduna Nigeria"
-        description="Shamsuddeen Yusuf is a full stack developer from Kaduna, Nigeria who builds backend systems, APIs, and web applications. Open to remote freelance and contract work."
+        title="Shamsuddeen Yusuf — Founder & Chief Engineer, RecruitmentAlert"
+        description="Software Engineer & Founder of RecruitmentAlert. Building real-time monitoring infrastructure for 42 Nigerian federal government portals."
         canonicalUrl="/shamsuddeen"
         jsonLd={[profileSchema]}
       />

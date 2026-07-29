@@ -19,9 +19,11 @@ export function SeoHead({
   jsonLd,
   noindex = false,
 }: SeoHeadProps) {
-  const fullCanonical = canonicalUrl
-    ? (canonicalUrl.startsWith("http") ? canonicalUrl : `https://www.recruitmentalert.com.ng${canonicalUrl}`)
-    : "https://www.recruitmentalert.com.ng";
+  const currentPath = typeof window !== "undefined" ? window.location.pathname : "";
+  const path = canonicalUrl ?? (currentPath || "/");
+  const fullCanonical = path.startsWith("http")
+    ? path
+    : `https://www.recruitmentalert.com.ng${path.startsWith('/') ? path : '/' + path}`;
 
   useEffect(() => {
     // 1. Update Document Title

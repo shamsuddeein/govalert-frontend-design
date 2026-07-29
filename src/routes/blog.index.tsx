@@ -62,8 +62,8 @@ function BlogIndexPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title="Nigerian Government Recruitment & Anti-Scam Guides. RecruitmentAlert Blog"
-        description="Official guides, verified portal directories, and scam prevention articles for Nigerian job seekers. Learn how to spot fake NNPC, Customs, and EFCC portals."
+        title="Recruitment Guides and Tech Tutorials — RecruitmentAlert Blog"
+        description="Practical articles on spotting fake Nigerian recruitment portals and software development tutorials by Shamsuddeen Yusuf."
         canonicalUrl="/blog"
         jsonLd={[breadcrumbSchema]}
       />

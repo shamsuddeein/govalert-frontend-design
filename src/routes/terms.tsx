@@ -1,6 +1,7 @@
 import React from "react";
 import { ShieldAlert, CheckCircle2, AlertTriangle, FileText } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/terms")({
   component: TermsOfServicePage,
@@ -9,6 +10,11 @@ export const Route = createFileRoute("/terms")({
 export function TermsOfServicePage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl font-sans text-foreground">
+      <SeoHead
+        title="Terms of Service — RecruitmentAlert"
+        description="Read the Terms of Service for using RecruitmentAlert.com.ng independent government recruitment monitoring platform."
+        canonicalUrl="/terms"
+      />
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8">
         <div className="flex items-center gap-2 text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider mb-2">

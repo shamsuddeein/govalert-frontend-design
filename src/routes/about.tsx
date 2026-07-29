@@ -29,8 +29,8 @@ function AboutPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <SeoHead
-        title="About RecruitmentAlert: Independent Nigerian Federal Recruitment Verification"
-        description="RecruitmentAlert is an independent monitoring engine that checks 42 official Nigerian federal government recruitment portals in real time to verify hiring notices."
+        title="About RecruitmentAlert — Independent Civil Intelligence & Portal Verification"
+        description="Learn about RecruitmentAlert, our mission, monitoring methodology, and founder Shamsuddeen Yusuf."
         canonicalUrl="/about"
         jsonLd={[breadcrumbSchema]}
       />

@@ -127,9 +127,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "manifest", href: "/manifest.json" },
-      { rel: "canonical", href: "https://www.recruitmentalert.com.ng" },
-      { rel: "alternate", hrefLang: "en-NG", href: "https://www.recruitmentalert.com.ng" },
-      { rel: "alternate", hrefLang: "x-default", href: "https://www.recruitmentalert.com.ng" },
       {
         rel: "stylesheet",
         href: appCss,

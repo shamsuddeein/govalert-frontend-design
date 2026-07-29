@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
 import { ShieldCheck, Mail, Send, AlertTriangle, MessageSquare, MapPin } from "lucide-react";
 import { toast } from "sonner";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
@@ -39,6 +40,11 @@ function ContactPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
+      <SeoHead
+        title="Contact RecruitmentAlert — Report Fake Portals & Support"
+        description="Contact the RecruitmentAlert team to report a fake job portal, verify hiring announcements, or inquire about portal monitoring."
+        canonicalUrl="/contact"
+      />
       <Nav />
       <main className="flex-1 mx-auto max-w-5xl w-full px-6 py-12">
         <div className="mb-10">

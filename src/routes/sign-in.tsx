@@ -5,6 +5,7 @@ import { Eye, EyeOff } from "lucide-react";
 import { toast } from "sonner";
 import { api } from "../lib/api";
 import { initializeGoogleAuth, triggerGoogleSignIn, GoogleAuthButton } from "../lib/googleAuth";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignInPage,
@@ -61,6 +62,11 @@ function SignInPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25 font-sans">
+      <SeoHead
+        title="Sign In — RecruitmentAlert"
+        description="Sign in to your RecruitmentAlert account to manage saved job alerts and portal monitoring preferences."
+        canonicalUrl="/sign-in"
+      />
       <Nav />
       <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
         <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative flex flex-col items-center">

@@ -29,8 +29,8 @@ function TelegramVerificationPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between font-sans selection:bg-secondary/25">
       <SeoHead
-        title="Official Telegram Bot Verification (@govalerts_bot). RecruitmentAlert"
-        description="Verify the official RecruitmentAlert Telegram bot username @govalerts_bot to protect yourself from fake clone bots and recruitment scams."
+        title="Get Nigerian Government Recruitment Alerts on Telegram — RecruitmentAlert"
+        description="Join the RecruitmentAlert Telegram bot and get instant alerts when official Nigerian federal government recruitment portals open."
         canonicalUrl="/telegram"
         jsonLd={[breadcrumbSchema]}
       />

@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { api } from "../lib/api";
 import { cn } from "../lib/utils";
 import { initializeGoogleAuth, triggerGoogleSignIn, GoogleAuthButton } from "../lib/googleAuth";
+import { SeoHead } from "../components/SeoHead";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
@@ -77,6 +78,11 @@ function RegisterPage() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
+      <SeoHead
+        title="Create an Account — RecruitmentAlert"
+        description="Create a free RecruitmentAlert account to receive real-time notifications for verified Nigerian federal government recruitment openings."
+        canonicalUrl="/register"
+      />
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16 outline-none">
         <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative">
