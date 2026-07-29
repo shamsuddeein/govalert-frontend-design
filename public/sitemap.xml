@@ -70,20 +70,26 @@
 
   <!-- Blog Articles -->
   <url>
-    <loc>https://www.recruitmentalert.com.ng/blog/spot-fake-nnpc-recruitment-warning-signs</loc>
-    <lastmod>2026-07-25</lastmod>
+    <loc>https://www.recruitmentalert.com.ng/blog/how-to-spot-a-fake-nnpc-recruitment</loc>
+    <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://www.recruitmentalert.com.ng/blog/official-gov-ng-recruitment-portals-2026-list</loc>
-    <lastmod>2026-07-25</lastmod>
+    <loc>https://www.recruitmentalert.com.ng/blog/official-gov-ng-recruitment-portals-the-complete-verified-list-for-2026</loc>
+    <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
   <url>
     <loc>https://www.recruitmentalert.com.ng/blog/why-legitimate-nigerian-government-jobs-never-ask-for-payment</loc>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-07-29</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://www.recruitmentalert.com.ng/blog/how-to-build-a-telegram-bot-with-python-and-django-that-sends-automatic-notifications</loc>
+    <lastmod>2026-07-29</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.85</priority>
   </url>
