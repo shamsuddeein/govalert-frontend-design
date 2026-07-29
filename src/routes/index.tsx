@@ -219,57 +219,45 @@ export function JobsErrorState({ message, onRetry }: { message: string; onRetry:
 export function StatusBadge({ status, warningNote }: { status: Status; warningNote?: string }) {
   const map: Record<Status, { label: string; cls: string; icon: React.ReactNode }> = {
     verified: {
-      label: "Verified",
-      cls: "bg-[#DCFCE7] text-[#166534] dark:bg-[#DCFCE7] dark:text-[#166534] font-semibold border border-[#166534]/20",
+      label: "Open",
+      cls: "bg-[#E6F4EA] text-[#137333] dark:bg-[#073b22]/70 dark:text-[#3fb68e] font-semibold border border-[#137333]/20",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-[#137333] dark:bg-[#3fb68e] shrink-0" />
       ),
     },
     urgent: {
       label: "Closing Soon",
-      cls: "bg-[#b45309] text-white",
+      cls: "bg-[#FEF3C7] text-[#92400E] dark:bg-[#451a03]/70 dark:text-[#fcd34d] font-semibold border border-[#92400E]/20",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-[#92400E] dark:bg-[#fcd34d] shrink-0" />
       ),
     },
     new: {
-      label: "New Opening",
-      cls: "bg-[#0e6b8a] text-white",
+      label: "New",
+      cls: "bg-[#E8F0FE] text-[#1A73E8] dark:bg-[#1c335a]/70 dark:text-[#8ab4f8] font-semibold border border-[#1A73E8]/20",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-[#1A73E8] shrink-0" />
       ),
     },
     warning: {
       label: "Notice",
-      cls: "bg-[#b45309] text-white",
+      cls: "bg-[#FEF3C7] text-[#92400E] dark:bg-[#451a03]/70 dark:text-[#fcd34d] font-semibold border border-[#92400E]/20",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-[#92400E] shrink-0" />
       ),
     },
     closed: {
       label: "Closed",
-      cls: "bg-muted text-muted-foreground border border-border",
+      cls: "bg-muted text-muted-foreground font-semibold border border-border/60",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-muted-foreground/60 shrink-0" />
       ),
     },
     unknown: {
-      label: "Verified",
-      cls: "bg-[#DCFCE7] text-[#166534] dark:bg-[#DCFCE7] dark:text-[#166534] font-semibold border border-[#166534]/20",
+      label: "Active",
+      cls: "bg-[#E6F4EA] text-[#137333] dark:bg-[#073b22]/70 dark:text-[#3fb68e] font-semibold border border-[#137333]/20",
       icon: (
-        <svg className="size-[10px] fill-none stroke-current" strokeWidth="2.5" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9 9 4.03 9 9z" />
-        </svg>
+        <span className="size-1.5 rounded-full bg-[#137333] dark:bg-[#3fb68e] shrink-0" />
       ),
     },
   };
@@ -573,7 +561,9 @@ function LatestJobs({
                       <div className="flex items-center justify-between gap-2 min-w-0">
                         <div className="flex items-center gap-2.5 min-w-0 flex-1">
                           <AgencyLogo short={job.agencyShort} size={32} className="shrink-0" />
-                          <span className="font-mono text-[11px] text-muted-foreground truncate min-w-0">REF: {job.id}</span>
+                          <span className="font-semibold text-xs text-muted-foreground truncate min-w-0">
+                            {job.agencyShort || job.agency}
+                          </span>
                         </div>
                         <StatusBadge status={job.status} />
                       </div>

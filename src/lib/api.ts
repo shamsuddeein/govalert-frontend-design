@@ -1,5 +1,7 @@
 // RecruitmentAlert API Client Module
 
+import { sanitizeJobTitle } from "./utils";
+
 const DEFAULT_BACKEND_URL = "https://govalert-production.up.railway.app";
 const BASE_HOST = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_BASE_URL) || DEFAULT_BACKEND_URL;
 const CLEAN_BASE = BASE_HOST.replace(/\/$/, "");
@@ -207,7 +209,7 @@ export function validateAndSanitizeJob(data: any): ApiJob | null {
 
   return {
     ref: String(data.ref || data.id || ""),
-    title: String(data.title || data.name || "Recruitment details unavailable"),
+    title: sanitizeJobTitle(String(data.title || data.name || "Recruitment Notice")),
     agency_name: String(data.agency_name || data.agency || "Agency unavailable"),
     agency_acronym: String(data.agency_acronym || data.agency_short || data.agencyShort || "Unknown"),
     agency_slug: String(data.agency_slug || (data.agency_acronym || "").toLowerCase()),

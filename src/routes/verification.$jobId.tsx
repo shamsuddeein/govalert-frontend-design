@@ -113,7 +113,7 @@ function VerificationReportPage() {
         <div className="mb-4">
           {report.ai_classification === "REAL" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-[#0a5c38]/10 dark:bg-[#3fb68e]/10 text-[#0a5c38] dark:text-[#3fb68e] text-[12px] font-bold uppercase tracking-wide">
-              <CheckCircle2 className="size-4" /> VERIFIED REAL. Official Government Source
+              <CheckCircle2 className="size-4" /> AUTHENTIC SOURCE. Confirmed Federal MDA Portal
             </span>
           ) : report.ai_classification === "FAKE" ? (
             <span className="inline-flex items-center gap-2 px-3 py-1.5 rounded-[6px] bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400 text-[12px] font-bold uppercase tracking-wide">
@@ -130,34 +130,34 @@ function VerificationReportPage() {
           Verification Report
         </h1>
         <div className="mt-1 font-mono text-[13px] text-muted-foreground">
-          REF: {report.ref}
+          {report.agency_acronym} — {report.job_title}
         </div>
 
-        {/* Report Metadata */}
-        <div className="mt-8 rounded-[8px] border border-border bg-card p-6">
-          <div className="grid gap-y-4 sm:grid-cols-3 text-[14px]">
+        {/* Verification Overview */}
+        <div className="mt-6 rounded-[8px] border border-border bg-card p-6 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-sans text-[13px]">
             <div>
               <span className="block text-muted-foreground text-[12px]">Agency</span>
               <span className="font-medium mt-1 block">{report.agency_name} ({report.agency_acronym})</span>
             </div>
             <div>
-              <span className="block text-muted-foreground text-[12px]">AI Confidence</span>
-              <span className="font-mono mt-1 block text-foreground">{report.ai_confidence != null ? `${report.ai_confidence}%` : "Not available"}</span>
+              <span className="block text-muted-foreground text-[12px]">Verification Score</span>
+              <span className="font-mono mt-1 block text-foreground font-bold">{report.ai_confidence != null ? `${report.ai_confidence}%` : "Not available"}</span>
             </div>
             <div>
-              <span className="block text-muted-foreground text-[12px]">Report ID</span>
+              <span className="block text-muted-foreground text-[12px]">Report Reference</span>
               <span className="font-mono mt-1 block text-foreground">
                 VR-{report.ref}
               </span>
             </div>
           </div>
 
-          {/* AI Red Flags */}
+          {/* Security Anomalies */}
           {report.ai_red_flags && report.ai_red_flags.length > 0 && (
             <div className="mt-4 pt-4 border-t border-border">
               <span className="inline-flex items-center gap-1.5 text-[12px] font-bold text-red-600 dark:text-red-400 uppercase tracking-wide">
                 <AlertTriangle className="size-3.5" aria-hidden />
-                AI Red Flags Detected
+                Security Anomalies Flagged
               </span>
               <ul className="mt-2 space-y-1">
                 {report.ai_red_flags.map((flag, i) => (

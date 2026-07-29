@@ -154,7 +154,7 @@ function AgenciesIndexPage() {
               <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
             </span>
-            <span>VETTING {agencies.length} ACTIVE GOVERNMENT REGISTRIES</span>
+            <span>{agencies.length} Monitored Federal Agencies</span>
           </div>
           <h1 className="text-3xl font-bold tracking-tight text-primary md:text-[32px] leading-tight">
             Federal MDAs & Portal Directories

@@ -234,7 +234,7 @@ function JobsPage() {
               <span className="pulsing-dot absolute inline-flex h-full w-full rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0a5c38] dark:bg-[#3fb68e]"></span>
             </span>
-            <span>REAL-TIME VERIFICATION ACTIVE</span>
+            <span>Live Official Portal Feed</span>
           </div>
           <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-primary md:text-[32px] leading-tight">
             Federal Recruitments Feed
@@ -370,8 +370,8 @@ function JobsPage() {
                           <div className="flex items-center justify-between gap-2 min-w-0">
                             <div className="flex items-center gap-2.5 min-w-0 flex-1">
                               <AgencyLogo short={job.agencyShort} size={32} className="shrink-0" />
-                              <span className="font-mono text-[11px] text-muted-foreground truncate min-w-0">
-                                REF: {job.id}
+                              <span className="font-semibold text-xs text-muted-foreground truncate min-w-0">
+                                {job.agencyShort || job.agency}
                               </span>
                             </div>
                             <StatusBadge status={job.status} />
