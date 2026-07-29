@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { api } from "../lib/api";
 import { initializeGoogleAuth, triggerGoogleSignIn, GoogleAuthButton } from "../lib/googleAuth";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignInPage,
@@ -68,8 +69,11 @@ function SignInPage() {
         canonicalUrl="/sign-in"
       />
       <Nav />
-      <main className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
+      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16">
         <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative flex flex-col items-center">
+          <div className="self-start mb-4">
+            <BackButton to="/" label="Back to Home" />
+          </div>
           <div className="flex items-center gap-2 mb-6 focus:outline-none select-none">
             <span className="text-xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">
               RecruitmentAlert

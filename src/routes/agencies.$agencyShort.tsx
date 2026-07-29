@@ -7,6 +7,7 @@ import { safeFormatDate, safeFormatDateTime } from "../lib/formatDate";
 
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/agencies/$agencyShort")({
   component: AgencyProfilePage,
@@ -194,6 +195,9 @@ function AgencyProfilePage() {
       />
       <Nav />
       <main className="mx-auto max-w-[720px] px-6 py-12">
+        <div className="mb-4">
+          <BackButton to="/agencies" label="Back to MDA Directory" />
+        </div>
         {/* Breadcrumb */}
         <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground">
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/agencies" className="hover:text-primary">Agencies</Link> → {agency.acronym}

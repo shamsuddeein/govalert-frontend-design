@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 
 import { api, ApiSystemStatus, ApiAgency } from "../lib/api";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/status")({
   component: StatusPage,
@@ -106,7 +107,10 @@ function StatusPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-4xl w-full px-6 py-12 space-y-8 outline-none">
+      <main className="mx-auto max-w-[1184px] px-6 py-10 space-y-8 font-sans">
+        <div className="mb-4">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         {/* Page Header */}
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between border-b border-border pb-6">
           <div>

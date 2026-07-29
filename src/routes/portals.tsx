@@ -5,6 +5,7 @@ import { AgencyLogo } from "../components/AgencyLogo";
 import { api, ApiAgency } from "../lib/api";
 import { safeFormatDateTime } from "../lib/formatDate";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/portals")({
   component: PortalsDirectoryPage,
@@ -80,6 +81,10 @@ function PortalsDirectoryPage() {
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[1184px] w-full px-4 sm:px-6 py-10 space-y-6 outline-none">
         
+        <div>
+          <BackButton to="/" label="Back to Home" />
+        </div>
+
         {/* Header Section */}
         <div className="border-b border-border pb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
           <div className="space-y-2">

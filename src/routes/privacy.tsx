@@ -2,6 +2,7 @@ import React from "react";
 import { ShieldCheck, Mail, Lock, CheckCircle, HelpCircle } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/privacy")({
   component: PrivacyPolicyPage,
@@ -15,6 +16,9 @@ export function PrivacyPolicyPage() {
         description="Read the official Privacy Policy for RecruitmentAlert. NDPA 2023 and NDPR compliant data privacy guidelines for job seekers."
         canonicalUrl="/privacy"
       />
+      <div className="mb-6">
+        <BackButton to="/" label="Back to Home" />
+      </div>
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8">
         <div className="flex items-center gap-2 text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider mb-2">

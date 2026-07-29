@@ -2,6 +2,7 @@ import React from "react";
 import { ShieldAlert, CheckCircle2, AlertTriangle, FileText } from "lucide-react";
 import { createFileRoute } from "@tanstack/react-router";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/terms")({
   component: TermsOfServicePage,
@@ -15,6 +16,9 @@ export function TermsOfServicePage() {
         description="Read the Terms of Service for using RecruitmentAlert.com.ng independent government recruitment monitoring platform."
         canonicalUrl="/terms"
       />
+      <div className="mb-6">
+        <BackButton to="/" label="Back to Home" />
+      </div>
       {/* Header */}
       <div className="border-b border-border pb-6 mb-8">
         <div className="flex items-center gap-2 text-sm font-semibold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider mb-2">

@@ -5,6 +5,7 @@ import { blogPosts as fallbackPosts, BlogPost } from "../lib/blogData";
 import { api } from "../lib/api";
 import { safeFormatDateTime } from "../lib/formatDate";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 import { Copy, Check } from "lucide-react";
 import { toast } from "sonner";
 
@@ -279,6 +280,10 @@ function BlogPostDetailPage() {
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[960px] w-full px-4 sm:px-6 py-12 outline-none">
         
+        <div className="max-w-[680px] mx-auto mb-6">
+          <BackButton to="/blog" label="Back to Blog" />
+        </div>
+
         {/* Breadcrumb */}
         <div className="mb-6 font-mono text-xs uppercase tracking-wide text-muted-foreground max-w-[680px] mx-auto">
           <Link to="/" className="hover:text-primary">Home</Link> &rarr; <Link to="/blog" className="hover:text-primary">Blog</Link> &rarr; {categoryDisplay}

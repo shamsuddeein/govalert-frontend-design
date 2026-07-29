@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from '@tanstack/react-router';
 import { Nav, Footer } from "../components/layout";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/about")({
   component: AboutPage,
@@ -35,8 +36,10 @@ function AboutPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[760px] px-6 py-12 outline-none">
-
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[760px] px-4 sm:px-6 py-12 outline-none font-sans">
+        <div className="mb-6">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         <div className="mb-10 text-left space-y-3 border-b border-border pb-8">
           <h1 className="text-3xl font-extrabold tracking-tight text-primary md:text-[34px] leading-tight">
             About RecruitmentAlert

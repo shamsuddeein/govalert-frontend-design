@@ -5,6 +5,7 @@ import { blogPosts as fallbackPosts, BlogPost } from "../lib/blogData";
 import { api } from "../lib/api";
 import { safeFormatDateTime } from "../lib/formatDate";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/blog/")({
   component: BlogIndexPage,
@@ -107,6 +108,10 @@ function BlogIndexPage() {
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[1040px] w-full px-4 sm:px-6 py-12 space-y-10 outline-none">
         
+        <div>
+          <BackButton to="/" label="Back to Home" />
+        </div>
+
         <div className="border-b border-border pb-8 space-y-4 text-left">
           <div>
             <span className="text-xs font-bold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e] font-mono">

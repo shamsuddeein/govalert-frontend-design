@@ -6,6 +6,7 @@ import { api, ApiAgency } from "../lib/api";
 import { safeFormatTime } from "../lib/formatDate";
 import { JobsErrorState, JobsEmptyState } from "./index";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/agencies/")({
   component: AgenciesIndexPage,
@@ -143,6 +144,9 @@ function AgenciesIndexPage() {
       />
       <Nav />
       <main className="mx-auto max-w-[1184px] px-6 py-12">
+        <div className="mb-6">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         {/* Header */}
         <div className="mb-10 text-left space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#0a5c38] dark:text-[#3fb68e] font-mono">

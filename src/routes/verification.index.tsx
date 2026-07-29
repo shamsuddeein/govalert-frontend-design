@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 
 export const Route = createFileRoute("/verification/")({
@@ -96,6 +97,9 @@ function VerificationPage() {
       />
       <Nav />
       <main className="mx-auto max-w-[800px] w-full px-6 py-16">
+        <div className="mb-6">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         <div className="text-center mb-12">
           <span className="font-mono text-xs font-bold uppercase tracking-widest text-[#0a5c38] dark:text-[#3fb68e]">
             TRUST & VERIFICATION

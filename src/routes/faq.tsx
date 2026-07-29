@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/faq")({
   component: FaqPage,
@@ -55,8 +56,11 @@ function FaqPage() {
         canonicalUrl="/faq"
       />
       <Nav />
-      <main className="mx-auto max-w-[640px] w-full px-6 py-16">
-        <div className="text-center mb-12">
+      <main className="mx-auto max-w-[720px] px-6 py-12 font-sans">
+        <div className="mb-6">
+          <BackButton to="/" label="Back to Home" />
+        </div>
+        <div className="mb-10 text-left space-y-2">
           <h1 className="text-[28px] font-bold tracking-tight text-foreground">
             Frequently Asked Questions
           </h1>

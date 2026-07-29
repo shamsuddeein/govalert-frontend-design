@@ -8,6 +8,7 @@ import { api, ApiAgency, isAuthenticated } from "../lib/api";
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/jobs/")({
   component: JobsPage,
@@ -187,6 +188,9 @@ function JobsPage() {
       />
       <Nav />
       <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1184px] px-6 py-12 outline-none">
+        <div className="mb-6">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         {/* Header */}
         <div className="mb-10 text-left space-y-2">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground font-mono">

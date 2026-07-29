@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { api } from "../lib/api";
 import { safeFormatDateTime } from "../lib/formatDate";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/audit-log")({
   component: AuditLogPage,
@@ -99,6 +100,10 @@ function AuditLogPage() {
       <Nav />
       <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[1184px] w-full px-4 sm:px-6 py-10 space-y-6 outline-none">
         
+        <div>
+          <BackButton to="/" label="Back to Home" />
+        </div>
+
         <div className="border-b border-border pb-6 space-y-2">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary">
             Public Automated Portal Audit Log

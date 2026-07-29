@@ -7,6 +7,7 @@ import { api, ApiJob } from "../lib/api";
 
 import { toast } from "sonner";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/search")({
   component: SearchPage,
@@ -156,6 +157,9 @@ function SearchPage() {
       />
       <Nav />
       <main className="flex-1 mx-auto max-w-7xl w-full px-6 py-12">
+        <div className="mb-4">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         <div className="mb-8">
           <h1 className="text-2xl font-bold tracking-tight text-primary md:text-3xl">
             Advanced Search

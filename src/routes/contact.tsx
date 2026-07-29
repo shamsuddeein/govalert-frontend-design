@@ -4,6 +4,7 @@ import { Nav, Footer } from "../components/layout";
 import { ShieldCheck, Mail, Send, AlertTriangle, MessageSquare, MapPin } from "lucide-react";
 import { toast } from "sonner";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/contact")({
   component: ContactPage,
@@ -47,6 +48,9 @@ function ContactPage() {
       />
       <Nav />
       <main className="flex-1 mx-auto max-w-5xl w-full px-6 py-12">
+        <div className="mb-4">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         <div className="mb-10">
           <h1 className="text-3xl font-bold tracking-tight text-primary md:text-4xl font-semibold">
             Contact & Scam Desk

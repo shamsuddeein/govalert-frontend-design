@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
+import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { toast } from "sonner";
@@ -201,7 +203,10 @@ function DashboardPage() {
   return (
     <div className="min-h-screen bg-background text-foreground selection:bg-secondary/25 font-sans">
       <Nav />
-      <main className="mx-auto max-w-[1184px] px-4 sm:px-6 py-8 sm:py-12">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1184px] px-4 sm:px-6 py-8 sm:py-12 outline-none font-sans">
+        <div className="mb-4">
+          <BackButton to="/" label="Back to Home" />
+        </div>
         {/* Banner/Header */}
         <div className="mb-8 sm:mb-10 flex flex-col gap-4 sm:gap-6 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-6 sm:pb-8">
           <div>

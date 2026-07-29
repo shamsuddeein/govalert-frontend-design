@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Nav, Footer } from "../components/layout";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/telegram")({
   component: TelegramVerificationPage,
@@ -35,8 +36,12 @@ function TelegramVerificationPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[760px] w-full px-4 sm:px-6 py-12 space-y-8 outline-none">
+      <main id="main-content" tabIndex={-1} className="flex-1 mx-auto max-w-[760px] w-full px-4 sm:px-6 py-12 space-y-8 outline-none font-sans">
         
+        <div>
+          <BackButton to="/" label="Back to Home" />
+        </div>
+
         <div className="border-b border-border pb-6 space-y-2 text-left">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-primary">
             Official Telegram Bot Verification

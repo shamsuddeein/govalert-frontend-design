@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { Nav, Footer } from "../components/layout";
 import { Share2, CheckCircle2, AlertTriangle, XCircle, Check, ExternalLink } from "lucide-react";
+import { BackButton } from "../components/BackButton";
 import { toast } from "sonner";
 import { api, ApiJobVerification } from "../lib/api";
 
@@ -100,6 +101,9 @@ function VerificationReportPage() {
     <div className="min-h-screen bg-background text-foreground">
       <Nav />
       <main className="mx-auto max-w-[720px] px-6 py-12 font-sans">
+        <div className="mb-4">
+          <BackButton to="/jobs/$jobId" params={{ jobId: report.ref }} label="Back to Job Details" />
+        </div>
         {/* Breadcrumb */}
         <div className="mb-6 font-mono text-[11px] uppercase tracking-wide text-muted-foreground">
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → <Link to="/jobs/$jobId" params={{ jobId: report.ref }} className="hover:text-primary">REF: {report.ref}</Link> → Verification Report

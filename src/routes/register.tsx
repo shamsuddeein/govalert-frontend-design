@@ -7,6 +7,7 @@ import { api } from "../lib/api";
 import { cn } from "../lib/utils";
 import { initializeGoogleAuth, triggerGoogleSignIn, GoogleAuthButton } from "../lib/googleAuth";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 export const Route = createFileRoute("/register")({
   component: RegisterPage,
@@ -84,8 +85,11 @@ function RegisterPage() {
         canonicalUrl="/register"
       />
       <Nav />
-      <main id="main-content" tabIndex={-1} className="flex-1 flex items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16 outline-none">
+      <main id="main-content" tabIndex={-1} className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 py-6 sm:py-12 md:py-16 outline-none">
         <div className="w-full max-w-md rounded-[8px] border border-border bg-card p-5 sm:p-8 shadow-sm relative">
+          <div className="mb-4">
+            <BackButton to="/" label="Back to Home" />
+          </div>
           <div className="text-center mb-6">
             <div className="flex items-center justify-center gap-2 mb-3">
               <span className="text-2xl font-extrabold tracking-tight text-[#0a5c38] dark:text-[#3fb68e]">

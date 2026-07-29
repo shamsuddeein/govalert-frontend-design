@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { Nav, Footer } from "../components/layout";
-import { ShieldCheck, Mail, ArrowRight, ArrowLeft } from "lucide-react";
+import { Mail, ArrowRight, ShieldCheck, CheckCircle2, ArrowLeft } from "lucide-react";
+import { BackButton } from "../components/BackButton";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/forgot-password")({
@@ -27,8 +28,11 @@ function ForgotPasswordPage() {
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col justify-between selection:bg-secondary/25">
       <Nav />
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
+      <main className="flex-1 flex flex-col items-center justify-center px-6 py-16">
         <div className="w-full max-w-md rounded border border-border bg-card p-8 shadow-sm relative">
+          <div className="mb-4">
+            <BackButton to="/sign-in" label="Back to Sign In" />
+          </div>
           <div className="text-center mb-8">
             <div className="mx-auto grid size-10 place-items-center rounded border border-border bg-muted text-primary">
               <ShieldCheck className="size-5" />

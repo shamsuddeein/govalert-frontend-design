@@ -9,6 +9,7 @@ import { safeFormatDate, safeFormatDateTime, safeFormatTime } from "../lib/forma
 import { toast } from "sonner";
 import { OfficialSourceLink } from "../components/OfficialSourceLink";
 import { SeoHead } from "../components/SeoHead";
+import { BackButton } from "../components/BackButton";
 
 function renderFormattedDescription(rawText: string | undefined | null) {
   if (!rawText || !rawText.trim()) {
@@ -286,6 +287,9 @@ function JobDetailsPage() {
       />
       <Nav />
       <main id="main-content" tabIndex={-1} className="mx-auto max-w-[720px] px-4 sm:px-6 py-8 sm:py-12 outline-none">
+        <div className="mb-4">
+          <BackButton to="/jobs" label="Back to All Jobs" />
+        </div>
         {/* Breadcrumb */}
         <div className="mb-6 font-mono-ui text-[11px] uppercase tracking-wide text-muted-foreground truncate">
           <Link to="/" className="hover:text-primary">Home</Link> → <Link to="/jobs" className="hover:text-primary">Jobs</Link> → REF: {job.ref}
