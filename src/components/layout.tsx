@@ -466,3 +466,7 @@ export function Footer() {
     </footer>
   );
 }
+
+export function Divider({ className = "" }: { className?: string }) {
+  return <hr className={`my-8 border-border ${className}`} />;
+}

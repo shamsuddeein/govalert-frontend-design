@@ -24,7 +24,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NNPC",
     name: "NNPC Limited",
-    category: "Engineering & Energy",
+    category: "Energy and Resources",
     portalStatus: "online",
     lastChecked: "2 mins ago",
     description:
@@ -58,7 +58,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NCS",
     name: "Nigeria Customs Service",
-    category: "Revenue & Finance",
+    category: "Civil Service",
     portalStatus: "online",
     lastChecked: "5 mins ago",
     description:
@@ -86,7 +86,7 @@ export const agenciesData: Agency[] = [
   {
     short: "EFCC",
     name: "Economic and Financial Crimes Commission",
-    category: "Law Enforcement",
+    category: "Security and Law Enforcement",
     portalStatus: "online",
     lastChecked: "12 mins ago",
     description:
@@ -114,7 +114,7 @@ export const agenciesData: Agency[] = [
   {
     short: "CBN",
     name: "Central Bank of Nigeria",
-    category: "Revenue & Finance",
+    category: "Finance and Revenue",
     portalStatus: "warning",
     lastChecked: "4 mins ago",
     description:
@@ -142,7 +142,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NAF",
     name: "Nigerian Air Force",
-    category: "Military & Paramilitary",
+    category: "Civil Service",
     portalStatus: "closed",
     lastChecked: "1h ago",
     description:
@@ -170,7 +170,7 @@ export const agenciesData: Agency[] = [
   {
     short: "FFS",
     name: "Federal Fire Service",
-    category: "Military & Paramilitary",
+    category: "Security and Law Enforcement",
     portalStatus: "online",
     lastChecked: "14 mins ago",
     description:
@@ -198,7 +198,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NIMC",
     name: "National Identity Management Commission",
-    category: "Engineering & Energy",
+    category: "Energy and Resources",
     portalStatus: "online",
     lastChecked: "8 mins ago",
     description:
@@ -220,7 +220,7 @@ export const agenciesData: Agency[] = [
   {
     short: "FIRS",
     name: "Federal Inland Revenue Service",
-    category: "Revenue & Finance",
+    category: "Finance and Revenue",
     portalStatus: "review",
     lastChecked: "24 mins ago",
     description:
@@ -242,7 +242,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NPF",
     name: "Nigeria Police Force",
-    category: "Law Enforcement",
+    category: "Security and Law Enforcement",
     portalStatus: "online",
     lastChecked: "15 mins ago",
     description:
@@ -264,7 +264,7 @@ export const agenciesData: Agency[] = [
   {
     short: "NPA",
     name: "Nigerian Ports Authority",
-    category: "Engineering & Energy",
+    category: "Transport and Infrastructure",
     portalStatus: "review",
     lastChecked: "30 mins ago",
     description:
@@ -286,7 +286,7 @@ export const agenciesData: Agency[] = [
   {
     short: "FMOH",
     name: "Federal Ministry of Health",
-    category: "Health & Medical",
+    category: "Health",
     portalStatus: "online",
     lastChecked: "45 mins ago",
     description:
@@ -352,7 +352,7 @@ export const agenciesData: Agency[] = [
   {
     short: "INEC",
     name: "Independent National Electoral Commission",
-    category: "Elections & Civil Service",
+    category: "Civil Service",
     portalStatus: "online",
     lastChecked: "Just now",
     description:
