@@ -681,6 +681,25 @@ export const api = {
     }
   },
 
+  // In-Dashboard Notifications
+  getNotifications: async (params?: { unread?: boolean; page?: number; page_size?: number }): Promise<ApiWebNotificationListResponse | null> => {
+    const q = new URLSearchParams();
+    if (params?.unread) q.append("unread", "true");
+    if (params?.page) q.append("page", String(params.page));
+    if (params?.page_size) q.append("page_size", String(params.page_size));
+    const query = q.toString() ? `?${q.toString()}` : "";
+    return request<ApiWebNotificationListResponse>(`/notifications/${query}`);
+  },
+
+  markNotificationRead: async (id: number): Promise<{ detail: string; id: number } | null> =>
+    request<{ detail: string; id: number }>(`/notifications/${id}/read/`, { method: "POST" }),
+
+  markAllNotificationsRead: async (): Promise<{ detail: string; updated_count: number } | null> =>
+    request<{ detail: string; updated_count: number }>(`/notifications/read-all/`, { method: "POST" }),
+
+  deleteNotification: async (id: number): Promise<{ detail: string; id: number } | null> =>
+    request<{ detail: string; id: number }>(`/notifications/${id}/`, { method: "DELETE" }),
+
   // Polling utility
   pollEndpoint: <T>(
     fetchFn: () => Promise<T | null>,
@@ -701,3 +720,22 @@ export const api = {
     };
   },
 };
+
+export interface ApiWebNotification {
+  id: number;
+  title: string;
+  body: string;
+  notification_type: "NEW_JOB" | "STATUS_CHANGE" | "DEADLINE_WARNING" | "BROADCAST";
+  target_url: string;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface ApiWebNotificationListResponse {
+  count: number;
+  unread_count: number;
+  page: number;
+  page_size: number;
+  results: ApiWebNotification[];
+}
+

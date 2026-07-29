@@ -103,9 +103,16 @@ export function ThemeToggle({ storageKey }: ThemeToggleProps = {}) {
 export function Nav() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [authed, setAuthed] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
-    setAuthed(isAuthenticated());
+    const isAuthed = isAuthenticated();
+    setAuthed(isAuthed);
+    if (isAuthed) {
+      api.getNotifications({ unread: true }).then((res) => {
+        if (res) setUnreadCount(res.unread_count || 0);
+      });
+    }
   }, []);
 
   const handleLogout = async () => {
@@ -173,6 +180,20 @@ export function Nav() {
             <ThemeToggle />
             {authed ? (
               <>
+                <Link
+                  to="/dashboard"
+                  className="relative inline-flex items-center justify-center size-9 rounded-full bg-muted/60 text-muted-foreground hover:text-primary hover:bg-muted transition-colors cursor-pointer"
+                  title="In-Dashboard Notifications"
+                >
+                  <svg className="size-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-[#0a5c38] dark:bg-[#3fb68e] text-[9px] font-bold text-white dark:text-[#0c1015]">
+                      {unreadCount > 9 ? "9+" : unreadCount}
+                    </span>
+                  )}
+                </Link>
                 <Link
                   to="/dashboard"
                   className="hidden text-[14px] font-medium text-muted-foreground hover:text-primary md:inline-flex cursor-pointer transition-colors"

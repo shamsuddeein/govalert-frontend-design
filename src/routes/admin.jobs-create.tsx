@@ -72,6 +72,11 @@ function AdminJobsCreate() {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   // Form State
+  const [isCustomAgency, setIsCustomAgency] = useState<boolean>(false);
+  const [customAgencyName, setCustomAgencyName] = useState<string>("");
+  const [customAgencyAcronym, setCustomAgencyAcronym] = useState<string>("");
+  const [customCategory, setCustomCategory] = useState<string>("Civil Service");
+
   const [selectedAgencyId, setSelectedAgencyId] = useState<number | "">("");
   const [selectedPortalId, setSelectedPortalId] = useState<number | "">("");
   const [eventType, setEventType] = useState<string>("RECRUITMENT_OPEN");
@@ -107,7 +112,7 @@ function AdminJobsCreate() {
 
   // Load Portals when agency changes
   useEffect(() => {
-    if (!selectedAgencyId) {
+    if (!selectedAgencyId || isCustomAgency) {
       setPortals([]);
       setSelectedPortalId("");
       return;
@@ -131,15 +136,20 @@ function AdminJobsCreate() {
     };
 
     fetchPortals();
-  }, [selectedAgencyId]);
+  }, [selectedAgencyId, isCustomAgency]);
 
   const selectedAgency = agencies.find((a) => a.id === Number(selectedAgencyId));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!selectedAgencyId) {
-      toast.error("Please select an agency.");
+    if (!isCustomAgency && !selectedAgencyId) {
+      toast.error("Please select an agency or switch to Custom / External Agency.");
+      return;
+    }
+
+    if (isCustomAgency && !customAgencyName.trim()) {
+      toast.error("Please enter the Custom Agency Name.");
       return;
     }
 
@@ -151,8 +161,11 @@ function AdminJobsCreate() {
     setSubmitting(true);
     try {
       const res = await adminApi.createAlert({
-        agency_id: Number(selectedAgencyId),
-        portal_id: selectedPortalId ? Number(selectedPortalId) : null,
+        agency_id: !isCustomAgency && selectedAgencyId ? Number(selectedAgencyId) : undefined,
+        custom_agency_name: isCustomAgency ? customAgencyName.trim() : undefined,
+        custom_agency_acronym: isCustomAgency ? customAgencyAcronym.trim() : undefined,
+        custom_category: isCustomAgency ? customCategory : undefined,
+        portal_id: !isCustomAgency && selectedPortalId ? Number(selectedPortalId) : null,
         title: title.trim(),
         event_type: eventType,
         positions: positions.trim(),
@@ -165,7 +178,7 @@ function AdminJobsCreate() {
         notify_subscribers: notifySubscribers && status === "APPROVED",
       });
 
-      toast.success(res.detail || "Job post created successfully!");
+      toast.success(res.detail || "Job post created & broadcasted successfully!");
       navigate({ to: "/admin/alerts" });
     } catch (err: any) {
       toast.error(err?.message || "Failed to create job post.");
@@ -230,57 +243,110 @@ function AdminJobsCreate() {
         <form onSubmit={handleSubmit} className="lg:col-span-7 space-y-6">
           {/* Section 1: Agency & Target */}
           <div className="bg-card border border-border rounded-[10px] p-5 space-y-4 shadow-sm">
-            <div className="flex items-center gap-2 text-sm font-bold text-foreground border-b border-border pb-3">
-              <Building2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
-              <span>1. Agency & Destination</span>
+            <div className="flex items-center justify-between border-b border-border pb-3">
+              <div className="flex items-center gap-2 text-sm font-bold text-foreground">
+                <Building2 className="h-4 w-4 text-[#0a5c38] dark:text-[#3fb68e]" />
+                <span>1. Agency & Destination</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCustomAgency(!isCustomAgency)}
+                className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer"
+              >
+                {isCustomAgency ? "← Select Monitored MDA" : "+ Custom / External Agency"}
+              </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {/* Agency Dropdown */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                  Target Agency <span className="text-destructive">*</span>
-                </label>
-                {loadingAgencies ? (
-                  <div className="h-10 w-full bg-muted animate-pulse rounded-[6px]" />
-                ) : (
-                  <select
-                    value={selectedAgencyId}
-                    onChange={(e) => setSelectedAgencyId(e.target.value ? Number(e.target.value) : "")}
-                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans cursor-pointer"
+            {isCustomAgency ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="space-y-1.5 md:col-span-2">
+                  <label className="text-xs font-semibold text-foreground">
+                    Agency Name <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
                     required
+                    placeholder="e.g. National Intelligence Agency"
+                    value={customAgencyName}
+                    onChange={(e) => setCustomAgencyName(e.target.value)}
+                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38]"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground">Acronym</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. NIA"
+                    value={customAgencyAcronym}
+                    onChange={(e) => setCustomAgencyAcronym(e.target.value)}
+                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38]"
+                  />
+                </div>
+                <div className="space-y-1.5 md:col-span-3">
+                  <label className="text-xs font-semibold text-foreground">Sector Category</label>
+                  <select
+                    value={customCategory}
+                    onChange={(e) => setCustomCategory(e.target.value)}
+                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38]"
                   >
-                    <option value="" disabled>
-                      Select an Agency...
-                    </option>
-                    {agencies.map((agency) => (
-                      <option key={agency.id} value={agency.id}>
-                        {agency.acronym} : {agency.name}
+                    <option value="Security and Law Enforcement">Security and Law Enforcement</option>
+                    <option value="Finance and Revenue">Finance and Revenue</option>
+                    <option value="Education">Education</option>
+                    <option value="Health">Health</option>
+                    <option value="Transport and Infrastructure">Transport and Infrastructure</option>
+                    <option value="Civil Service">Civil Service</option>
+                    <option value="Energy and Resources">Energy and Resources</option>
+                  </select>
+                </div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Agency Dropdown */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1">
+                    Target Agency <span className="text-destructive">*</span>
+                  </label>
+                  {loadingAgencies ? (
+                    <div className="h-10 w-full bg-muted animate-pulse rounded-[6px]" />
+                  ) : (
+                    <select
+                      value={selectedAgencyId}
+                      onChange={(e) => setSelectedAgencyId(e.target.value ? Number(e.target.value) : "")}
+                      className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans cursor-pointer"
+                      required={!isCustomAgency}
+                    >
+                      <option value="" disabled>
+                        Select an Agency...
+                      </option>
+                      {agencies.map((agency) => (
+                        <option key={agency.id} value={agency.id}>
+                          {agency.acronym} : {agency.name}
+                        </option>
+                      ))}
+                    </select>
+                  )}
+                </div>
+
+                {/* Portal Dropdown */}
+                <div className="space-y-1.5">
+                  <label className="text-xs font-semibold text-foreground flex items-center gap-1">
+                    Portal (Optional)
+                  </label>
+                  <select
+                    value={selectedPortalId}
+                    onChange={(e) => setSelectedPortalId(e.target.value ? Number(e.target.value) : "")}
+                    className="w-full h-[44px] px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans"
+                  >
+                    <option value="">No specific portal link</option>
+                    {portals.map((portal) => (
+                      <option key={portal.id} value={portal.id}>
+                        {portal.name} ({portal.url})
                       </option>
                     ))}
                   </select>
-                )}
+                </div>
               </div>
-
-              {/* Portal Dropdown */}
-              <div className="space-y-1.5">
-                <label className="text-xs font-semibold text-foreground flex items-center gap-1">
-                  Portal (Optional)
-                </label>
-                <select
-                  value={selectedPortalId}
-                  onChange={(e) => setSelectedPortalId(e.target.value ? Number(e.target.value) : "")}
-                  className="w-full h-10 px-3 rounded-[6px] bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[#0a5c38] font-sans"
-                >
-                  <option value="">No specific portal link</option>
-                  {portals.map((portal) => (
-                    <option key={portal.id} value={portal.id}>
-                      {portal.name} ({portal.url})
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* Section 2: Event Type & Job Details */}

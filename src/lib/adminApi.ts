@@ -695,4 +695,28 @@ export const adminApi = {
   deleteBlogPost: async (id: number): Promise<void> => {
     await adminRequest(`/blog/${id}/`, { method: "DELETE" });
   },
+
+  // Alert Creation
+  createAlert: async (data: {
+    agency_id?: number | null;
+    portal_id?: number | null;
+    event_type: string;
+    title: string;
+    positions?: string;
+    deadline?: string;
+    requirements?: string;
+    source_url?: string;
+    content_excerpt?: string;
+    trust_score?: number;
+    status?: "APPROVED" | "PENDING" | "HELD" | "REJECTED";
+    notify_subscribers?: boolean;
+    custom_agency_name?: string;
+    custom_agency_acronym?: string;
+    custom_category?: string;
+  }): Promise<{ detail: string; alert: AdminAlertRecord }> => {
+    return adminRequest<{ detail: string; alert: AdminAlertRecord }>("/alerts/", {
+      method: "POST",
+      body: JSON.stringify(data),
+    });
+  },
 };

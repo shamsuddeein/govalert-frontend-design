@@ -107,7 +107,7 @@ function StatusPage() {
         jsonLd={[breadcrumbSchema]}
       />
       <Nav />
-      <main className="mx-auto max-w-[1184px] px-6 py-10 space-y-8 font-sans">
+      <main id="main-content" tabIndex={-1} className="mx-auto max-w-[1184px] px-6 py-10 space-y-8 font-sans outline-none">
         <div className="mb-4">
           <BackButton to="/" label="Back to Home" />
         </div>

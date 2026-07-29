@@ -5,7 +5,7 @@ import { BackButton } from "../components/BackButton";
 import { Nav, Footer } from "../components/layout";
 import { StatusBadge, type Status } from "./index";
 import { toast } from "sonner";
-import { isAuthenticated, api } from "../lib/api";
+import { isAuthenticated, api, type ApiWebNotification } from "../lib/api";
 import { AccessibleModal } from "../components/AccessibleModal";
 
 export const Route = createFileRoute("/dashboard")({
@@ -20,7 +20,8 @@ function DashboardPage() {
   );
   const [savedJobs, setSavedJobs] = useState<any[]>([]);
   const [loadingJobs, setLoadingJobs] = useState(true);
-  const [notifications, setNotifications] = useState<Array<{ id: number; title: string; body: string; time: string; unread: boolean }>>([]);
+  const [notifications, setNotifications] = useState<ApiWebNotification[]>([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
 
   // Telegram State
   const [telegramConnected, setTelegramConnected] = useState(false);
@@ -54,7 +55,7 @@ function DashboardPage() {
     weeklyDigest: false,
   });
 
-  // Load profile & saved jobs from API
+  // Load profile, saved jobs, and notifications from API
   const loadUserData = async () => {
     if (!isAuthenticated()) {
       navigate({ to: "/sign-in" });
@@ -64,9 +65,10 @@ function DashboardPage() {
     setLoadingProfile(true);
 
     try {
-      const [profileRes, jobsRes] = await Promise.all([
+      const [profileRes, jobsRes, notifRes] = await Promise.all([
         api.getMe(),
         api.getSavedJobs(),
+        api.getNotifications(),
       ]);
 
       if (profileRes) {
@@ -89,6 +91,11 @@ function DashboardPage() {
 
       if (jobsRes) {
         setSavedJobs(jobsRes);
+      }
+
+      if (notifRes) {
+        setNotifications(notifRes.results || []);
+        setUnreadNotifCount(notifRes.unread_count || 0);
       }
     } catch (e) {
       console.warn("Failed to load user dashboard data:", e);
@@ -118,9 +125,24 @@ function DashboardPage() {
     }
   };
 
-  const markAllRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, unread: false })));
-    toast.success("All notifications marked as read");
+  const handleMarkAllRead = async () => {
+    const res = await api.markAllNotificationsRead();
+    if (res) {
+      setNotifications((prev) => prev.map((n) => ({ ...n, is_read: true })));
+      setUnreadNotifCount(0);
+      toast.success("All notifications marked as read");
+    }
+  };
+
+  const handleNotificationClick = async (notif: ApiWebNotification) => {
+    if (!notif.is_read) {
+      api.markNotificationRead(notif.id);
+      setNotifications((prev) => prev.map((n) => (n.id === notif.id ? { ...n, is_read: true } : n)));
+      setUnreadNotifCount((prev) => Math.max(0, prev - 1));
+    }
+    if (notif.target_url) {
+      navigate({ to: notif.target_url as any });
+    }
   };
 
   const handleSaveProfile = async (e: React.FormEvent) => {
@@ -391,67 +413,70 @@ function DashboardPage() {
             {activeTab === "notifications" && (
               <section className="space-y-6 text-left">
                 <div className="flex items-center justify-between border-b border-border/40 pb-3">
-                  <h3 className="text-[16px] font-bold text-primary">Recent Alerts</h3>
-                  <button
-                    onClick={markAllRead}
-                    className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer"
-                  >
-                    Mark all as read
-                  </button>
-                </div>
-
-                {/* Telegram Connection Banner */}
-                <div className="rounded-[8px] border border-border bg-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="space-y-1">
-                    <h4 className="font-bold text-xs uppercase tracking-wider text-primary">Telegram Push Integration</h4>
-                    <p className="text-xs text-muted-foreground max-w-xl leading-relaxed">
-                      Receive critical status alerts, vetting logs, and scam warnings direct to your phone instantly. Bypass email delays.
-                    </p>
-                  </div>
-
-                  {telegramConnected ? (
-                    <div className="flex items-center gap-1.5 bg-[#0a5c38]/10 border border-[#0a5c38]/25 rounded-[6px] px-3 py-1.5 text-[11px] font-bold text-[#0a5c38] dark:text-[#3fb68e] uppercase tracking-wider self-start md:self-auto">
-                      Connected to @{telegramHandle.replace("@", "")}
-                    </div>
-                  ) : (
+                  <h3 className="text-[16px] font-bold text-primary">
+                    Recent Alerts {unreadNotifCount > 0 && <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-[#0a5c38]/10 dark:bg-[#3fb68e]/10 text-[#0a5c38] dark:text-[#3fb68e] font-semibold">{unreadNotifCount} unread</span>}
+                  </h3>
+                  {unreadNotifCount > 0 && (
                     <button
-                      onClick={handleStartTelegramConnection}
-                      className="inline-flex h-[40px] items-center justify-center rounded-[8px] bg-primary px-5 text-xs font-semibold text-primary-foreground hover:bg-primary/95 cursor-pointer shrink-0 self-start md:self-auto"
+                      onClick={handleMarkAllRead}
+                      className="text-xs font-semibold text-[#0a5c38] dark:text-[#3fb68e] hover:underline cursor-pointer"
                     >
-                      Connect Alert Bot
+                      Mark all as read
                     </button>
                   )}
                 </div>
 
                 {/* Notifications List */}
-                <div className="space-y-3">
-                  {notifications.map((notif) => (
-                    <div
-                      key={notif.id}
-                      className={`relative flex items-start gap-4 rounded-[8px] border p-4 transition-colors ${
-                        notif.unread
-                          ? "bg-card border-[#0a5c38]/30 dark:border-[#3fb68e]/30 shadow-sm"
-                          : "bg-card/40 border-border"
-                      }`}
-                    >
-                      {notif.unread && (
-                        <span className="absolute left-2 top-2 size-1.5 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
-                      )}
+                {notifications.length > 0 ? (
+                  <div className="space-y-3">
+                    {notifications.map((notif) => {
+                      const isUnread = !notif.is_read;
+                      return (
+                        <div
+                          key={notif.id}
+                          onClick={() => handleNotificationClick(notif)}
+                          className={`relative flex items-start gap-4 rounded-[8px] border p-4 transition-all cursor-pointer ${
+                            isUnread
+                              ? "bg-card border-[#0a5c38]/40 dark:border-[#3fb68e]/40 shadow-sm hover:border-[#0a5c38]"
+                              : "bg-card/40 border-border hover:border-border/80"
+                          }`}
+                        >
+                          {isUnread && (
+                            <span className="absolute left-2.5 top-3.5 size-2 rounded-full bg-[#0a5c38] dark:bg-[#3fb68e]" />
+                          )}
 
-                      <div className="flex-1 space-y-1">
-                        <div className="flex items-center justify-between gap-4">
-                          <h4 className={`text-xs font-bold ${notif.unread ? "text-primary font-semibold" : "text-muted-foreground"}`}>
-                            {notif.title}
-                          </h4>
-                          <span className="text-[10px] text-muted-foreground font-mono">
-                            {notif.time}
-                          </span>
+                          <div className="flex-1 space-y-1 pl-2">
+                            <div className="flex items-center justify-between gap-4">
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded ${
+                                  notif.notification_type === "NEW_JOB"
+                                    ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20"
+                                    : notif.notification_type === "DEADLINE_WARNING"
+                                    ? "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
+                                    : "bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20"
+                                }`}>
+                                  {notif.notification_type.replace("_", " ")}
+                                </span>
+                                <h4 className={`text-xs font-bold ${isUnread ? "text-primary font-semibold" : "text-muted-foreground"}`}>
+                                  {notif.title}
+                                </h4>
+                              </div>
+                              <span className="text-[10px] text-muted-foreground font-mono shrink-0">
+                                {new Date(notif.created_at).toLocaleDateString("en-NG", { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })}
+                              </span>
+                            </div>
+                            <p className="text-xs text-muted-foreground leading-relaxed">{notif.body}</p>
+                          </div>
                         </div>
-                        <p className="text-xs text-muted-foreground leading-relaxed">{notif.body}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <div className="rounded-[8px] border border-dashed border-border p-12 text-center space-y-2">
+                    <p className="text-sm font-semibold text-primary">No Notifications Yet</p>
+                    <p className="text-xs text-muted-foreground">You will receive instant alerts here when new recruitment openings are verified.</p>
+                  </div>
+                )}
               </section>
             )}
 
